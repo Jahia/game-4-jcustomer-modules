@@ -1,2 +1,19 @@
 <jnt = 'http://www.jahia.org/jahia/nt/1.0'>
 <jmix = 'http://www.jahia.org/jahia/mix/1.0'>
+<game4mix = 'http://modules.se.jahia.org/game-4-jcustomer/mix/1.0'>
+<game4nt = 'http://modules.se.jahia.org/game-4-jcustomer/nt/1.0'>
+<game4 = 'http://modules.se.jahia.org/game-4-jcustomer/1.0'>
+//<wemnt = 'http://www.jahia.org/jahia/wem/nt/1.0'>
+
+[game4mix:components] > jmix:droppableContent mixin
+[game4mix:showInTree] > jmix:cmContentTreeDisplayable, jmix:editorialContent mixin
+
+[game4mix:usesConsents] mixin
+// extends=game4nt:quiz
+// itemtype=content
+ - game4:consentType (weakreference,choicelist[nodes='$currentSite/consentTypes;wemnt:consentType']) nofulltext
+
+[game4mix:usesResultAsProperty] mixin
+// extends=game4nt:qna
+// itemtype=content
+ - game4:jExpPropertyName (string) nofulltext
