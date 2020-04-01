@@ -4,15 +4,19 @@
 <game4mix = 'http://modules.se.jahia.org/game-4-jcustomer/mix/1.0'>
 <game4nt = 'http://modules.se.jahia.org/game-4-jcustomer/nt/1.0'>
 <game4 = 'http://modules.se.jahia.org/game-4-jcustomer/1.0'>
+<wemnt = 'http://www.jahia.org/jahia/wem/nt/1.0'>
 
 
 [game4mix:internalVideoLink] > jmix:templateMixin mixin
  extends = game4nt:warmup
- - game4:videoIntPath (weakreference, picker[type='editoriallink']) internationalized < 'jnt:file'
+ - videoIntPath (weakreference, picker[type='editoriallink']) internationalized < 'jnt:file'
 
 [game4mix:externalVideoLink] > jmix:templateMixin mixin
  extends = game4nt:warmup
- - game4:videoExtPath (string) = 'https://' internationalized
+ - videoExtPath (string) = 'https://' internationalized
+
+//[game4mix:score] mixin
+// - game4:notUsedForScore (boolean) nofulltext
 
 [game4nt:quiz] > jnt:content, game4mix:components, game4mix:showInTree, game4mix:usesConsents, mix:title orderable
  - game4:subtitle (string) internationalized
@@ -23,6 +27,9 @@
 // - relatedContents (weakreference, picker[type='editoriallink']) < 'jmix:droppableContent'
  + * (game4nt:qna)
  + * (game4nt:warmup)
+//workaround waiting for a UI enhancement
+ + * (wemnt:personalizedContent)
+ + * (wemnt:optimizationTest)
 
 [game4nt:warmup] > jnt:content, game4mix:showInTree, mix:title orderable
  - game4:subtitle (string) internationalized
@@ -32,9 +39,15 @@
  - game4:videoLink (string, choicelist[eLearningVideoTypeInitializer,resourceBundle]) indexed=no < 'videoExtPath', 'videoIntPath'
  - game4:qnaDuration (string,choicelist[resourceBundle]) = '5 mins' autocreated indexed=no < '5 mins', '10 mins', '30 mins', '1h' , '> 1h'
  + * (game4nt:qna)
+//workaround waiting for a UI enhancement
+ + * (wemnt:personalizedContent)
+ + * (wemnt:optimizationTest)
 
 [game4nt:qna] > jnt:content, game4mix:showInTree, game4mix:usesResultAsProperty, mix:title
- - game4:cover (weakreference, picker[type='image']) < 'jmix:image'
  - game4:question (string) mandatory internationalized
  - game4:help (string) internationalized
- - game4:responses (string) mandatory multiple internationalized
+ - game4:nbExpectedAnswer (long)
+ - game4:answers (string) mandatory multiple internationalized //TODO switch to answers
+ - game4:randomSelection (boolean) = false autocreated indexed=no
+ - game4:notUsedForScore (boolean) indexed=no
+ - game4:cover (weakreference, picker[type='image']) < 'jmix:image'
