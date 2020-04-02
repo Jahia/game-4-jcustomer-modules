@@ -8,7 +8,7 @@ import org.jahia.services.content.nodetypes.initializers.ModuleChoiceListInitial
 import org.jahia.services.content.nodetypes.renderer.AbstractChoiceListRenderer;
 import org.jahia.services.content.nodetypes.renderer.ModuleChoiceListRenderer;
 import org.jahia.services.render.RenderContext;
-//import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,19 +17,18 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import java.util.*;
 
-//@Component(name="btnQuzVideoTypeInitializer", service=ModuleChoiceListInitializer.class, immediate=true)
+@Component(name = "btnQuizVideoTypeInitializer", service = ModuleChoiceListInitializer.class, immediate = true)
 public class VideoItemTypeInitializer  extends AbstractChoiceListRenderer implements ModuleChoiceListInitializer, ModuleChoiceListRenderer {
     private static final Logger logger = LoggerFactory.getLogger(VideoItemTypeInitializer.class);
 
-//    private String key="quizVideoTypeInitializer";
-    private String key;
+    private String key="quizVideoTypeInitializer";
+//    private String key;
 
     /**
      * {@inheritDoc}
      */
     public List<ChoiceListValue> getChoiceListValues(ExtendedPropertyDefinition epd, String param, List<ChoiceListValue> values,
                                                      Locale locale, Map<String, Object> context) {
-        logger.info("cocouc");
         //Create the list of ChoiceListValue to return
         List<ChoiceListValue> myChoiceList = new ArrayList<ChoiceListValue>();
 
@@ -43,12 +42,12 @@ public class VideoItemTypeInitializer  extends AbstractChoiceListRenderer implem
         //externalLink
         myPropertiesMap = new HashMap<String, Object>();
         myPropertiesMap.put("addMixin","game4mix:externalVideoLink");
-        myChoiceList.add(new ChoiceListValue("external",myPropertiesMap,new ValueImpl("videoExtPath", PropertyType.STRING, false)));
+        myChoiceList.add(new ChoiceListValue("external",myPropertiesMap,new ValueImpl("tata", PropertyType.STRING, false)));
 
         //internalLink
         myPropertiesMap = new HashMap<String, Object>();
         myPropertiesMap.put("addMixin","game4mix:internalVideoLink");
-        myChoiceList.add(new ChoiceListValue("internal",myPropertiesMap,new ValueImpl("videoIntPath", PropertyType.STRING, false)));
+        myChoiceList.add(new ChoiceListValue("internal",myPropertiesMap,new ValueImpl("internal", PropertyType.STRING, false)));
 
         //Return the list
         return myChoiceList;

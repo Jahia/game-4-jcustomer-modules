@@ -9,11 +9,11 @@
 
 [game4mix:internalVideoLink] > jmix:templateMixin mixin
  extends = game4nt:warmup
- - videoIntPath (weakreference, picker[type='editoriallink']) internationalized < 'jnt:file'
+ - game4:videoIntPath (weakreference, picker[type='editoriallink']) internationalized < 'jnt:file'
 
 [game4mix:externalVideoLink] > jmix:templateMixin mixin
  extends = game4nt:warmup
- - videoExtPath (string) = 'https://' internationalized
+ - game4:videoExtPath (string) = 'https://' internationalized
 
 //[game4mix:score] mixin
 // - game4:notUsedForScore (boolean) nofulltext
@@ -36,7 +36,7 @@
  - game4:masterQnaCover (weakreference, picker[type='image']) < 'jmix:image'
 // - abstract (string, textarea) internationalized
  - game4:content (string, richtext[ckeditor.customConfig='$context/modules/game-4-jcustomer-components-quiz/javascript/ckeditor/config/small.js']) internationalized
- - game4:videoLink (string, choicelist[eLearningVideoTypeInitializer,resourceBundle]) indexed=no < 'videoExtPath', 'videoIntPath'
+ - game4:videoLink (string, choicelist[quizVideoTypeInitializer,resourceBundle]) indexed=no < 'internal', 'external'
  - game4:qnaDuration (string,choicelist[resourceBundle]) = '5 mins' autocreated indexed=no < '5 mins', '10 mins', '30 mins', '1h' , '> 1h'
  + * (game4nt:qna)
 //workaround waiting for a UI enhancement
