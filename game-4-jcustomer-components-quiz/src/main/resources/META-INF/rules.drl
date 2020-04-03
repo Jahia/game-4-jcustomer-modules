@@ -1,0 +1,31 @@
+package org.jahia.se.modules.games4jcustomer.componentsquiz.rules
+
+// list any import classes here.
+import org.jahia.services.content.rules.*
+import org.jahia.services.content.JCRContentUtils
+import org.slf4j.Logger
+
+expander rules.dsl
+
+// declare any global variables here
+global User user
+global Service service
+global Logger logger
+global JCRContentUtils jcrUtils
+
+rule "Create user profile attribute"
+    when
+        A new node is created
+        - it has the extension type game4mix:usesResultAsProperty
+    then
+        Log "this is it : " + node.getNode().getProperty("game4:jExpPropertyName").getString()
+end
+
+rule "Update & Remove user profile attribute"
+    when
+        A property game4:jExpPropertyName has been set on a node
+    then
+//        Log "property.getNode() : " + property.getNode().getProperty("game4:jExpPropertyName").getString()
+//        Log "property.getProperty( : " + property.getProperty().getString()
+        Log "property.getStringValue() " + property.getStringValue()
+end

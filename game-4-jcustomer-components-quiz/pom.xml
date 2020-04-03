@@ -58,10 +58,10 @@
   <packaging>bundle</packaging>
   <name>Game for jCustomer Quiz Components Module</name>
   <description>This is the custom module (Game for jCustomer Quiz Components Module) for running on a Jahia server.</description>
-  <scm>
-    <connection>scm:dummy:uri</connection>
-    <developerConnection>scm:dummy:uri</developerConnection>
-  </scm>
+<!--  <scm>-->
+<!--    <connection>scm:dummy:uri</connection>-->
+<!--    <developerConnection>scm:dummy:uri</developerConnection>-->
+<!--  </scm>-->
   <properties>
     <jahia-depends>default,game-4-jcustomer-core</jahia-depends>
   </properties>
