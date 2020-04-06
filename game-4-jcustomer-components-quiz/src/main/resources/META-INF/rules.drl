@@ -4,6 +4,7 @@ package org.jahia.se.modules.games4jcustomer.componentsquiz.rules
 import org.jahia.services.content.rules.*
 import org.jahia.services.content.JCRContentUtils
 import org.slf4j.Logger
+import org.jahia.se.modules.game.core.rules.CreateOrUpdateUserProperties
 
 expander rules.dsl
 
@@ -12,14 +13,16 @@ global User user
 global Service service
 global Logger logger
 global JCRContentUtils jcrUtils
+global CreateOrUpdateUserProperties createOrUpdateUserProperties
 
-rule "Create user profile attribute"
-    when
-        A new node is created
-        - it has the extension type game4mix:usesResultAsProperty
-    then
-        Log "this is it : " + node.getNode().getProperty("game4:jExpPropertyName").getString()
-end
+//rule "Create user profile attribute"
+//    when
+//        A new node is created
+//        - it has the extension type game4mix:usesResultAsProperty
+//    then
+//        Log "this is it : " + node.getNode().getProperty("game4:jExpPropertyName").getString()
+//        Create or update jCustomer property "{\"id\":\"x\",\"name\":\""+node.getNode().getProperty("game4:jExpPropertyName").getString()+"\"}" from node
+//end
 
 rule "Update & Remove user profile attribute"
     when
@@ -28,4 +31,5 @@ rule "Update & Remove user profile attribute"
 //        Log "property.getNode() : " + property.getNode().getProperty("game4:jExpPropertyName").getString()
 //        Log "property.getProperty( : " + property.getProperty().getString()
         Log "property.getStringValue() " + property.getStringValue()
+        Create or update jCustomer property "{\"id\":\"x\",\"name\":\""+node.getNode().getProperty("game4:jExpPropertyName").getString()+"\"}" from node
 end

@@ -86,7 +86,9 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <extensions>true</extensions>
         <configuration>
-          <instructions />
+          <instructions>
+            <Export-Package>org.jahia.se.modules.game.core.rules</Export-Package>
+          </instructions>
         </configuration>
       </plugin>
     </plugins>

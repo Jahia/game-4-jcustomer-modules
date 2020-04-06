@@ -1,0 +1,1 @@
+[consequence][]Create or update jCustomer property {properties} from {node}=createOrUpdateUserProperties.executeActionNow(node,{properties}, drools);
