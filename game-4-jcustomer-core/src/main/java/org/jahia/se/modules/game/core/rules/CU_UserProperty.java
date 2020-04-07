@@ -2,23 +2,24 @@ package org.jahia.se.modules.game.core.rules;
 
 import org.drools.core.spi.KnowledgeHelper;
 import org.jahia.registries.ServicesRegistry;
-import org.jahia.services.content.rules.BackgroundAction;
+//import org.jahia.services.content.rules.BackgroundAction;
 import org.jahia.services.content.rules.NodeFact;
-import org.jahia.services.content.rules.PublishedNodeFact;
-import org.quartz.SchedulerException;
+//import org.jahia.services.content.rules.PublishedNodeFact;
+
+//import org.quartz.SchedulerException;
 
 import org.json.JSONObject;
 import org.json.JSONException;
-//import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 
-//@Component(name = "createOrUpdateUserProperties", service = CreateOrUpdateUserProperties.class, immediate = true)
-public class CreateOrUpdateUserProperties {
+@Component(service = CU_UserProperty.class, immediate = true)
+public class CU_UserProperty{
 
-    private static final Logger logger = LoggerFactory.getLogger(CreateOrUpdateUserProperties.class);
+    private static final Logger logger = LoggerFactory.getLogger(CU_UserProperty.class);
 //    private String key="createOrUpdateUserProperties";
 
 //    private CreateOrUpdateUserProperties myRuleService;
@@ -29,10 +30,20 @@ public class CreateOrUpdateUserProperties {
 //
 //    }
 
-    public void executeActionNow(NodeFact node, final String properties,KnowledgeHelper drools) throws JSONException{
-        JSONObject o = new JSONObject(properties);
-        logger.info("properties : "+o.toString());
+    public void executeActionNow(NodeFact node){
+//        game4:jExpPropertyName (string) indexed=no
+//          game4:jExpPropertyId (string) hidden indexed=no
+        //Get value game4:jExpPropertyId
+        String jExpPropertyId =
+        logger.info("executeActionNow ! ");
     }
+
+//    public void executeActionNow(NodeFact node,KnowledgeHelper drools) throws JSONException{
+//
+////        JSONObject o = new JSONObject(properties);
+////        logger.info("properties : "+node.getNode().getProperty("game4:jExpPropertyName").getString());
+//        logger.info("executeActionNow ! ");
+//    }
 
 //    public void executeActionNow(NodeFact node, final String actionToExecute, KnowledgeHelper drools) throws SchedulerException, RepositoryException {
 //

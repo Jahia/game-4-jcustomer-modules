@@ -87,6 +87,9 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
+            <_dsannotations>
+              org.jahia.se.modules.game.core.rules.*
+            </_dsannotations>
             <Export-Package>org.jahia.se.modules.game.core.rules</Export-Package>
           </instructions>
         </configuration>

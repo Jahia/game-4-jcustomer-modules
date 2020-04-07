@@ -1,0 +1,1 @@
+[consequence][]Create or update jCustomer property from node=cU_UserProperty.executeActionNow(node);
