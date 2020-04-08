@@ -58,13 +58,30 @@
   <packaging>bundle</packaging>
   <name>Game for jCustomer Core Module</name>
   <description>This is the custom module (Game for jCustomer Core Module) for running on a Jahia server.</description>
-  <scm>
-    <connection>scm:dummy:uri</connection>
-    <developerConnection>scm:dummy:uri</developerConnection>
-  </scm>
+<!--  <scm>-->
+<!--    <connection>scm:dummy:uri</connection>-->
+<!--    <developerConnection>scm:dummy:uri</developerConnection>-->
+<!--  </scm>-->
   <properties>
     <jahia-depends>content-media-manager,default,jexperience</jahia-depends>
+<!--    <Export-Package>org.jahia.se.modules.game.core.rules</Export-Package>-->
   </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.jahia.modules</groupId>
+      <artifactId>jexperience</artifactId>
+      <version>1.11.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jahia.modules</groupId>
+      <artifactId>jexperience</artifactId>
+      <version>1.11.0</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
   <repositories>
     <repository>
       <releases>
@@ -88,6 +105,7 @@
         <configuration>
           <instructions>
             <_dsannotations>
+              org.jahia.se.modules.game.core.initializers.*,
               org.jahia.se.modules.game.core.rules.*
             </_dsannotations>
             <Export-Package>org.jahia.se.modules.game.core.rules</Export-Package>

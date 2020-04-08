@@ -16,5 +16,5 @@
 [game4mix:usesResultAsProperty] mixin
 // extends=game4nt:qna
 // itemtype=content
- - game4:jExpPropertyName (string) indexed=no
- - game4:jExpPropertyId (string) hidden indexed=no
+// - game4:jExpPropertyName (string) indexed=no
+ - game4:jExpProperty (string,choicelist[jExpProfilePropertiesInitializer]) indexed=no //< 'internal', 'external'
