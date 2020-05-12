@@ -17,4 +17,5 @@
 // extends=game4nt:qna
 // itemtype=content
 // - game4:jExpPropertyName (string) indexed=no
+//='{"occurrence":"single","type":"string"}' || ='{"type":"integer"}'
  - game4:jExpProperty (string,choicelist[jExpProfilePropertiesInitializer]) indexed=no //< 'internal', 'external'

@@ -1,150 +1,168 @@
 package org.jahia.se.modules.game.core.initializers;
 
-
-import org.jahia.modules.jexperience.admin.internal.HttpUtils;
-import org.jahia.services.content.JCRPropertyWrapper;
+import com.ning.http.client.AsyncCompletionHandler;
+import com.ning.http.client.AsyncHttpClient;
+import com.ning.http.client.ListenableFuture;
+import com.ning.http.client.Response;
+import org.apache.jackrabbit.value.StringValue;
+import org.jahia.modules.jexperience.admin.ContextServerService;
+import org.jahia.services.content.JCRNodeWrapper;
+import org.jahia.services.content.decorator.JCRSiteNode;
 import org.jahia.services.content.nodetypes.ExtendedPropertyDefinition;
-import org.jahia.services.content.nodetypes.ValueImpl;
 import org.jahia.services.content.nodetypes.initializers.ChoiceListValue;
 import org.jahia.services.content.nodetypes.initializers.ModuleChoiceListInitializer;
-import org.jahia.services.content.nodetypes.renderer.AbstractChoiceListRenderer;
-import org.jahia.services.content.nodetypes.renderer.ModuleChoiceListRenderer;
-import org.jahia.services.render.RenderContext;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.jcr.Value;
-import java.util.*;
-
-import org.jahia.modules.jexperience.admin.internal.ContextServerSettings;
-import org.jahia.modules.jexperience.admin.internal.ContextServerSettingsService;
-import org.jahia.modules.jexperience.admin.JExperienceConfigFactory;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.util.EntityUtils;
-import org.jahia.services.content.JCRNodeWrapper;
-
 import java.io.IOException;
-//name = "jExpProfilePropertiesInitializer",
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
+/**
+ * <h1>JExpProfilePropertiesInitializer</h1>
+ * <p>
+ * The JExpProfilePropertiesInitializer class implement a ModuleChoiceListInitializer that simply add a list
+ * of values to the field (the field used a choiceList initializer "JExpProfilePropertiesInitializer").
+ * The JExpProfilePropertiesInitializer get the list of profile properties from jCustomer and add it to the field
+ * choiceList. The initializer has a parameter and according to this parameter we added the required
+ * profiles properties to the field choiceList.
+ * <p>
+ * The JExpProfilePropertiesInitializer parameters<JSONObject> :
+ * - occurrence : single || multiple -> to get only profile properties of type single or multivalued (default : single)
+ * - type : string || date || integer -> to get only profile properties of selected type (default : all)
+ *
+ * @author HD
+ * @author MF-TEAM
+ */
+
 @Component(service = ModuleChoiceListInitializer.class, immediate = true)
+public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitializer {
 
-public class JExpProfilePropertiesInitializer  extends AbstractChoiceListRenderer implements ModuleChoiceListInitializer, ModuleChoiceListRenderer {
     private static final Logger logger = LoggerFactory.getLogger(JExpProfilePropertiesInitializer.class);
-
-    private ContextServerSettingsService contextServerSettingsService;
-
-    @Reference(service=ContextServerSettingsService.class)
-    public void setContextServerSettingsService(ContextServerSettingsService contextServerSettingsService) {
-        this.contextServerSettingsService = contextServerSettingsService;
-    }
-
-    private String key="jExpProfilePropertiesInitializer";
 //    private String key;
+    private String key="jExpProfilePropertiesInitializer";
+    private ContextServerService contextServerService;
 
-    /**
-     * {@inheritDoc}
-     */
-    public List<ChoiceListValue> getChoiceListValues(ExtendedPropertyDefinition epd, String param, List<ChoiceListValue> values,
-                                                     Locale locale, Map<String, Object> context){
-
-        //Create the list of ChoiceListValue to return
-        List<ChoiceListValue> myChoiceList = new ArrayList<ChoiceListValue>();
-
-        if (context == null) {
-            return myChoiceList;
-        }
-
-        logger.info("epd : "+epd);
-        logger.info("param : "+param);
-        logger.info("values : "+values);
-        logger.info("context : "+context);
-        JCRNodeWrapper node = (JCRNodeWrapper) context.get("contextParent");
-        String siteKey=null;
-
-        try{
-            siteKey = node.getResolveSite().getSiteKey();
-        }catch (RepositoryException e){
-            logger.error("getResolveSite with node: "+node+" throws a RepositoryException : "+e);
-        }
-
-        logger.info("siteKey : "+siteKey);
-
-
-//        HashMap<String, Object> myPropertiesMap = null;
-
-        //#1 Get all jExperiences properties optimization -> ask for card ? then display attribute of this card...
-        //#2 get id and name of properties and loop over the results
-        myChoiceList.add(new ChoiceListValue("name","id"));
-        //externalLink
-//        myPropertiesMap = new HashMap<String, Object>();
-//        myPropertiesMap.put("addMixin","game4mix:externalVideoLink");
-//        myChoiceList.add(new ChoiceListValue("external",myPropertiesMap,new ValueImpl("tata", PropertyType.STRING, false)));
-//
-//        //internalLink
-//        myPropertiesMap = new HashMap<String, Object>();
-//        myPropertiesMap.put("addMixin","game4mix:internalVideoLink");
-//        myChoiceList.add(new ChoiceListValue("internal",myPropertiesMap,new ValueImpl("internal", PropertyType.STRING, false)));
-
-        //Return the list
-        return myChoiceList;
+    @Reference(service=ContextServerService.class)
+    public void setContextServerService(ContextServerService contextServerService) {
+        this.contextServerService = contextServerService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
+    public List<ChoiceListValue> getChoiceListValues(ExtendedPropertyDefinition epd, String param, List<ChoiceListValue> values, Locale locale, Map<String, Object> context) {
+        List<ChoiceListValue> choiceListValues = new ArrayList<>();
+
+        try {
+            logger.debug("param : "+param);
+
+            JSONObject params= new JSONObject();
+            if(!param.isEmpty())
+                params = new JSONObject(param);
+
+            final String occurrence = params.optString("occurrence","single");
+            final String type =params.optString("type");
+
+            logger.debug("occurrence : "+occurrence+" & type :"+type);
+
+            JCRNodeWrapper node = (JCRNodeWrapper)
+                    ((context.get("contextParent") != null)
+                            ? context.get("contextParent")
+                            : context.get("contextNode"));
+
+            JCRSiteNode site = node.getResolveSite();
+            final AsyncHttpClient asyncHttpClient = contextServerService
+                    .initAsyncHttpClient(site.getSiteKey());
+
+            if (asyncHttpClient != null) {
+                AsyncHttpClient.BoundRequestBuilder requestBuilder = contextServerService
+                        .initAsyncRequestBuilder(site.getSiteKey(), asyncHttpClient, "/cxs/profiles/properties",
+                                true, true, true);
+
+                ListenableFuture<Response> future = requestBuilder.execute(new AsyncCompletionHandler<Response>() {
+                    @Override
+                    public Response onCompleted(Response response) {
+                        asyncHttpClient.closeAsynchronously();
+                        return response;
+                    }
+                });
+
+                JSONObject responseBody = new JSONObject(future.get().getResponseBody());
+                JSONArray profileProperties = responseBody.getJSONArray("profiles");
+//                logger.info("responseBody : "+responseBody.toString());
+//                logger.info("profileProperties : "+profileProperties.toString());
+
+                for (int i = 0; i < profileProperties.length(); i++) {
+                    JSONObject property = profileProperties.getJSONObject(i);
+                    boolean occurenceMatch = occurrence.equals("single")?
+                            !property.optBoolean("multivalued") : property.optBoolean("multivalued");
+                    boolean typeMatch = type.isEmpty()? true : property.optString("type").equals(type);
+
+                    logger.debug("property.optBoolean(\"multivalued\") : "+property.optBoolean("multivalued"));
+                    logger.debug("property.optString(\"type\") : "+property.optString("type"));
+                    logger.debug("typeMatch : "+typeMatch);
+                    logger.debug("occurenceMatch : "+occurenceMatch);
+
+                    if (occurenceMatch && typeMatch) {
+                        JSONObject metadata = property.getJSONObject("metadata");
+                        JSONArray systemTags = metadata.optJSONArray("systemTags");
+
+                        logger.debug("systemTags : "+systemTags.toString());
+                        logger.debug("cardDataTag : "+systemTags.toString().contains("cardDataTag/"));
+
+                        Pattern cardPattern = Pattern.compile("\"cardDataTag/(\\w+)/(\\d{1,2})/(.*?)\"");
+                        Matcher matcher = cardPattern.matcher(systemTags.toString());
+                        //String cardId = matcher.group(1);
+                        //String cardIndex = matcher.group(2);
+                        //String cardName = matcher.group(3);
+
+                        String cardName = "";
+                        if (matcher.find())
+                            cardName = " ( "+matcher.group(3)+" )";
+                        logger.debug("cardName : "+cardName);
+
+                        String itemId = property.optString("itemId");
+                        String displayName = metadata.optString("name",itemId)+cardName;
+
+                        choiceListValues.add(new ChoiceListValue(displayName, null, new StringValue(itemId)));
+                    }
+                }
+
+                Collections.sort(choiceListValues, this.choiceListValueComparator);
+            }
+        } catch (RepositoryException | InterruptedException | ExecutionException | IOException | JSONException e) {
+            logger.error("Error happened", e);
+        }
+
+        return choiceListValues;
+    }
+
+    @Override
     public void setKey(String key) {
         this.key = key;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String getKey() {
         return key;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String getStringRendering(RenderContext context, JCRPropertyWrapper propertyWrapper) throws RepositoryException {
-        final StringBuilder sb = new StringBuilder();
+    public static Comparator<ChoiceListValue> choiceListValueComparator = new Comparator<ChoiceListValue>() {
+        @Override
+        public int compare(ChoiceListValue l1, ChoiceListValue l2) {
+            String displayName1 = l1.getDisplayName().toUpperCase();
+            String displayName2 = l2.getDisplayName().toUpperCase();
 
-        if (propertyWrapper.isMultiple()) {
-            sb.append('{');
-            final Value[] values = propertyWrapper.getValues();
-            for (Value value : values) {
-                sb.append('[').append(value.getString()).append(']');
-            }
-            sb.append('}');
-        } else {
-            sb.append('[').append(propertyWrapper.getValue().getString()).append(']');
+            //ascending order
+            return displayName1.compareTo(displayName2);
         }
-
-        return sb.toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getStringRendering(Locale locale, ExtendedPropertyDefinition propDef, Object propertyValue) throws RepositoryException {
-        return "[" + propertyValue.toString() + "]";
-    }
-
-    private String getProperties(String siteKey) throws IOException {
-        ContextServerSettings contextServerSettings = contextServerSettingsService.getSettings(siteKey);
-        if (contextServerSettings != null) {
-            HttpEntity entity = HttpUtils.executeGetRequest(contextServerSettings.getAdminHttpClient(), contextServerSettings.getContextServerURL() + "/cxs/rules/" + formMappingID, null, null);
-            //Pkoi pas retourner un JSONObject?
-            if (entity != null) {
-                String json = EntityUtils.toString(entity);
-                EntityUtils.consume(entity);
-                return json;
-            }
-        }
-        return null;
-    }
+    };
 }
