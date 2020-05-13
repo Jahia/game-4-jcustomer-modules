@@ -64,7 +64,7 @@
 <!--  </scm>-->
   <properties>
     <jahia-depends>content-media-manager,default,jexperience</jahia-depends>
-<!--    <Export-Package>org.jahia.se.modules.game.core.rules</Export-Package>-->
+<!--    <export-package>org.jahia.se.modules.game.core.rules</export-package>-->
   </properties>
 
   <dependencies>
@@ -74,12 +74,12 @@
       <version>1.11.0</version>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.jahia.modules</groupId>
-      <artifactId>jexperience</artifactId>
-      <version>1.11.0</version>
-      <scope>provided</scope>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.jahia.modules</groupId>-->
+<!--      <artifactId>jexperience</artifactId>-->
+<!--      <version>1.11.0</version>-->
+<!--      <scope>provided</scope>-->
+<!--    </dependency>-->
   </dependencies>
 
   <repositories>

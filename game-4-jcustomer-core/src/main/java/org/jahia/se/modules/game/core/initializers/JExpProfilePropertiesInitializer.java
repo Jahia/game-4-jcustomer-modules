@@ -9,6 +9,7 @@ import org.jahia.modules.jexperience.admin.ContextServerService;
 import org.jahia.services.content.JCRNodeWrapper;
 import org.jahia.services.content.decorator.JCRSiteNode;
 import org.jahia.services.content.nodetypes.ExtendedPropertyDefinition;
+import org.jahia.services.content.nodetypes.ValueImpl;
 import org.jahia.services.content.nodetypes.initializers.ChoiceListValue;
 import org.jahia.services.content.nodetypes.initializers.ModuleChoiceListInitializer;
 import org.json.JSONArray;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.*;
@@ -137,6 +139,15 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
                 }
 
                 Collections.sort(choiceListValues, this.choiceListValueComparator);
+
+                //Add in first position a value to quickly create a new user profile property
+                //property will be single/string and place in card "Quiz"
+                //this is a PreSales test. Ideally the popup used in Profile property manager should appear here...
+                HashMap<String, Object> myPropertiesMap = null;
+                myPropertiesMap = new HashMap<String, Object>();
+                myPropertiesMap.put("addMixin","game4mix:usesNewProfileProperty");
+
+                choiceListValues.add(0,new ChoiceListValue("create", myPropertiesMap, new ValueImpl("_new_", PropertyType.STRING, false)));
             }
         } catch (RepositoryException | InterruptedException | ExecutionException | IOException | JSONException e) {
             logger.error("Error happened", e);

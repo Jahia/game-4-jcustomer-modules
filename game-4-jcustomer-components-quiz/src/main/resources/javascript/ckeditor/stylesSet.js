@@ -75,7 +75,5 @@ CKEDITOR.stylesSet.add('B4', [
     {name: 'Pill Light', element: 'span', attributes: {class: 'badge badge-pill badge-light'}},
     {name: 'Pill Dark', element: 'span', attributes: {class: 'badge badge-pill badge-dark'}},
 
-
-
     {name: 'Pre', element: 'pre', attributes: {class: 'prettyprint linenums'}}
 ]);
