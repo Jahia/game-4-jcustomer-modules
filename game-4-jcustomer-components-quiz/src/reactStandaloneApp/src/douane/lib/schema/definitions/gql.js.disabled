@@ -1,0 +1,27 @@
+export default{
+    $id: "#gql",
+    type: "object",
+    properties: {
+        //http://localhost:8080/modules/graphql
+        endpoint:{
+            type:"string",
+            format:"uri"
+        },
+        //"Basic cm9vdDpyb290"
+        authorization:{
+            type:"string"
+        },
+        //should be defined properly property by property
+        variables:{
+            type:"object"
+            // properties:{
+            //     id:{type:"string"},
+            //     type:{type:"string",pattern:"[a-zA-Z0-9]+:[a-zA-Z0-9]+"}
+            // },
+            // required: ["id", "type"]
+            // additionalProperties:false
+        }
+    },
+    required: ["endpoint","authorization","variables"],
+    additionalProperties:false
+}

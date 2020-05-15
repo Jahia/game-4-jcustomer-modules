@@ -1,0 +1,32 @@
+type Quiz @mapping(node: "game4nt:quiz") {
+	metadata: Metadata
+	key: String! @mapping(property: "game4:quizKey")
+	title(language:String!): String @mapping(property: "jcr:title")
+	subtitle(language:String!): String @mapping(property: "game4:subtitle")
+	description(language:String!): String @mapping(property: "game4:description")
+	duration: String @mapping(property: "game4:duration")
+	cover: ImageAsset @mapping(property: "game4:cover")
+	consent: Asset @mapping(property: "game4:consentType")
+	children: [String!]
+}
+
+type Warmup @mapping(node: "game4nt:warmup")  {
+    title: String @mapping(property: "jcr:title")
+}
+
+type Qna @mapping(node: "game4nt:qna") {
+	metadata: Metadata
+	title: String @mapping(property: "jcr:title")
+	question: String! @mapping(property: "game4:question")
+	help: String @mapping(property: "game4:help")
+	nbExpectedAnswer: Long @mapping(property: "game4:nbExpectedAnswer")
+	answers: [String!]! @mapping(property: "game4:answers")
+	randomSelection: Boolean @mapping(property: "game4:randomSelection")
+	notUsedForScore: Boolean @mapping(property: "game4:notUsedForScore")
+	cover: ImageAsset @mapping(property: "game4:cover")
+	jExpProperty: String @mapping(property: "game4:jExpProperty")
+}
+
+#extend type Query {
+#	quizByKey(key:ID!): Quiz
+#}

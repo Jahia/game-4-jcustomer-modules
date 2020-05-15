@@ -1,0 +1,14 @@
+export default {
+    $id: "#jCustomer",
+    type: "object",
+    properties: {
+        //"http://localhost:8080/modules/jexperience/proxy/iso"
+        endpoint:{
+            type:"string",
+            format:"uri",
+            default:process.env.REACT_APP_UNOMI_HOST || "http://localhost:8182"
+        }
+    },
+    required: ["endpoint"],
+    additionalProperties:false
+}

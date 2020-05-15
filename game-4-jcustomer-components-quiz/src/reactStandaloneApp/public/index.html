@@ -28,16 +28,29 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
+    <script>
+    //Default value for commented keys in context can be defined in .env
+    const context={
+    // host,
+    // workspace:"default",
+    scope:"myFashionBlog",//site key
+    //return by the qgl query
+    // content:{
+    //     id:"3ff7b68c-1cfa-4d50-8377-03f19db3a985",
+    //     type: "elearningnt:lesson"
+    // },
+    // files_endpoint:`${host}/files/${workspace}`,
+    // gql_endpoint:`${host}/modules/graphql`,
+    // gql_authorization:`Bearer ${token}`,//"Basic cm9vdDpyb290",
+    gql_variables:{
+      id:"83194ef6-bebc-45b6-97d0-80283def60a7",
+      language: "fr",
+    },
+    // cdp_endpoint:"http://localhost:8181"
+    };
+
+    window.addEventListener("DOMContentLoaded", (event) => window.quizUIApp("root",context));
+    </script>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>

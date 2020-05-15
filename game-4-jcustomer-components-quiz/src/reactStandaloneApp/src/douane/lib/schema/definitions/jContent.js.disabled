@@ -1,0 +1,38 @@
+import {workspace} from "../../config.js";
+
+export default {
+    $id: "#jContent",
+    type: "object",
+    properties: {
+        //"http://localhost:8080"
+        host:{
+            type:"string",
+            format:"uri"
+        },
+        //"live"
+        workspace:{
+            type:"string",
+            enum:workspace
+        },
+        //"iso"
+        scope:{
+            type:"string",
+            pattern:"[a-zA-Z0-9-_]+"
+        },
+        // {
+        //     id:"3ff7b68c-1cfa-4d50-8377-03f19db3a985",
+        //     type: "elearningnt:lesson"
+        // }
+        content:{
+            type:"object",
+            properties:{
+                id:{type:"string"},
+                type:{type:"string",pattern:"[a-zA-Z0-9]+:[a-zA-Z0-9]+"}
+            },
+            required: ["id", "type"]
+            //additionalProperties:false
+        }
+    },
+    required: ["host","workspace","scope","content"],
+    additionalProperties:false
+}
