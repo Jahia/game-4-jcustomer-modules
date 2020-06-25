@@ -15,8 +15,7 @@
  extends = game4nt:warmup
  - game4:videoExtPath (string) = 'https://' internationalized
 
-//[game4mix:score] mixin
-// - game4:notUsedForScore (boolean) nofulltext
+[game4mix:quizChild] mixin
 
 [game4nt:quiz] > jnt:content, game4mix:components, game4mix:showInTree, game4mix:usesConsents, mix:title orderable
  - game4:quizKey (string) primary mandatory
@@ -26,13 +25,13 @@
  - game4:duration (string,choicelist[resourceBundle]) = '5 mins' autocreated indexed=no < '5 mins', '10 mins', '30 mins', '1h' , '> 1h'
 // related contents are part of the page itself
 // - relatedContents (weakreference, picker[type='editoriallink']) < 'jmix:droppableContent'
- + * (game4nt:qna)
- + * (game4nt:warmup)
+ + * (game4mix:quizChild)
+// + * (game4nt:warmup)
 //workaround waiting for a UI enhancement - cannot create but I can copy past!
 // + * (wemnt:personalizedContent)
 // + * (wemnt:optimizationTest)
 
-[game4nt:warmup] > jnt:content, game4mix:showInTree, mix:title orderable
+[game4nt:warmup] > jnt:content, game4mix:showInTree, game4mix:quizChild, mix:title orderable
  - game4:subtitle (string) internationalized
  - game4:masterQnaCover (weakreference, picker[type='image']) < 'jmix:image'
 // - abstract (string, textarea) internationalized
@@ -44,7 +43,7 @@
 // + * (wemnt:personalizedContent)
 // + * (wemnt:optimizationTest)
 
-[game4nt:qna] > jnt:content, game4mix:showInTree, game4mix:usesResultAsProperty, mix:title
+[game4nt:qna] > jnt:content, game4mix:showInTree, game4mix:usesResultAsProperty, game4mix:quizChild, mix:title
  - game4:question (string) mandatory internationalized
  - game4:help (string) internationalized
  - game4:nbExpectedAnswer (long)

@@ -7,20 +7,28 @@ type Quiz @mapping(node: "game4nt:quiz") {
 	duration: String @mapping(property: "game4:duration")
 	cover: ImageAsset @mapping(property: "game4:cover")
 	consent: Asset @mapping(property: "game4:consentType")
-	children: [String!]
+	children: [QuizChild]
 }
 
+type QuizChild @mapping(node: "game4mix:quizChild")  {
+    metadata: Metadata
+}
+
+#implements is not available in jahia SDL
+#type Warmup implements QuizChild @mapping(node: "game4nt:warmup")  {
 type Warmup @mapping(node: "game4nt:warmup")  {
     title: String @mapping(property: "jcr:title")
 }
 
+#implements is not available in jahia SDL
+#type Qna implements QuizChild @mapping(node: "game4nt:qna") {
 type Qna @mapping(node: "game4nt:qna") {
 	metadata: Metadata
-	title: String @mapping(property: "jcr:title")
-	question: String! @mapping(property: "game4:question")
-	help: String @mapping(property: "game4:help")
+	title(language:String!): String @mapping(property: "jcr:title")
+	question(language:String!): String! @mapping(property: "game4:question")
+	help(language:String!): String @mapping(property: "game4:help")
 	nbExpectedAnswer: Long @mapping(property: "game4:nbExpectedAnswer")
-	answers: [String!]! @mapping(property: "game4:answers")
+	answers(language:String!): [String!]! @mapping(property: "game4:answers")
 	randomSelection: Boolean @mapping(property: "game4:randomSelection")
 	notUsedForScore: Boolean @mapping(property: "game4:notUsedForScore")
 	cover: ImageAsset @mapping(property: "game4:cover")
@@ -28,5 +36,6 @@ type Qna @mapping(node: "game4nt:qna") {
 }
 
 #extend type Query {
-#	quizByKey(key:ID!): Quiz
+#	quizByKey(key:String!): Quiz
+#	quizById(id:ID!): Quiz
 #}

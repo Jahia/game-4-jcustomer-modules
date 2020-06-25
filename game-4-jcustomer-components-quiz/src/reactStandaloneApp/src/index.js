@@ -9,14 +9,14 @@ import * as serviceWorker from 'misc/serviceWorker';
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from '@apollo/react-hooks';
 
-import {controlContext} from "douane";
+import {contextValidator} from "douane";
 
 import 'index.css';
 
 const render=(target,context)=>{
   try{
     // console.log("context : ",JSON.stringify(context));
-    context = controlContext(context);
+    context = contextValidator(context);
     const headers={};
     if(context.gql_authorization)
       headers.Authorization=context.gql_authorization;
@@ -29,7 +29,7 @@ const render=(target,context)=>{
     // console.log("lesson : ",src.data.jcr.lesson);
     ReactDOM.render(
       <ApolloProvider client={client}>
-          <App context={context}/>
+        <App context={context}/>
       </ApolloProvider>,
       document.getElementById('root')
     );
@@ -38,12 +38,12 @@ const render=(target,context)=>{
     console.error("error : ",e);
     //TODO create a generic error handler
     ReactDOM.render(
-    <AjvError
-      item={e.item}
-      errors={e.errors}
-    />,
-    document.getElementById(target)
-  );
+      <AjvError
+        item={e.item}
+        errors={e.errors}
+      />,
+      document.getElementById(target)
+    );
   }
 }
 

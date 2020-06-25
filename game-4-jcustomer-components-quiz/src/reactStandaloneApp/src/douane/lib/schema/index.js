@@ -30,15 +30,6 @@ export default{
                 default:process.env.REACT_APP_JCONTENT_WORKSPACE || workspace[1]//"live"
             },
             scope:{ type:"string",pattern:"[a-zA-Z0-9-_]+"},//iso
-            // content:{
-            //     type:"object",
-            //     properties:{
-            //         id:{type:"string"},//"3ff7b68c-1cfa-4d50-8377-03f19db3a985"
-            //         type:{type:"string",pattern:"[a-zA-Z0-9]+:[a-zA-Z0-9]+"}//"elearningnt:lesson"
-            //     },
-            //     required: ["id", "type"]
-            //     //additionalProperties:false
-            // },
             files_endpoint:{
                 type:"string",
                 format:"uri",
@@ -53,7 +44,14 @@ export default{
                 type:"string",
                 // default:process.env.REACT_APP_JCONTENT_GQL_AUTH || "Basic cm9vdDpyb290"
             },
-            gql_variables:{type:"object"},
+            gql_variables:{
+                type:"object",
+                properties:{
+                    id:{type:"string"},//"3ff7b68c-1cfa-4d50-8377-03f19db3a985"
+                    language:{type:"string",pattern:"[a-z]{2}(?:_[A-Z]{2})?"}//"fr" or "fr_FR"
+                },
+                required: ["id", "language"]
+            },
             cdp_endpoint:{
                 type:"string",
                 format:"uri",
@@ -64,7 +62,6 @@ export default{
             "host",
             "workspace",
             "scope",
-            // "content",
             "files_endpoint",
             "gql_endpoint",
             // "gql_authorization",
