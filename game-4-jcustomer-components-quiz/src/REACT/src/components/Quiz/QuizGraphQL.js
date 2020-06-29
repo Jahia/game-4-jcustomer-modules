@@ -42,7 +42,7 @@ export const GET_QUIZ = gql`
         response: jcr(workspace: $workspace) {
             quiz: nodeById(uuid: $id) {
                 id: uuid
-                key: property(language:$language, name:"game4:quizKey"){
+                key: property(name:"game4:quizKey"){
                     value
                 }
                 title:displayName(language:$language)
@@ -52,15 +52,15 @@ export const GET_QUIZ = gql`
                 description: property(language:$language,name:"game4:description"){
                     value
                 }
-                duration: property(language:$language,name:"game4:duration"){
+                duration: property(name:"game4:duration"){
                     value
                 }
-                cover: property(language:$language,name:"game4:cover"){
+                cover: property(name:"game4:cover"){
                     node: refNode {
                         path
                     }
                 }
-                consent: property(language:$language,name:"game4:consentType"){
+                consent: property(name:"game4:consentType"){
                     node: refNode {
                         uuid
                     }

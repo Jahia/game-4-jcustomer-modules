@@ -1,6 +1,7 @@
 import * as Ajv from "ajv";
 import schema from  "./lib/schema"
 import {getGQLWorkspace} from "misc/utils"
+import {cnd_type} from "douane/lib/config";
 
 const ajv = new Ajv({useDefaults:true});
 //TODO le try catch doit etre fait ici et un component react doit etre retourne
@@ -12,6 +13,7 @@ const contextValidator = (context) =>{
         throw {item:"Context configuration object",errors:ajv.errors};
 
     context.gql_variables.workspace = getGQLWorkspace(context.workspace);
+    context.cnd_type=cnd_type;
     return context;
 }
 

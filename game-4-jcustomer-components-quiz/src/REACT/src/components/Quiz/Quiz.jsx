@@ -29,7 +29,7 @@ const Quiz = ({quizData,showQuiz,start,disabled}) => {
             <div className={"content"}>
                 <div dangerouslySetInnerHTML={{__html:quiz.description}}></div>
 
-                <Button variant="elearning"
+                <Button variant="game4-quiz"
                         onClick={start}
                         disabled={disabled}>
                     Start

@@ -1,4 +1,4 @@
-type Quiz @mapping(node: "game4nt:quiz") {
+type QuizChild @mapping(node: "game4nt:quiz") {
 	metadata: Metadata
 	key: String! @mapping(property: "game4:quizKey")
 	title(language:String!): String @mapping(property: "jcr:title")
@@ -21,8 +21,8 @@ type Warmup @mapping(node: "game4nt:warmup")  {
 }
 
 #implements is not available in jahia SDL
-#type Qna implements QuizChild @mapping(node: "game4nt:qna") {
-type Qna @mapping(node: "game4nt:qna") {
+#type QuizChild implements QuizChild @mapping(node: "game4nt:qna") {
+type QuizChild @mapping(node: "game4nt:qna") {
 	metadata: Metadata
 	title(language:String!): String @mapping(property: "jcr:title")
 	question(language:String!): String! @mapping(property: "game4:question")
@@ -36,6 +36,6 @@ type Qna @mapping(node: "game4nt:qna") {
 }
 
 #extend type Query {
-#	quizByKey(key:String!): Quiz
-#	quizById(id:ID!): Quiz
+#	quizByKey(key:String!): QuizChild
+#	quizById(id:ID!): QuizChild
 #}

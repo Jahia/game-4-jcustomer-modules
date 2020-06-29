@@ -19,7 +19,7 @@ import { faHandPointLeft,faCheckDouble,faCheck,faTimesCircle } from '@fortawesom
 import { faClock,faCheckCircle} from '@fortawesome/free-regular-svg-icons';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'components/App.css';
+import 'components/App.scss';
 import 'react-circular-progressbar/dist/styles.css';
 
 library.add(
@@ -87,7 +87,7 @@ const App = ({context})=> {
     return (
         <JContext.Provider value={context}>
             {/*<RunLesson dataLesson={dataLesson}></RunLesson>*/}
-            <Container className="elearning">
+            <Container className="game4-quiz">
                 <Row>
                     <Quiz
                         key={quizData.id}
@@ -97,21 +97,21 @@ const App = ({context})=> {
                         disabled={quizStartDisabled}
                     />
                 </Row>
-                {/*{*/}
-                {/*    childNodes.map( (childNode,i) =>*/}
-                {/*        <Row key={childNode.id}>*/}
-                {/*            <Chapter*/}
-                {/*                childNode={childNode}*/}
-                {/*                showChapter={childIndex === i}*/}
-                {/*                childIndex={childIndex}*/}
-                {/*                setChildIndex={setChildIndex}*/}
-                {/*                max={max}*/}
-                {/*                getFinalScore={lesson.content.getScore}*/}
-                {/*                quizKey={quizKey}*/}
-                {/*            />*/}
-                {/*        </Row>*/}
-                {/*    )*/}
-                {/*}*/}
+                {
+                    childNodes.map( (childNode,i) =>
+                        <Row key={childNode.id}>
+                            <QuizChild
+                                childNode={childNode}
+                                show={childIndex === i}
+                                childIndex={childIndex}
+                                setChildIndex={setChildIndex}
+                                max={max}
+                                getFinalScore={getFinalScore}
+                                quizKey={quizKey}
+                            />
+                        </Row>
+                    )
+                }
                 {/*<Row>*/}
                 {/*    <Result*/}
                 {/*        quiz={quizData}*/}
