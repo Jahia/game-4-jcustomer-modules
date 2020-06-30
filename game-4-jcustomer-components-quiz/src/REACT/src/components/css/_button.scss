@@ -1,0 +1,30 @@
+.btn{
+  &-game4-quiz{
+    position: relative;
+    border: none $light-grey;
+    border-radius: unset;
+    color: $dark-grey;//#262626;
+    background-color: $light-grey;
+    padding: 1rem 3rem;
+    text-transform: uppercase;
+
+    &:after{
+      position: absolute;
+      right: 100%;
+      bottom: 0;
+      left: 0;
+      height: 5px;
+      content: '';
+      transition: right .3s cubic-bezier(.23,1,.32,1);
+      background-color:$primary-color;
+    }
+
+    &:not([disabled]):hover:after{
+      right: 0;
+    }
+
+    //.btn-group > .btn.&{
+    //  flex:unset;
+    //}
+  }
+}

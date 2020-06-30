@@ -35,26 +35,27 @@ const Qna = ({id,show,childIndex,setChildIndex,max,getFinalScore,quizKey}) => {
     };
 
     return(
-        <Col className={`slide quiz ${showQuiz?'':'d-none'}`}>
-            <img src={`${files_endpoint}${quiz.cover}`} className="cover" alt={quiz.title}/>
-            <h2>{quiz.title}
-                <span>{quiz.subtitle}</span>
-            </h2>
-            <div className={"content"}>
-                <div dangerouslySetInnerHTML={{__html:quiz.description}}></div>
-
-                <Button variant="game4-quiz"
-                        onClick={start}
-                        disabled={disabled}>
-                    Start
-                </Button>
-
-                <div className={"duration"}>
-                    <FontAwesomeIcon icon={['far','clock']} />
-                    {quiz.duration}
-                </div>
-            </div>
-        </Col>
+        <></>
+        // <Col className={`slide quiz ${showQuiz?'':'d-none'}`}>
+        //     <img src={`${files_endpoint}${quiz.cover}`} className="cover" alt={quiz.title}/>
+        //     <h2>{quiz.title}
+        //         <span>{quiz.subtitle}</span>
+        //     </h2>
+        //     <div className={"content"}>
+        //         <div dangerouslySetInnerHTML={{__html:quiz.description}}></div>
+        //
+        //         <Button variant="game4-quiz"
+        //                 onClick={start}
+        //                 disabled={disabled}>
+        //             Start
+        //         </Button>
+        //
+        //         <div className={"duration"}>
+        //             <FontAwesomeIcon icon={['far','clock']} />
+        //             {quiz.duration}
+        //         </div>
+        //     </div>
+        // </Col>
     );
 }
 
