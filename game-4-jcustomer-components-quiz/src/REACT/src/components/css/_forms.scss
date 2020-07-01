@@ -1,0 +1,9 @@
+.show-result .custom-control.custom-checkbox::before {
+  content: '';
+  background: 50%/50% 50% red;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: calc(50% - 5px);
+  left: -20px;
+}

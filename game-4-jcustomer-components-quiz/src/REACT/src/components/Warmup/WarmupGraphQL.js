@@ -1,31 +1,34 @@
 import {gql} from 'apollo-boost';
 
-export const GET_QUIZ = gql`
-    query getQuiz($workspace: Workspace!, $id: String!, $language: String!) {
+export const GET_WARMUP = gql`
+    query getWarmup($workspace: Workspace!, $id: String!, $language: String!) {
         response: jcr(workspace: $workspace) {
-            quiz: nodeById(uuid: $id) {
+            warmup: nodeById(uuid: $id) {
                 id: uuid
-                key: property(name:"game4:quizKey"){
-                    value
-                }
                 title:displayName(language:$language)
                 subtitle: property(language:$language, name:"game4:subtitle"){
                     value
                 }
-                description: property(language:$language,name:"game4:description"){
+                content: property(language:$language,name:"game4:content"){
                     value
                 }
-                duration: property(name:"game4:duration"){
+                duration: property(name:"game4:qnaDuration"){
                     value
                 }
-                cover: property(name:"game4:cover"){
+                videoLink: property(name:"game4:videoLink"){
+                    value
+                }
+                videoExtPath: property(language:$language,name:"game4:videoExtPath"){
+                    value
+                }
+                videoIntPath: property(language:$language,name:"game4:videoIntPath"){
                     node: refNode {
                         path
                     }
                 }
-                consent: property(name:"game4:consentType"){
+                cover: property(name:"game4:masterQnaCover"){
                     node: refNode {
-                        uuid
+                        path
                     }
                 }
                 children{
@@ -36,9 +39,8 @@ export const GET_QUIZ = gql`
                         }
                     }
                 }
+    
             }
         }
     }
 `
-
-

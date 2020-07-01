@@ -3,42 +3,40 @@ import PropTypes from "prop-types";
 
 import get from "lodash.get";
 import {JContext} from "contexts";
+import {Button} from "react-bootstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import Qna from "components/Qna";
+import Warmup from "components/Warmup";
 
-// import Qna from "components/Qna";
+// import Answer from "components/Answer";
 // import Warmup from "components/Warmup/Warmup"
 
-const QuizChild = ({childNode,show,childIndex,setChildIndex,max,getFinalScore,quizKey}) => {
+const QuizChild = ({node,show,quizKey}) => {
     const {cnd_type} =  useContext(JContext);
-    
-    const node = {
-        id: get(childNode, "id", ""),
-        type: get(childNode, "type.value", ""),
-    };
-
     return(
+
         <>
-        {/*{ node.type == cnd_type.QNA ?*/}
-        {/*        <Qna*/}
-        {/*            id={node.id}*/}
-        {/*            show={show}*/}
-        {/*            childIndex={childIndex}*/}
-        {/*            setChildIndex={setChildIndex}*/}
-        {/*            max={max}*/}
-        {/*            getFinalScore={getFinalScore}*/}
-        {/*            quizKey={quizKey}*/}
-        {/*        />*/}
-        {/*}*/}
+        { node.type === cnd_type.QNA &&
+                <Qna
+                    id={node.id}
+                    show={show}
+                    quizKey={quizKey}
+                />
+        }
+        { node.type === cnd_type.WARMUP &&
+            <Warmup
+                id={node.id}
+                show={show}
+                quizKey={quizKey}
+            />
+        }
         </>
     );
 }
 
 QuizChild.propTypes={
-    childNode:PropTypes.object.isRequired,
+    node:PropTypes.object.isRequired,
     show:PropTypes.bool.isRequired,
-    childIndex:PropTypes.number.isRequired,
-    setChildIndex:PropTypes.func.isRequired,
-    max:PropTypes.number.isRequired,
-    getFinalScore:PropTypes.func.isRequired,
     quizKey:PropTypes.string.isRequired
 }
 

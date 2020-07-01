@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import PropTypes from "prop-types";
 import {Col, Button, Carousel} from "react-bootstrap";
 
@@ -8,8 +8,8 @@ import {JContext} from "contexts";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Quiz = ({quizData,show,onClickNext,showNext}) => {
-    const {files_endpoint} =  useContext(JContext);
-    
+    const {files_endpoint} =  React.useContext(JContext);
+
     const quiz = {
         title: get(quizData, "title", ""),
         subtitle: get(quizData, "subtitle.value", ""),
@@ -40,7 +40,6 @@ const Quiz = ({quizData,show,onClickNext,showNext}) => {
                 </div>
             </div>
         </div>
-
     );
 }
 

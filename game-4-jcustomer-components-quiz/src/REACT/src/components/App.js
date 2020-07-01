@@ -22,6 +22,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'components/App.scss';
 import 'react-circular-progressbar/dist/styles.css';
 import Qna from "components/Qna";
+import QuizChild from "components/QuizChild";
 
 library.add(
     fab,
@@ -46,10 +47,14 @@ const Indicator = ({active,handleSelect}) =>{
 
 //NOPE ! TODO jCustomer/context.json -> context. jContext.value = {context,jCustomer}
 const App = ({context})=> {
+    // console.log("App GET_QUIZ : ",GET_QUIZ);
+    const {loading, error, data} = useQuery(GET_QUIZ, {
+        variables:context.gql_variables,
+    });
 
-    console.log("App GET_QUIZ : ",GET_QUIZ);
-    // const [context, setContext] = React.useState(cxs);
-    // const[childIndex,setChildIndex] = React.useState(-2);
+    const [quizData, setQuizData] = React.useState({});
+    const [quizKey, setQuizKey] = React.useState();
+    const [quizChildNodes, setQuizChildNodes] = React.useState([]);
     const [index, setIndex] = React.useState(0);
 
     React.useEffect(() => {
@@ -65,26 +70,30 @@ const App = ({context})=> {
             });
     }, []);
 
-    // const {gql_variables} =  useContext(JContext);
+    React.useEffect(() => {
+        console.log("App Quiz init !");
+        if(loading === false && data){
+            const quizData = get(data, "response.quiz", {});
+            const quizKey = get(quizData, "key.value", {});
+            let quizChildNodes = get(quizData,"children.nodes",[]);
+            quizChildNodes=quizChildNodes.map(node =>{
+                return {
+                    id: get(node, "id"),
+                    type: get(node, "type.value"),
+                };
+            })
+            setQuizData(quizData);
+            setQuizKey(quizKey);
+            setQuizChildNodes(quizChildNodes);
+        }
+    }, [loading,data]);
 
-    const {loading, error, data} = useQuery(GET_QUIZ, {
-        variables:context.gql_variables,
-    });
+
+
     // console.log(`useQuery: loading ->${loading}; error-> ${error} ; data ->${data}`);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
-
-    const quizData = get(data, "response.quiz", {});
-    const quizKey = get(quizData, "key.value", {});
-    let childNodes = get(quizData,"children.nodes",[]);
-    childNodes=childNodes.map(node =>{
-        return {
-            id: get(node, "id"),
-            type: get(node, "type.value"),
-        };
-    })
-    // console.log("childNodes array? ",Array.isArray(childNodes));
-    // console.log("childNodes not empty : ",childNodes.length);
+console.log("App redo!");
 
 
     // console.log("disabled : ",disabled);
@@ -97,8 +106,8 @@ const App = ({context})=> {
     // console.log("RunLesson context: ",context);
 
 
-    const max = childNodes.length -1;
-    // const showStart = !Array.isArray(childNodes) || childNodes.length===0;
+    const max = quizChildNodes.length;//O is quiz child start at 1
+    // const showStart = !Array.isArray(quizChildNodes) || quizChildNodes.length===0;
     const showPrev = index>0;
     const showNext =
         index !==-1 &&
@@ -146,9 +155,7 @@ const App = ({context})=> {
         }
         return indicator;
     }
-//className="game4-quiz"
-    // onSelect={handleSelect}
-//TODO gerer les btns de navigation next et header pour afficher les resutats
+//TODO ajouter un layer visible si showResult et afficher le btns de navigation next
     return (
         <JContext.Provider value={context}>
             {/*<RunLesson dataLesson={dataLesson}></RunLesson>*/}
@@ -167,14 +174,14 @@ const App = ({context})=> {
                                 onClickNext={onClickNext}
                                 showNext={showNext}
                             />
-
-
-                            <div className="game4-quiz__item">
-                                <img className="d-block w-100" src="..." alt="Second slide"/>
-                            </div>
-                            <div className="game4-quiz__item">
-                                <img className="d-block w-100" src="..." alt="Third slide"/>
-                            </div>
+                            {quizChildNodes.map( (node,i) =>
+                                <QuizChild
+                                    key={node.id}
+                                    node={node}
+                                    show={index === i+1}
+                                    quizKey={quizKey}
+                                />
+                            )}
                         </div>
                         <a className="game4-quiz__control-prev" href="#carouselExampleIndicators" role="button"
                            data-slide="prev">
@@ -200,10 +207,10 @@ const App = ({context})=> {
                     {/*        />*/}
                     {/*    </Carousel.Item>*/}
                     {/*    {*/}
-                    {/*        childNodes.map( (node,i) =>*/}
+                    {/*        quizChildNodes.map( (node,i) =>*/}
                     {/*            <Carousel.Item key={node.id}>*/}
                     {/*                { node.type == context.cnd_type.QNA ?*/}
-                    {/*                    <Qna*/}
+                    {/*                    <Answer*/}
                     {/*                        id={node.id}*/}
                     {/*                        myi={}*/}
                     {/*                        getFinalScore={getFinalScore}*/}

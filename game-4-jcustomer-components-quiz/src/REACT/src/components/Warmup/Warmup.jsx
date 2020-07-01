@@ -4,24 +4,25 @@ import {Col, Button} from "react-bootstrap";
 
 import get from "lodash.get";
 import {JContext} from "contexts";
+import {GET_WARMUP} from "./WarmupGraphQL";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {useQuery} from "@apollo/react-hooks";
-import { loader } from 'graphql.macro';
+// import { loader } from 'graphql.macro';
 
-const Warmup = ({id,show,childIndex,setChildIndex,max,getFinalScore,quizKey}) => {
-    const {gql_variables} =  useContext(JContext);
+const Warmup = ({id,show,quizKey}) => {
+    const {gql_variables,files_endpoint} =  useContext(JContext);
     const variables = Object.assign(gql_variables,{id:id})
 
-    const query = loader("./Warmup.graphql");
-    const {loading, error, data} = useQuery(query, {
+    // const query = loader("./Warmup.graphql.disabled");
+    const {loading, error, data} = useQuery(GET_WARMUP, {
         variables:variables,
     });
     // console.log(`useQuery: loading ->${loading}; error-> ${error} ; data ->${data}`);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
-    const warmupData = get(data, "response.qna", {});
+    const warmupData = get(data, "response.warmup", {});
     
     const warmup = {
         title: get(warmupData, "title", ""),
@@ -36,36 +37,21 @@ const Warmup = ({id,show,childIndex,setChildIndex,max,getFinalScore,quizKey}) =>
     };
 
     return(
-        <Col className={`slide quiz ${showQuiz?'':'d-none'}`}>
-            <img src={`${files_endpoint}${quiz.cover}`} className="cover" alt={quiz.title}/>
-            <h2>{quiz.title}
-                <span>{quiz.subtitle}</span>
-            </h2>
-            <div className={"content"}>
-                <div dangerouslySetInnerHTML={{__html:quiz.description}}></div>
-
-                <Button variant="game4-quiz"
-                        onClick={start}
-                        disabled={disabled}>
-                    Start
-                </Button>
-
-                <div className={"duration"}>
-                    <FontAwesomeIcon icon={['far','clock']} />
-                    {quiz.duration}
-                </div>
+        <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
+            <img className="d-block w-100"
+                 src={`${files_endpoint}${warmup.cover}`}
+                 alt={warmup.title}/>
+            <div className="game4-quiz__caption d-none d-md-block">
+                <h2 className="text-uppercase">{warmup.title}<span className="subtitle">{warmup.subtitle}</span></h2>
+                <div className="lead" dangerouslySetInnerHTML={{__html:warmup.content}}></div>
             </div>
-        </Col>
+        </div>
     );
 }
 
 Warmup.propTypes={
     id:PropTypes.string.isRequired,
     show:PropTypes.bool.isRequired,
-    childIndex:PropTypes.number.isRequired,
-    setChildIndex:PropTypes.func.isRequired,
-    max:PropTypes.number.isRequired,
-    getFinalScore:PropTypes.func.isRequired,
     quizKey:PropTypes.string.isRequired
 }
 
