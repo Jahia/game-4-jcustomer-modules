@@ -11,23 +11,24 @@ import {GET_QNA} from "./QnaGraphQL";
 import Answer from "./Answer";
 import uTracker from "unomi-analytics";
 
-const Qna = ({id,show,quizKey}) => {
+// const Qna = ({id,show,quizKey,setShowResult}) => {
+const Qna = (props) => {
     const {gql_variables,files_endpoint,quiz_validMark} =  React.useContext(JContext);
-    const variables = Object.assign(gql_variables,{id:id})
+    const variables = Object.assign(gql_variables,{id:props.id})
     const {loading, error, data} = useQuery(GET_QNA, {
         variables:variables,
     });
 
     const [answers, setAnswers] = React.useState([]);
     const [qna, setQna] = React.useState({answers:[]});
-    const [showResult, setShowResult] = React.useState(false);
     const [disableSubmit, setDisableSubmit] = React.useState(true);
 
     React.useEffect(() => {
 
         if(loading === false && data){
-            console.log("Qna init");
+
             const qnaData = get(data, "response.qna", {});
+            console.log("Qna ",qnaData.id," : init");
 
             const qna = {
                 title: get(qnaData, "title"),
@@ -67,13 +68,15 @@ const Qna = ({id,show,quizKey}) => {
     }
 
     const handleSubmit = () => {
-        //TODO informer le Quiz que la bar de result doit etre affichée
-        setShowResult(true);
+        //TODO calculer le score et mettre setResult(true) si correct ou
+        // voir si je stocke l'historique dans un result[qna.id]=true], si notUsedForScore = true mettre -> true directement
+        //TODO faire le call a jExperience si jExpField2Map regarder le src pour voir comment faire l'update du profil
+        props.setShowResult(true);
     }
 
-    //TODO ajouter un layer visible si showResult et masquer le button submit
+    //TODO revoir le layer visible si showResult
     return(
-        <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
+        <div className={`game4-quiz__item show-overlay ${props.show ? 'active':''} `}>
             <img className="d-block w-100"
                  src={`${files_endpoint}${qna.cover}`}
                  alt={qna.title}/>
@@ -82,7 +85,7 @@ const Qna = ({id,show,quizKey}) => {
                     <legend>{qna.question}
                         <span>{qna.help}</span>
                     </legend>
-                    <div className={`game4-quiz__answer-list ${showResult?"show-result":""}`}>
+                    <div className="game4-quiz__answer-list">
                     {qna.answers.map((answer,i)=>
                         <Answer
                             key={i}
@@ -92,13 +95,13 @@ const Qna = ({id,show,quizKey}) => {
                     }
                     </div>
                 </fieldset>
-                {!showResult &&
-                    <Button variant="game4-quiz"
-                            onClick={handleSubmit}
-                            disabled={disableSubmit}>
-                        Submit
-                    </Button>
-                }
+
+                <Button variant="game4-quiz"
+                        onClick={handleSubmit}
+                        disabled={disableSubmit}>
+                    Submit
+                </Button>
+
             </div>
         </div>
     );
@@ -107,7 +110,9 @@ const Qna = ({id,show,quizKey}) => {
 Qna.propTypes={
     id:PropTypes.string.isRequired,
     show:PropTypes.bool.isRequired,
-    quizKey:PropTypes.string.isRequired
+    quizKey:PropTypes.string.isRequired,
+    setShowResult:PropTypes.func.isRequired,
+    setResult:PropTypes.func.isRequired
 }
 
 export default Qna;

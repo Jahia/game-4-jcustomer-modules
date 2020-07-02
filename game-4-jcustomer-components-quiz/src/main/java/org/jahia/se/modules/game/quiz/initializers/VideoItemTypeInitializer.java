@@ -42,12 +42,12 @@ public class VideoItemTypeInitializer  extends AbstractChoiceListRenderer implem
         //externalLink
         myPropertiesMap = new HashMap<String, Object>();
         myPropertiesMap.put("addMixin","game4mix:externalVideoLink");
-        myChoiceList.add(new ChoiceListValue("external",myPropertiesMap,new ValueImpl("external", PropertyType.STRING, false)));
+        myChoiceList.add(new ChoiceListValue("external",myPropertiesMap,new ValueImpl("videoExtPath", PropertyType.STRING, false)));
 
         //internalLink
         myPropertiesMap = new HashMap<String, Object>();
         myPropertiesMap.put("addMixin","game4mix:internalVideoLink");
-        myChoiceList.add(new ChoiceListValue("internal",myPropertiesMap,new ValueImpl("internal", PropertyType.STRING, false)));
+        myChoiceList.add(new ChoiceListValue("internal",myPropertiesMap,new ValueImpl("videoIntPath", PropertyType.STRING, false)));
 
         //Return the list
         return myChoiceList;

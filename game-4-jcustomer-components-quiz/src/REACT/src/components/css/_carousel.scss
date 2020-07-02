@@ -168,12 +168,17 @@
   justify-content: center;
   padding-left: 0; // override <ol> default
   // Use the .game4-quiz__control's width as margin so we don't overlay those
-  margin-right: $game4-quiz__control-width;
-  margin-left: $game4-quiz__control-width;
+  //margin-right: $game4-quiz__control-width;
+  //margin-left: $game4-quiz__control-width;
   list-style: none;
   //RVD >>
-  margin-top: 1rem;
-  margin-bottom: 0;
+  padding: 1rem $game4-quiz__control-width 0;
+  //margin-top: 1rem;
+  //margin-bottom: 0;
+
+  .show-result & {
+    background-color: $white;
+  }
 
 
   li {

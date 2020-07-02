@@ -5,7 +5,7 @@ import {JContext} from "contexts";
 import ReactPlayer from "react-player";
 import uTracker from 'unomi-analytics';
 
-const VideoPlayer = ({videoURL,chapterId})=>{
+const VideoPlayer = ({videoURL,warmupID})=>{
     // const {content,jCustomer} =  useContext(JContext);
     const {content} =  useContext(JContext);
     // console.log("content : ",content);
@@ -19,19 +19,19 @@ const VideoPlayer = ({videoURL,chapterId})=>{
     const player = useRef(null);
     // async function collectEvent({status}){
     function collectEvent({status}){
-        // console.log("collectEvent start uTracker: ",uTracker);
+        console.log("collectEvent start uTracker: ",uTracker);
         //if tracker is not initialized the track event is not send
         uTracker.track("video",{
             id:content.id,
             type:content.type,
-            elesson:{//lesson is already map to string by Elastic so we cannot reuse this name
+            game4Quiz:{//lesson is already map to string by Elastic so we cannot reuse this name
                 id:content.id,
                 type:content.type
             },
-            chapter:{
-                id:chapterId
+            game4Warmup:{
+                id:warmupID
             },
-            video:{
+            game4Video:{
                 duration: player.current.getDuration(),
                 currentTime: player.current.getCurrentTime(),
                 status: status
@@ -50,45 +50,6 @@ const VideoPlayer = ({videoURL,chapterId})=>{
 
     const onPlayHandler = () => {
         collectEvent({status:"started"});
-
-        // console.log("sessionId_onPlayHandler : ",sessionId);
-        // console.log("chapterId_onPlayHandler : ",chapterId);
-        // //send event
-        // // source -> lesson -> properties :lessonid,chapterid
-        // // target -> video -> videoid,duration,currentTime
-        // UNOMI.post("/eventcollector",{
-        //     "sessionId" : sessionId,
-        //     "events": [{
-        //         "eventType": "view",
-        //         "scope": window.__jahia__.jcustomer.scope,
-        //         "source": {
-        //             "itemId": window.__jahia__.content.id,
-        //             "itemType": window.__jahia__.content.type,
-        //             "scope": window.__jahia__.jcustomer.scope,
-        //             "properties": {
-        //                 "chapterInfo":chapterId
-        //             }
-        //         },
-        //         "target": {
-        //             "itemId": "/",
-        //             "itemType": "elearning:video",
-        //             "properties": {
-        //                 "videoInfo": {
-        //                     "duration": player.current.getDuration(),
-        //                     "currentTime": player.current.getCurrentTime(),
-        //                     "status": "started"
-        //                 }
-        //             },
-        //             "scope": window.__jahia__.jcustomer.scope
-        //         }
-        //     }]
-        // }).then(response=>{
-        //     console.log("ok ! ",response);
-        // }).catch(e=>{
-        //     console.error("oups ! ",e);
-        // });
-
-
         console.log("onPlay called");
     };
     const onEndedHandler = () => {
@@ -121,7 +82,7 @@ const VideoPlayer = ({videoURL,chapterId})=>{
 
 VideoPlayer.propTypes={
     videoURL:PropTypes.string.isRequired,
-    chapterId:PropTypes.string.isRequired
+    warmupID:PropTypes.string.isRequired
 }
 
 export default VideoPlayer;

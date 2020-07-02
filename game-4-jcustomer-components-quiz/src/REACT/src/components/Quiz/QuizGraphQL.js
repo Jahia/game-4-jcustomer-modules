@@ -5,10 +5,13 @@ export const GET_QUIZ = gql`
         response: jcr(workspace: $workspace) {
             quiz: nodeById(uuid: $id) {
                 id: uuid
+                type: primaryNodeType{
+                    value:name
+                }
                 key: property(name:"game4:quizKey"){
                     value
                 }
-                title:displayName(language:$language)
+                title: displayName(language:$language)
                 subtitle: property(language:$language, name:"game4:subtitle"){
                     value
                 }

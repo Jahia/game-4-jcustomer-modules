@@ -23,7 +23,7 @@ const Quiz = ({quizData,show,onClickNext,showNext}) => {
     return(
         <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
             <img className="d-block w-100"
-                 src={`${files_endpoint}${quiz.cover}`}
+                 src={`${files_endpoint}${encodeURI(quiz.cover)}`}
                  alt={quiz.title}/>
             <div className="game4-quiz__caption d-none d-md-block">
                 <h2 className="text-uppercase">{quiz.title}<span className="subtitle">{quiz.subtitle}</span></h2>

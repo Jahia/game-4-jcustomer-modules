@@ -8,6 +8,10 @@
     padding: 1rem 3rem;
     text-transform: uppercase;
 
+    .show-result .game4-quiz__caption & {
+      display:none
+    }
+
     &:after{
       position: absolute;
       right: 100%;
