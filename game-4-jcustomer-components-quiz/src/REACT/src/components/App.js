@@ -61,6 +61,7 @@ const App = ({context})=> {
     const [quizChildNodes, setQuizChildNodes] = React.useState([]);
     const [showResult, setShowResult] = React.useState(false);
     const [result, setResult] = React.useState(false);
+    const [resultSet, setResultSet] = React.useState([]);
     const [slideIndex, setSlideIndex] = React.useState([]);
     const [index, setIndex] = React.useState();
 
@@ -124,6 +125,19 @@ const App = ({context})=> {
         }
     }, [loading,data]);
 
+    React.useEffect(() => {
+        //when an update occurs that means a new result was added. So it is time to show result
+        console.log("resultSet useEffect init");
+
+        if(Array.isArray(resultSet) && resultSet.length >0){
+            console.log("resultSet useEffect setResult")
+            const result = resultSet.slice(-1);
+            setResult(...result);
+            setShowResult(true);
+        }
+
+    },[resultSet])
+
     // console.log(`useQuery: loading ->${loading}; error-> ${error} ; data ->${data}`);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
@@ -180,21 +194,9 @@ const App = ({context})=> {
 
     }
 
-    // const indicator = () =>{
-    //     const indicator=[];
-    //     for(let i=0; i<=max; i++){
-    //         indicator.push(<Indicator
-    //             key={i}
-    //             active={index===i}
-    //             handleSelect={()=>handleSelect(i)}
-    //         />);
-    //     }
-    //     return indicator;
-    // }
 //TODO ajouter un layer visible si showResult et afficher le btns de navigation next
     return (
         <JContext.Provider value={context}>
-            {/*<RunLesson dataLesson={dataLesson}></RunLesson>*/}
             <Container>
                 <Row>
                     <div className={`game4-quiz slide ${showResult?"show-result":""}`}>
@@ -228,8 +230,8 @@ const App = ({context})=> {
                                             id={node.id}
                                             show={index === node.id}
                                             quizKey={quizKey}
-                                            setShowResult={setShowResult}
-                                            setResult={setResult}
+                                            resultSet={resultSet}
+                                            setResultSet={setResultSet}
                                         />
 
                                 if(node.type === context.cnd_type.WARMUP)
@@ -238,8 +240,8 @@ const App = ({context})=> {
                                         id={node.id}
                                         show={index === node.id}
                                         quizKey={quizKey}
-                                        setShowResult={setShowResult}
-                                        setResult={setResult}
+                                        resultSet={resultSet}
+                                        setResultSet={setResultSet}
                                         addItem2Slides={addItem2Slides}
                                         index={index}
                                     />

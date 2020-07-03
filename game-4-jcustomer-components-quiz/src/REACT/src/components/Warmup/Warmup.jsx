@@ -92,8 +92,8 @@ const Warmup = (props) => {
                     id={node.id}
                     show={props.index === node.id}
                     quizKey={props.quizKey}
-                    setShowResult={props.setShowResult}
-                    setResult={props.setResult}
+                    resultSet={props.resultSet}
+                    setResultSet={props.setResultSet}
                 />
             )}
         </>
@@ -104,8 +104,8 @@ Warmup.propTypes={
     id:PropTypes.string.isRequired,
     show:PropTypes.bool.isRequired,
     quizKey:PropTypes.string.isRequired,
-    setShowResult:PropTypes.func.isRequired,
-    setResult:PropTypes.func.isRequired,
+    resultSet:PropTypes.array.isRequired,
+    setResultSet:PropTypes.func.isRequired,
     addItem2Slides:PropTypes.func.isRequired,
     index:PropTypes.string.isRequired
 }

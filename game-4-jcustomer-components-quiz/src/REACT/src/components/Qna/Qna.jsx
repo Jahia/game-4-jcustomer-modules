@@ -11,6 +11,42 @@ import {GET_QNA} from "./QnaGraphQL";
 import Answer from "./Answer";
 import uTracker from "unomi-analytics";
 
+class _Qna{
+    //NOTE be sure string value like "false" or "true" are boolean I use JSON.parse to cast
+    constructor(qnaData,quiz_validMark) {
+        // console.log("Warmup : ",quiz);
+        this.title= get(qnaData, "title");
+        this.question= get(qnaData, "question.value", "");
+        this.help= get(qnaData, "help.value", "");
+        this.nbExpectedAnswer= get(qnaData, "nbExpectedAnswer.value", "");
+        this.randomSelection= JSON.parse(get(qnaData, "randomSelection.value", false));
+        this.notUsedForScore= JSON.parse(get(qnaData, "notUsedForScore.value", false));
+        this.cover= get(qnaData, "cover.node.path", "");
+        this.jExpField2Map= get(qnaData, "jExpField2Map.value", "");
+        this.answers= get(qnaData, "answers.values", []).map(answer=>{
+            const valid = answer.indexOf(quiz_validMark) === 0;
+            if(valid)
+                answer = answer.substring(quiz_validMark.length+1);//+1 is for space between mark and label
+
+            return {label:answer,checked:false,valid}
+        })
+    };
+    valid() {
+        if(this.notUsedForScore)
+            return true;
+
+        console.log("qna isValid start eval");
+        const isValid = this.answers.reduce((result,answer)=>{
+            if(answer.valid)
+                result.push(answer.checked);
+            return result;
+        },[]).reduce((result,checked) => result && checked,true);
+        console.log("qna isValid : ",isValid);
+        return isValid;
+    };
+}
+
+
 // const Qna = ({id,show,quizKey,setShowResult}) => {
 const Qna = (props) => {
     const {gql_variables,files_endpoint,quiz_validMark} =  React.useContext(JContext);
@@ -30,25 +66,26 @@ const Qna = (props) => {
             const qnaData = get(data, "response.qna", {});
             console.log("Qna ",qnaData.id," : init");
 
-            const qna = {
-                title: get(qnaData, "title"),
-                question: get(qnaData, "question.value", ""),
-                help: get(qnaData, "help.value", ""),
-                nbExpectedAnswer: get(qnaData, "nbExpectedAnswer.value", ""),
-                randomSelection: get(qnaData, "randomSelection.value", ""),
-                notUsedForScore: get(qnaData, "notUsedForScore.value", ""),
-                cover: get(qnaData, "cover.node.path", ""),
-                jExpField2Map: get(qnaData, "jExpField2Map.value", ""),
-            };
-
-            qna.answers= get(qnaData, "answers.values", []).map(answer=>{
-                const valid = answer.indexOf(quiz_validMark) === 0;
-                if(valid)
-                    answer = answer.substring(quiz_validMark.length+1);//+1 is for space between mark and label
-
-                return {label:answer,checked:false,valid}
-            })
-            setQna(qna);
+            // const qna = {
+            //     title: get(qnaData, "title"),
+            //     question: get(qnaData, "question.value", ""),
+            //     help: get(qnaData, "help.value", ""),
+            //     nbExpectedAnswer: get(qnaData, "nbExpectedAnswer.value", ""),
+            //     randomSelection: get(qnaData, "randomSelection.value", ""),
+            //     notUsedForScore: get(qnaData, "notUsedForScore.value", ""),
+            //     cover: get(qnaData, "cover.node.path", ""),
+            //     jExpField2Map: get(qnaData, "jExpField2Map.value", ""),
+            // };
+            //
+            // qna.answers= get(qnaData, "answers.values", []).map(answer=>{
+            //     const valid = answer.indexOf(quiz_validMark) === 0;
+            //     if(valid)
+            //         answer = answer.substring(quiz_validMark.length+1);//+1 is for space between mark and label
+            //
+            //     return {label:answer,checked:false,valid}
+            // })
+            // setQna(qna);
+            setQna(new _Qna(qnaData,quiz_validMark));
         }
 
     }, [loading,data]);
@@ -68,10 +105,14 @@ const Qna = (props) => {
     }
 
     const handleSubmit = () => {
-        //TODO calculer le score et mettre setResult(true) si correct ou
-        // voir si je stocke l'historique dans un result[qna.id]=true], si notUsedForScore = true mettre -> true directement
-        //TODO faire le call a jExperience si jExpField2Map regarder le src pour voir comment faire l'update du profil
-        props.setShowResult(true);
+        props.setResultSet([...props.resultSet,qna.valid()]);
+
+        if(qna.jExpField2Map){
+            //Get response label
+            const values = qna.answers.filter(answers => answers.checked);
+            //TODO manage case multiple later
+            //TODO do the call from tracker
+        }
     }
 
     //TODO revoir le layer visible si showResult
@@ -111,8 +152,8 @@ Qna.propTypes={
     id:PropTypes.string.isRequired,
     show:PropTypes.bool.isRequired,
     quizKey:PropTypes.string.isRequired,
-    setShowResult:PropTypes.func.isRequired,
-    setResult:PropTypes.func.isRequired
+    resultSet:PropTypes.array.isRequired,
+    setResultSet:PropTypes.func.isRequired
 }
 
 export default Qna;
