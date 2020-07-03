@@ -106,12 +106,44 @@ const Qna = (props) => {
 
     const handleSubmit = () => {
         props.setResultSet([...props.resultSet,qna.valid()]);
-
+        console.log("[handleSubmit] qna.jExpField2Map => ",qna.jExpField2Map);
         if(qna.jExpField2Map){
             //Get response label
-            const values = qna.answers.filter(answers => answers.checked);
+            const values = qna.answers.filter(answers => answers.checked).reduce((label,answer)=>answer.label,"");
             //TODO manage case multiple later
             //TODO do the call from tracker
+            //TODO faire mon custom event sinon creer la rules a la volé et l'envoyer, mais pas sur que ca marche en public
+            //TODO donc le faire en drools...
+            //if tracker is not initialized the track event is not send
+            //window.cxs.profileId
+            console.log("[handleSubmit] update : ",qna.jExpField2Map," with values : ",values);
+            console.log("[handleSubmit] window.cxs.profileId : ",window.cxs.profileId);
+            uTracker.track("updateVisitorData",{
+                // targetType: "profile",
+                // targetId: window.cxs.profileId,
+                update : {
+                    // targetType: "profile",
+                    // targetId: window.cxs.profileId,
+                    [qna.jExpField2Map]:values
+                }
+            });
+
+            // uTracker.track("video",{
+            //     id:content.id,
+            //     type:content.type,
+            //     game4Quiz:{//lesson is already map to string by Elastic so we cannot reuse this name
+            //         id:content.id,
+            //         type:content.type
+            //     },
+            //     game4Warmup:{
+            //         id:warmupID
+            //     },
+            //     game4Video:{
+            //         duration: player.current.getDuration(),
+            //         currentTime: player.current.getCurrentTime(),
+            //         status: status
+            //     }
+            // });
         }
     }
 

@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "id": "updateVisitorData",
+    "name": "Update Visitor Data",
+    "description": "This will update the visitor's data when an updateVisitorData event is received."
+  },
+  "raiseEventOnlyOnceForProfile": false,
+  "raiseEventOnlyOnceForSession": false,
+  "condition": {
+    "type": "eventTypeCondition",
+    "parameterValues": {
+      "eventTypeId": "updateVisitorData"
+    }
+  },
+  "actions": [
+    {
+      "type": "updatePropertiesAction",
+      "parameterValues": {}
+    }
+  ]
+}
