@@ -72,6 +72,7 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
 
             final String occurrence = params.optString("occurrence","single");
             final String type =params.optString("type");
+            //TODO ajouter l'ID de la cards
 
             logger.debug("occurrence : "+occurrence+" & type :"+type);
 

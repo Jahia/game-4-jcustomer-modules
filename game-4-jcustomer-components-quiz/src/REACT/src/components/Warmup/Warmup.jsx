@@ -9,7 +9,6 @@ import VideoPlayer from "components/VideoPlayer";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {useQuery} from "@apollo/react-hooks";
-import QuizChild from "components/QuizChild";
 import Qna from "components/Qna";
 // import { loader } from 'graphql.macro';
 

@@ -22,5 +22,5 @@
  - game4:newjExpPropertyId (string) hidden indexed=no
 
 [game4mix:usesResultAsProperty] mixin
-//='{"occurrence":"single","type":"string"}' || ='{"type":"integer"}'
+//='{"occurrence":"single","type":"string","card":"Quiz"}' || ='{"type":"integer"}'
  - game4:jExpProperty (string,choicelist[jExpProfilePropertiesInitializer,resourceBundle]) indexed=no

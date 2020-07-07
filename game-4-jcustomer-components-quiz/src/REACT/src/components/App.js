@@ -1,7 +1,7 @@
 import React from 'react'; //useEffect,useContext
 import PropTypes from "prop-types";
 
-import {Container,Row,Carousel} from 'react-bootstrap';
+import {Container,Row} from 'react-bootstrap';
 import { useQuery } from '@apollo/react-hooks';
 
 import uTracker from 'unomi-analytics';
@@ -13,7 +13,7 @@ import {JContext} from "contexts";
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons';
-import { faHandPointLeft,faCheckDouble,faCheck,faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faHandPointLeft,faCheckDouble,faCheck,faTimesCircle,faTimes } from '@fortawesome/free-solid-svg-icons';
 import { faClock,faCheckCircle} from '@fortawesome/free-regular-svg-icons';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -24,7 +24,6 @@ import {GET_QUIZ} from "components/Quiz/QuizGraphQL.js";
 import Quiz from "components/Quiz"
 import Qna from "components/Qna";
 import Warmup from "components/Warmup";
-import QuizChild from "components/QuizChild";
 
 
 
@@ -35,7 +34,8 @@ library.add(
     faCheckCircle,
     faCheckDouble,
     faCheck,
-    faTimesCircle
+    faTimesCircle,
+    faTimes
 );
 
 const Indicator = ({active,handleSelect}) =>{
@@ -247,16 +247,6 @@ const App = ({context})=> {
                                     />
                                 })
                             }
-                                {/*<QuizChild*/}
-                                {/*    key={node.id}*/}
-                                {/*    node={node}*/}
-                                {/*    show={index === node.id}*/}
-                                {/*    quizKey={quizKey}*/}
-                                {/*    setShowResult={setShowResult}*/}
-                                {/*    addItem2Slides={addItem2Slides}*/}
-                                {/*    index={index}*/}
-                                {/*/>*/}
-                            {/*)}*/}
                             {/*TODO add a slide result here*/}
                         </div>
                         <a className="game4-quiz__control-prev" href="#carouselExampleIndicators" role="button"

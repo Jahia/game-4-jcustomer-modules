@@ -1,0 +1,15 @@
+{
+  "target": "profiles",
+  "multivalued": false,
+  "type": "string",
+  "metadata": {
+    "readOnly": false,
+    "systemTags": [
+      "hasCardDataTag",
+      "cardDataTag/_game4Quiz/20.1/Game4Quiz",
+      "positionInCard.1"
+    ],
+    "id": "quizAnswer",
+    "name": "Demo Quiz Answer"
+  }
+}

@@ -65,26 +65,6 @@ const Qna = (props) => {
 
             const qnaData = get(data, "response.qna", {});
             console.log("Qna ",qnaData.id," : init");
-
-            // const qna = {
-            //     title: get(qnaData, "title"),
-            //     question: get(qnaData, "question.value", ""),
-            //     help: get(qnaData, "help.value", ""),
-            //     nbExpectedAnswer: get(qnaData, "nbExpectedAnswer.value", ""),
-            //     randomSelection: get(qnaData, "randomSelection.value", ""),
-            //     notUsedForScore: get(qnaData, "notUsedForScore.value", ""),
-            //     cover: get(qnaData, "cover.node.path", ""),
-            //     jExpField2Map: get(qnaData, "jExpField2Map.value", ""),
-            // };
-            //
-            // qna.answers= get(qnaData, "answers.values", []).map(answer=>{
-            //     const valid = answer.indexOf(quiz_validMark) === 0;
-            //     if(valid)
-            //         answer = answer.substring(quiz_validMark.length+1);//+1 is for space between mark and label
-            //
-            //     return {label:answer,checked:false,valid}
-            // })
-            // setQna(qna);
             setQna(new _Qna(qnaData,quiz_validMark));
         }
 
@@ -109,41 +89,26 @@ const Qna = (props) => {
         console.log("[handleSubmit] qna.jExpField2Map => ",qna.jExpField2Map);
         if(qna.jExpField2Map){
             //Get response label
-            const values = qna.answers.filter(answers => answers.checked).reduce((label,answer)=>answer.label,"");
             //TODO manage case multiple later
-            //TODO do the call from tracker
-            //TODO faire mon custom event sinon creer la rules a la volé et l'envoyer, mais pas sur que ca marche en public
-            //TODO donc le faire en drools...
+            const values =
+                qna.answers
+                .filter(answers => answers.checked)
+                .reduce(
+                    (label,answer) =>
+                        (answer.label && 0 < answer.label.length)
+                            ?answer.label
+                            :null
+                    ,null
+                );
+
             //if tracker is not initialized the track event is not send
-            //window.cxs.profileId
-            console.log("[handleSubmit] update : ",qna.jExpField2Map," with values : ",values);
-            console.log("[handleSubmit] window.cxs.profileId : ",window.cxs.profileId);
+            console.debug("[handleSubmit] update : ",qna.jExpField2Map," with values : ",values);
             uTracker.track("updateVisitorData",{
-                // targetType: "profile",
-                // targetId: window.cxs.profileId,
                 update : {
-                    // targetType: "profile",
-                    // targetId: window.cxs.profileId,
-                    [qna.jExpField2Map]:values
+                    propertyName:`properties.${qna.jExpField2Map}`,
+                    propertyValue:values
                 }
             });
-
-            // uTracker.track("video",{
-            //     id:content.id,
-            //     type:content.type,
-            //     game4Quiz:{//lesson is already map to string by Elastic so we cannot reuse this name
-            //         id:content.id,
-            //         type:content.type
-            //     },
-            //     game4Warmup:{
-            //         id:warmupID
-            //     },
-            //     game4Video:{
-            //         duration: player.current.getDuration(),
-            //         currentTime: player.current.getCurrentTime(),
-            //         status: status
-            //     }
-            // });
         }
     }
 
@@ -158,15 +123,16 @@ const Qna = (props) => {
                     <legend>{qna.question}
                         <span>{qna.help}</span>
                     </legend>
-                    <div className="game4-quiz__answer-list">
-                    {qna.answers.map((answer,i)=>
-                        <Answer
-                            key={i}
-                            answer={answer}
-                            handleDisableSubmit={handleDisableSubmit}
-                        />)
-                    }
-                    </div>
+                    <ol className="game4-quiz__answer-list">
+                        {qna.answers.map((answer,i)=>
+                            <Answer
+                                key={i}
+                                answer={answer}
+                                handleDisableSubmit={handleDisableSubmit}
+                            />)
+                        }
+                    </ol>
+
                 </fieldset>
 
                 <Button variant="game4-quiz"
