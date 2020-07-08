@@ -9,7 +9,7 @@
 //}
 
 .game4-quiz__answer-list{
-  text-align: left;
+  //text-align: left;
   list-style: none;
 
   line-height: 1.5rem;
@@ -17,8 +17,12 @@
   padding:0;
 
   .custom-control{
-    padding: .75rem .5rem;
-    border-bottom: 2px solid rgba(255,255,255,.2);
+    padding: .75rem 0 .75rem .5rem;
+    margin-right: .5rem;
+    //border-bottom: 2px solid rgba(255,255,255,.2);
+    border-top: 2px solid rgba(255,255,255,.2);
+
+
 
     &-input:checked ~ .custom-control-label::before {
       border-color: $game4-quiz__checkbox-primary-color;
@@ -26,25 +30,49 @@
     }
     .show-result & {
 
-      input:checked{
-        background-color: $white;
-      }
-
-
-
+      //input:checked{
+        //background-color: $white;
+      //}
     }
   }
 
   li{
     position: relative;
-    padding-left: 2.5rem;
+    padding-left: 2.2rem;
+    margin-bottom: 2px;
+
+    &:first-child{
+      .custom-control{
+        border-top: none;
+      }
+    }
+    &:last-child{
+      .custom-control{
+        border-bottom: 2px solid rgba(255,255,255,.2);
+      }
+    }
+
     .show-result &{
+      //& + li.checked{
+      //  .custom-control{
+      //    border-bottom: none;
+      //  }
+      //}
+
       &.checked{
         background-color: $white;
         color: $dark-grey;
         border-radius: 10px;
-        .custom-control{
+        & + li{
+          .custom-control{
+            border-top: 2px solid transparent;
+          }
+        }
+        &:last-child{
           border-bottom: 2px solid transparent;
+        }
+        .custom-control{
+          border-top: 2px solid transparent;
         }
       }
     }
@@ -53,11 +81,12 @@
   .result {
     opacity: 0;
     transform: none;
-    //@include transition(opacity 0s $game4-quiz__transition-duration);
+    @include transition(opacity 0s $game4-quiz__result-transition-duration);
+    //transition: opacity $game4-quiz__result-transition-duration cubic-bezier(.23,1,.32,1);
 
     position: absolute;
-    left: -2rem;
-    top:.45rem;
+    left: -2.2rem;
+    top:.55rem;
     line-height: 1rem;
     border-radius: 5px 0px 0px 5px;
     color: $dark-grey;

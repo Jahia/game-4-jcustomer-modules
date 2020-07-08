@@ -15,6 +15,7 @@ class _Qna{
     //NOTE be sure string value like "false" or "true" are boolean I use JSON.parse to cast
     constructor(qnaData,quiz_validMark) {
         // console.log("Warmup : ",quiz);
+        this.id= get(qnaData, "id");
         this.title= get(qnaData, "title");
         this.question= get(qnaData, "question.value", "");
         this.help= get(qnaData, "help.value", "");
@@ -31,6 +32,10 @@ class _Qna{
             return {label:answer,checked:false,valid}
         })
     };
+    getNbExpectedAnswer(){
+        return this.answers.filter(answer => answer.valid).length;
+    };
+
     valid() {
         if(this.notUsedForScore)
             return true;
@@ -55,7 +60,7 @@ const Qna = (props) => {
         variables:variables,
     });
 
-    const [answers, setAnswers] = React.useState([]);
+    // const [answers, setAnswers] = React.useState([]);
     const [qna, setQna] = React.useState({answers:[]});
     const [disableSubmit, setDisableSubmit] = React.useState(true);
 
@@ -121,13 +126,15 @@ const Qna = (props) => {
             <div className="game4-quiz__caption d-none d-md-block">
                 <fieldset>
                     <legend>{qna.question}
-                        <span>{qna.help}</span>
+                        <i>{qna.help}</i>
                     </legend>
                     <ol className="game4-quiz__answer-list">
                         {qna.answers.map((answer,i)=>
                             <Answer
                                 key={i}
                                 answer={answer}
+                                name={qna.id}
+                                type={qna.getNbExpectedAnswer()>1?"checkbox":"radio"}
                                 handleDisableSubmit={handleDisableSubmit}
                             />)
                         }

@@ -13,11 +13,47 @@
 
 .game4-quiz {
   position: relative;
+  font-family: "JetBrainsMono";
 }
 
 .game4-quiz.pointer-event {
   touch-action: pan-y;
 }
+.game4-quiz__header{
+  display: none;
+  position: absolute;
+  top: 0;
+  left:0;
+  right: 0;
+  height: 0;
+  z-index: 1;
+  padding-top: 2.25rem;
+  padding-bottom: 1rem;
+  padding-right: (100% - $game4-quiz__caption-width) / 2;
+  padding-left: (100% - $game4-quiz__caption-width) / 2;
+  .show-result &{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    height: 6.5rem;
+    background-color: $light-grey;
+    transition: height .3s cubic-bezier(.23,1,.32,1);
+    //@include transition($game4-quiz__transition);
+  }
+
+  &-result{
+    text-transform: capitalize;
+    font-size: 1.75rem;
+    font-weight: 700;
+    //.show-result &{
+    //  display: block;
+    //}
+  }
+  &-btn{
+
+  }
+}
+
 
 .game4-quiz__inner {
   position: relative;
@@ -25,6 +61,7 @@
   overflow: hidden;
   @include clearfix();
 }
+
 
 .game4-quiz__item {
   position: relative;
@@ -177,7 +214,7 @@
   //margin-bottom: 0;
 
   .show-result & {
-    background-color: $white;
+    background-color: $light-grey;
   }
 
 
@@ -197,6 +234,10 @@
     border-bottom: $game4-quiz__indicator-hit-area-height solid transparent;
     opacity: .5;
     @include transition($game4-quiz__indicator-transition);
+
+    .show-result & {
+      background-color:$game4-quiz__indicator-result-bg;
+    }
   }
 
   .active {
@@ -212,14 +253,19 @@
 .game4-quiz__caption {
   position: absolute;
   right: (100% - $game4-quiz__caption-width) / 2;
-  top: 20%;
+  top: 4rem;
   //bottom: 20px;
   left: (100% - $game4-quiz__caption-width) / 2;
   z-index: 10;
-  padding-top: 59px;
+  //padding-top: 3rem;
   padding-bottom: 20px;
   color: $game4-quiz__caption-color;
   text-align: center;
+  transition: top .3s cubic-bezier(.23,1,.32,1);
+
+  .show-result & {
+    top: 7rem;
+  }
 
   h2{
     //color: $primary-color;
@@ -228,6 +274,21 @@
       border-left: $game4-quiz__caption-pipe solid $primary-color;
       padding-left: 1rem;
       margin-left: 1rem;
+    }
+  }
+
+  fieldset{
+    text-align: left;
+    legend{
+      font-size: 2.5rem;
+      font-weight: 700;
+      i{
+        font-size: 1rem;
+        display: block;
+        .show-result &{
+          display:none;
+        }
+      }
     }
   }
 

@@ -14,8 +14,8 @@ const Answer = (props) =>{
         props.handleDisableSubmit();
     },[checked]);
 
-    const handleChange= () => {
-        // console.log("handleChange !")
+    const handleChange= (e) => {
+        console.log("handleChange : ",e);
         toggleChecked(!checked);
     }
     return(
@@ -30,7 +30,8 @@ const Answer = (props) =>{
             </div>
             <Form.Check
                 custom
-                type="checkbox"
+                type={props.type}
+                name={props.name}
                 id={_ID_}
                 label={props.answer.label}
                 onChange={handleChange}
@@ -41,6 +42,8 @@ const Answer = (props) =>{
 };
 Answer.propTypes={
     answer:PropTypes.object.isRequired,
+    name:PropTypes.string.isRequired,
+    type:PropTypes.string.isRequired,
     handleDisableSubmit:PropTypes.func.isRequired
 }
 

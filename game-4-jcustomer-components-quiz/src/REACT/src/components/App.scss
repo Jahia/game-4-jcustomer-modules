@@ -1,3 +1,9 @@
+@font-face {
+  font-family: "JetBrainsMono";
+  src: url("../assets/fonts/JetBrainsMono-1.0.3/web/woff2/JetBrainsMono-Regular.woff2") format("woff2"),
+  url("../assets/fonts/JetBrainsMono-1.0.3/web/woff/JetBrainsMono-Regular.woff") format("woff");
+}
+
 @import "css/mixin/_clearfix";
 @import "css/mixin/_hover";
 @import "css/mixin/_transition";

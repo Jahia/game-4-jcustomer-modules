@@ -1,7 +1,7 @@
 import React from 'react'; //useEffect,useContext
 import PropTypes from "prop-types";
 
-import {Container,Row} from 'react-bootstrap';
+import {Button, Container, Row} from 'react-bootstrap';
 import { useQuery } from '@apollo/react-hooks';
 
 import uTracker from 'unomi-analytics';
@@ -201,19 +201,26 @@ const App = ({context})=> {
                 <Row>
                     <div className={`game4-quiz slide ${showResult?"show-result":""}`}>
                         <div className="game4-quiz__header">
-                            <ol className="game4-quiz__indicators">
-                                {slideIndex.map( itemId =>
-                                    <Indicator
-                                        key={itemId}
-                                        active={index=== itemId}
-                                        handleSelect={()=>handleSelect(itemId)}
-                                    />
-                                )}
-                            </ol>
                             <span className="game4-quiz__header-result">
-
+                                {result && "correct"}
+                                {!result && "incorrect"}
                             </span>
+                            <Button variant="game4-quiz-header"
+                                    onClick={onClickNext}
+                                    disabled={!showNext}>
+                                question suivante
+                            </Button>
                         </div>
+
+                        <ol className="game4-quiz__indicators">
+                            {slideIndex.map( itemId =>
+                                <Indicator
+                                    key={itemId}
+                                    active={index=== itemId}
+                                    handleSelect={()=>handleSelect(itemId)}
+                                />
+                            )}
+                        </ol>
 
                         <div className="game4-quiz__inner">
                             <Quiz
