@@ -1,16 +1,47 @@
 import React, {useContext} from 'react';
 import PropTypes from "prop-types";
-import {Col, Button} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 
 import get from "lodash.get";
 import {JContext} from "contexts";
 import {GET_WARMUP} from "./WarmupGraphQL";
 import VideoPlayer from "components/VideoPlayer";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {useQuery} from "@apollo/react-hooks";
 import Qna from "components/Qna";
+// import {getRandomString} from "misc/utils";
 // import { loader } from 'graphql.macro';
+
+
+class _Warmup{
+    //NOTE be sure string value like "false" or "true" are boolean I use JSON.parse to cast
+    constructor(warmupData,files_endpoint) {
+        // console.log("Warmup : ",quiz);
+        this.id= get(warmupData, "id", "");
+        this.title= get(warmupData, "title", "");
+        this.subtitle= get(warmupData, "subtitle.value", "");
+        this.content= get(warmupData, "content.value", "");
+        this.duration= get(warmupData, "duration.value", "");
+        this.videoLink= get(warmupData, "videoLink.value", "");
+        this.videoIntPath = get(warmupData, "videoIntPath.node.path");
+
+        this.cover= get(warmupData, "cover.node.path", "");
+        this.childNodes=
+            get(warmupData,"children.nodes",[])
+            .map(node => {
+                return{
+                    id: get(node, "id"),
+                    type: get(node, "type.value")
+                }
+            });
+
+        if(this.videoLink)
+            this.video= this.videoIntPath ?
+                `${files_endpoint}${encodeURI(this.videoIntPath)}`:
+                get(warmupData, "videoExtPath.value")
+    };
+};
 
 const Warmup = (props) => {
     const {gql_variables,files_endpoint} =  useContext(JContext);
@@ -24,43 +55,19 @@ const Warmup = (props) => {
     React.useEffect(() => {
 
         if(loading === false && data){
-            const childNodesIds = [];
-            const warmupData = get(data, "response.warmup", {});
-            console.log("Warmup ",warmupData.id," : init");
 
-            const warmup = {
-                id: get(warmupData, "id", ""),
-                title: get(warmupData, "title", ""),
-                subtitle: get(warmupData, "subtitle.value", ""),
-                content: get(warmupData, "content.value", ""),
-                duration: get(warmupData, "duration.value", ""),
-                videoLink: get(warmupData, "videoLink.value", ""),
-                cover: get(warmupData, "cover.node.path", ""),
-                childNodes: get(warmupData,"children.nodes",[]).map(node =>{
-                    const nodeId = get(node, "id");
-                    childNodesIds.push(nodeId);
-                    return {
-                        id: nodeId,
-                        type: get(node, "type.value")
-                    };
-                })
-            };
-            props.addItem2Slides(childNodesIds,warmup.id);
+            const warmup=new _Warmup(get(data, "response.warmup", {}),files_endpoint);
+            console.log("Warmup ",warmup.id," : init");
 
-            if(warmup.videoLink){
-                const videoIntPath = get(warmupData, "videoIntPath.node.path");
-                warmup.video= videoIntPath ?
-                    `${files_endpoint}${encodeURI(videoIntPath)}`:
-                    get(warmupData, "videoExtPath.value")
-            }
+            const nodesIds = [];
+            warmup.childNodes.forEach(node => nodesIds.push(node.id));
+            props.addItem2Slides(nodesIds,warmup.id);
 
-            // console.log("warmup.id : ",warmup.id);
-            // console.log("warmup.video : ",warmup.video);
+            console.debug("warmup.id : ",warmup.id,"; warmup.video : ",warmup.video);
             setWarmup(warmup);
         }
     },[loading,data]);
 
-    // console.log(`useQuery: loading ->${loading}; error-> ${error} ; data ->${data}`);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
     // console.log("warmup.video global : ",warmup.video);
@@ -83,6 +90,11 @@ const Warmup = (props) => {
                             />
                         </div>
                     }
+                    <Button variant="game4-quiz"
+                            onClick={props.onClickNext}>
+                        {/*disabled={!props.showNext}*/}
+                        question
+                    </Button>
                 </div>
             </div>
             {warmup.childNodes.map( node =>
@@ -90,7 +102,7 @@ const Warmup = (props) => {
                     key={node.id}
                     id={node.id}
                     show={props.index === node.id}
-                    quizKey={props.quizKey}
+                    // quizKey={props.quizKey}
                     resultSet={props.resultSet}
                     setResultSet={props.setResultSet}
                 />
@@ -102,11 +114,12 @@ const Warmup = (props) => {
 Warmup.propTypes={
     id:PropTypes.string.isRequired,
     show:PropTypes.bool.isRequired,
-    quizKey:PropTypes.string.isRequired,
+    // quizKey:PropTypes.string.isRequired,
     resultSet:PropTypes.array.isRequired,
     setResultSet:PropTypes.func.isRequired,
     addItem2Slides:PropTypes.func.isRequired,
-    index:PropTypes.string.isRequired
+    index:PropTypes.string.isRequired,
+    onClickNext:PropTypes.func.isRequired
 }
 
 export default Warmup;

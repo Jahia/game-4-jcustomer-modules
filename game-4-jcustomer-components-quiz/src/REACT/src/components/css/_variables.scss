@@ -9,6 +9,7 @@ $font-stack: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue"
 
 $game4-quiz__checkbox-primary-color: $blue;
 $game4-quiz__checkbox-secondary-color: $light-grey;
+$game4-quiz__quiz-min-height: 70vh !default;
 
 $enable-caret:                                true !default;
 $enable-rounded:                              true !default;
@@ -50,7 +51,6 @@ $game4-quiz__control-next-icon-bg:      url("data:image/svg+xml,<svg xmlns='http
 $game4-quiz__result-transition-duration:.35s !default;
 $game4-quiz__transition-duration:       .6s !default;
 $game4-quiz__transition:                transform $game4-quiz__transition-duration ease-in-out !default; // Define transform transition first if using multiple transitions (e.g., `transform 2s ease, opacity .5s ease-out`)
-
 
 $game4-quiz__btn-header-radius: 10px !default;
 $game4-quiz__btn-underline-height : 3px !default;

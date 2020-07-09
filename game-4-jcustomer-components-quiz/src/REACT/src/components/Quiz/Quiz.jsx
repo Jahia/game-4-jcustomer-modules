@@ -7,36 +7,36 @@ import {JContext} from "contexts";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const Quiz = ({quizData,show,onClickNext,showNext}) => {
+const Quiz = (props) => {
     const {files_endpoint} =  React.useContext(JContext);
 
-    const quiz = {
-        title: get(quizData, "title", ""),
-        subtitle: get(quizData, "subtitle.value", ""),
-        description: get(quizData, "description.value", ""),
-        duration: get(quizData, "duration.value", ""),
-        ctaLink: get(quizData, "ctaLink.value", ""),
-        cover: get(quizData, "cover.node.path", ""),
-        consent: get(quizData, "consent.node.uuid", ""),
-    };
+    // const quiz = {
+    //     title: get(props.quizData, "title", ""),
+    //     subtitle: get(props.quizData, "subtitle.value", ""),
+    //     description: get(props.quizData, "description.value", ""),
+    //     duration: get(props.quizData, "duration.value", ""),
+    //     ctaLink: get(props.quizData, "ctaLink.value", ""),
+    //     cover: get(props.quizData, "cover.node.path", ""),
+    //     consent: get(props.quizData, "consent.node.uuid", ""),
+    // };
 
     return(
-        <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
+        <div className={`game4-quiz__item show-overlay ${props.show ? 'active':''} `}>
             <img className="d-block w-100"
-                 src={`${files_endpoint}${encodeURI(quiz.cover)}`}
-                 alt={quiz.title}/>
+                 src={`${files_endpoint}${encodeURI(props.quiz.cover)}`}
+                 alt={props.quiz.title}/>
             <div className="game4-quiz__caption d-none d-md-block">
-                <h2 className="text-uppercase">{quiz.title}<span className="subtitle">{quiz.subtitle}</span></h2>
-                <div className="lead" dangerouslySetInnerHTML={{__html:quiz.description}}></div>
+                <h2 className="text-uppercase">{props.quiz.title}<span className="subtitle">{props.quiz.subtitle}</span></h2>
+                <div className="lead" dangerouslySetInnerHTML={{__html:props.quiz.description}}></div>
                 <Button variant="game4-quiz"
-                        onClick={onClickNext}
-                        disabled={!showNext}>
+                        onClick={props.onClickNext}
+                        disabled={!props.showNext}>
                     Start
                 </Button>
 
                 <div className={"duration"}>
                     <FontAwesomeIcon icon={['far','clock']} />
-                    {quiz.duration}
+                    {props.quiz.duration}
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@ const Quiz = ({quizData,show,onClickNext,showNext}) => {
 }
 
 Quiz.propTypes={
-    quizData:PropTypes.object.isRequired,
+    quiz:PropTypes.object.isRequired,
     show:PropTypes.bool.isRequired,
     onClickNext:PropTypes.func.isRequired,
     showNext:PropTypes.bool.isRequired

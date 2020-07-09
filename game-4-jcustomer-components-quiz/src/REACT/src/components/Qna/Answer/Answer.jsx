@@ -9,29 +9,21 @@ const Answer = (props) =>{
     // const [checked,toggleChecked] = useState(props.answer.checked);
     // const _ID_ = getRandomString(5,"#aA");
 
-    // useEffect(()=>{
-    //     props.answer.checked = checked;
-    //     props.handleDisableSubmit();
-    // },[checked]);
-
-    // const handleChange= (e) => {
-    //     console.log("handleChange : ",e.target.id);
-    //     toggleChecked(!checked);
-    // }
+    const isValid = props.answer.valid || (props.qna.notUsedForScore ? props.answer.checked : false);
     return(
         <li className={props.answer.checked?"checked":""}>
-            <div className={`result ${props.answer.valid?"valid":""}`}>
-                {props.answer.valid &&
+            <div className={`result ${isValid?"valid":""}`}>
+                {isValid &&
                 <FontAwesomeIcon icon={['fas','check']}/>
                 }
-                {!props.answer.valid &&
+                {!isValid &&
                 <FontAwesomeIcon icon={['fas','times']}/>
                 }
             </div>
             <Form.Check
                 custom
-                type={props.type}
-                name={props.name}
+                type={props.qna.computedNbExpectedAnswer >1 ?"checkbox":"radio"}
+                name={props.qna.id}
                 id={props.answer.id}
                 label={props.answer.label}
                 onChange={props.handleChange}
@@ -41,9 +33,8 @@ const Answer = (props) =>{
     );
 };
 Answer.propTypes={
+    qna:PropTypes.object.isRequired,
     answer:PropTypes.object.isRequired,
-    name:PropTypes.string.isRequired,
-    type:PropTypes.string.isRequired,
     checked:PropTypes.bool.isRequired,
     handleChange:PropTypes.func.isRequired
 }

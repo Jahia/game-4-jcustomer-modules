@@ -43,22 +43,21 @@ class _Qna{
     // };
 
     valid() {
+        console.log("qna isValid this.notUsedForScore : ",this.notUsedForScore);
         if(this.notUsedForScore)
             return true;
 
-        // console.log("qna isValid start eval");
+        console.log("qna isValid start eval");
         const isValid = this.answers.reduce((result,answer)=>{
             if(answer.valid)
                 result.push(answer.checked);
             return result;
         },[]).reduce((result,checked) => result && checked,true);
-        // console.log("qna isValid : ",isValid);
+        console.log("qna isValid : ",isValid);
         return isValid;
     };
 }
 
-
-// const Qna = ({id,show,quizKey,setShowResult}) => {
 const Qna = (props) => {
     const {gql_variables,files_endpoint,quiz_validMark} =  React.useContext(JContext);
     const variables = Object.assign(gql_variables,{id:props.id})
@@ -91,7 +90,7 @@ const Qna = (props) => {
                 disable = false;
         })
         // console.log("qna.answers : ",qna.answers);
-        setQna(qna);
+        // setQna(qna);
         setDisableSubmit(disable);
 
     }, [checked]);
@@ -104,7 +103,7 @@ const Qna = (props) => {
         // console.log("handleChange : ",e.target.id);
         // console.log("qna.computedNbExpectedAnswer : ",qna.computedNbExpectedAnswer);
 
-        if(qna.computedNbExpectedAnswer === 1){//case radio
+        if(qna.computedNbExpectedAnswer <= 1){//case radio, <=1 is required to manage question not used for score
             setChecked(e.target.id)
         }else {//case checkbox
             const index = checked.indexOf(e.target.id);
@@ -118,6 +117,9 @@ const Qna = (props) => {
     }
 
     const handleSubmit = () => {
+        console.log("[handleSubmit] props.resultSet => ",props.resultSet);
+        console.log("[handleSubmit] ...props.resultSet => ",...props.resultSet);
+        console.log("[handleSubmit] qna.valid() => ",qna.valid());
         props.setResultSet([...props.resultSet,qna.valid()]);
         // console.log("[handleSubmit] qna.jExpField2Map => ",qna.jExpField2Map);
         if(qna.jExpField2Map){
@@ -160,9 +162,8 @@ const Qna = (props) => {
                         {qna.answers.map((answer,i)=>
                             <Answer
                                 key={i}
+                                qna={qna}
                                 answer={answer}
-                                name={qna.id}
-                                type={qna.computedNbExpectedAnswer >1 ?"checkbox":"radio"}
                                 checked={checked.includes(answer.id)}
                                 handleChange={handleChange}
                             />)
@@ -185,7 +186,7 @@ const Qna = (props) => {
 Qna.propTypes={
     id:PropTypes.string.isRequired,
     show:PropTypes.bool.isRequired,
-    quizKey:PropTypes.string.isRequired,
+    // quizKey:PropTypes.string.isRequired,
     resultSet:PropTypes.array.isRequired,
     setResultSet:PropTypes.func.isRequired
 }

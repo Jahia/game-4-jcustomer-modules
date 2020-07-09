@@ -4,7 +4,7 @@
         <game-4-jcustomer-components-quiz j:dependencies="default game-4-jcustomer-core"
                                         j:modulePriority="0"
                                         j:moduleType="module"
-                                        j:title="Game for jCustomer Quiz Components Module"
+                                        j:title="Game for jCustomer Score Components Module"
                                         jcr:primaryType="jnt:module">
                 
                 <portlets jcr:primaryType="jnt:portletFolder"/>

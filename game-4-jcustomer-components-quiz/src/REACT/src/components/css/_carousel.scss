@@ -71,6 +71,11 @@
   margin-right: -100%;
   backface-visibility: hidden;
   @include transition($game4-quiz__transition);
+
+  img{
+    min-height: $game4-quiz__quiz-min-height;
+    object-fit: cover;
+  }
 }
 
 .game4-quiz__item.show-overlay::before {
@@ -291,6 +296,8 @@
       }
     }
   }
+}
 
-
+.game4-quiz__score-result{
+  margin-top: 6rem;
 }
