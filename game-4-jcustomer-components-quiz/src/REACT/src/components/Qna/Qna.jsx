@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {Col, Button} from "react-bootstrap";
+import {Col, Button, Form} from "react-bootstrap";
 
 import get from "lodash.get";
 import {JContext} from "contexts";
@@ -10,6 +10,7 @@ import {useQuery} from "@apollo/react-hooks";
 import {GET_QNA} from "./QnaGraphQL";
 import Answer from "./Answer";
 import uTracker from "unomi-analytics";
+import {getRandomString} from "misc/utils";
 
 class _Qna{
     //NOTE be sure string value like "false" or "true" are boolean I use JSON.parse to cast
@@ -19,34 +20,39 @@ class _Qna{
         this.title= get(qnaData, "title");
         this.question= get(qnaData, "question.value", "");
         this.help= get(qnaData, "help.value", "");
-        this.nbExpectedAnswer= get(qnaData, "nbExpectedAnswer.value", "");
+        // this.nbExpectedAnswer= get(qnaData, "nbExpectedAnswer.value", "");
         this.randomSelection= JSON.parse(get(qnaData, "randomSelection.value", false));
         this.notUsedForScore= JSON.parse(get(qnaData, "notUsedForScore.value", false));
         this.cover= get(qnaData, "cover.node.path", "");
         this.jExpField2Map= get(qnaData, "jExpField2Map.value", "");
         this.answers= get(qnaData, "answers.values", []).map(answer=>{
+            const id = getRandomString(5,"#aA");
             const valid = answer.indexOf(quiz_validMark) === 0;
             if(valid)
                 answer = answer.substring(quiz_validMark.length+1);//+1 is for space between mark and label
 
-            return {label:answer,checked:false,valid}
+            return {id,label:answer,checked:false,valid}
         })
+        if(this.randomSelection)
+            this.answers.sort( (a,b) => a.id > b.id );
+
+        this.computedNbExpectedAnswer = this.answers.filter(answer => answer.valid).length;
     };
-    getNbExpectedAnswer(){
-        return this.answers.filter(answer => answer.valid).length;
-    };
+    // getNbExpectedAnswer(){
+    //     return this.answers.filter(answer => answer.valid).length;
+    // };
 
     valid() {
         if(this.notUsedForScore)
             return true;
 
-        console.log("qna isValid start eval");
+        // console.log("qna isValid start eval");
         const isValid = this.answers.reduce((result,answer)=>{
             if(answer.valid)
                 result.push(answer.checked);
             return result;
         },[]).reduce((result,checked) => result && checked,true);
-        console.log("qna isValid : ",isValid);
+        // console.log("qna isValid : ",isValid);
         return isValid;
     };
 }
@@ -63,35 +69,57 @@ const Qna = (props) => {
     // const [answers, setAnswers] = React.useState([]);
     const [qna, setQna] = React.useState({answers:[]});
     const [disableSubmit, setDisableSubmit] = React.useState(true);
+    const [checked, setChecked] = React.useState([]);
 
     React.useEffect(() => {
 
         if(loading === false && data){
 
             const qnaData = get(data, "response.qna", {});
-            console.log("Qna ",qnaData.id," : init");
+            // console.log("Qna ",qnaData.id," : init");
             setQna(new _Qna(qnaData,quiz_validMark));
         }
 
     }, [loading,data]);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :(</p>;
+    React.useEffect(() => {
+        let disable = true;//used to handleDisableSubmit
 
-    const handleDisableSubmit = () => {
-        // console.log("qna.answers :",qna.answers);
-        let disable = true;
-        qna.answers.forEach(answer => {
-            // console.log("answer.label :",answer.label,"answer.checked :",answer.checked);
+        qna.answers.forEach(answer=>{
+            answer.checked = checked.includes(answer.id);
             if(answer.checked)
                 disable = false;
         })
+        // console.log("qna.answers : ",qna.answers);
+        setQna(qna);
         setDisableSubmit(disable);
+
+    }, [checked]);
+
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error :(</p>;
+
+    const handleChange= (e) => {
+        // console.log("handleChange : ",e.target.id);
+        // console.log("qna.computedNbExpectedAnswer : ",qna.computedNbExpectedAnswer);
+
+        if(qna.computedNbExpectedAnswer === 1){//case radio
+            setChecked(e.target.id)
+        }else {//case checkbox
+            const index = checked.indexOf(e.target.id);
+            if(index === -1){//checked
+                setChecked([...checked, e.target.id]);
+            }else{//unchecked
+                checked.splice(index,1);
+                setChecked([...checked]);
+            }
+        }
     }
 
     const handleSubmit = () => {
         props.setResultSet([...props.resultSet,qna.valid()]);
-        console.log("[handleSubmit] qna.jExpField2Map => ",qna.jExpField2Map);
+        // console.log("[handleSubmit] qna.jExpField2Map => ",qna.jExpField2Map);
         if(qna.jExpField2Map){
             //Get response label
             //TODO manage case multiple later
@@ -107,7 +135,7 @@ const Qna = (props) => {
                 );
 
             //if tracker is not initialized the track event is not send
-            console.debug("[handleSubmit] update : ",qna.jExpField2Map," with values : ",values);
+            // console.debug("[handleSubmit] update : ",qna.jExpField2Map," with values : ",values);
             uTracker.track("updateVisitorData",{
                 update : {
                     propertyName:`properties.${qna.jExpField2Map}`,
@@ -134,8 +162,9 @@ const Qna = (props) => {
                                 key={i}
                                 answer={answer}
                                 name={qna.id}
-                                type={qna.getNbExpectedAnswer()>1?"checkbox":"radio"}
-                                handleDisableSubmit={handleDisableSubmit}
+                                type={qna.computedNbExpectedAnswer >1 ?"checkbox":"radio"}
+                                checked={checked.includes(answer.id)}
+                                handleChange={handleChange}
                             />)
                         }
                     </ol>
