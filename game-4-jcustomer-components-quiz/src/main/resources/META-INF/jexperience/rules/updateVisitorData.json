@@ -38,7 +38,7 @@
     {
       "type": "setPropertyAction",
       "parameterValues": {
-        "setPropertyName": "script::r = event.properties.update.propertyName",
+        "setPropertyName": "script::r = event.properties.update.propertyName.startsWith(\"properties.\") ? event.properties.update.propertyName : null",
         "setPropertyValue": "script::r = event.properties.update.propertyValue",
         "setPropertyStrategy": "alwaysSet"
       }

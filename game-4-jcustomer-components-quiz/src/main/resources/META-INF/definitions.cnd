@@ -46,7 +46,7 @@
 [game4nt:qna] > jnt:content, game4mix:showInTree, game4mix:usesResultAsProperty, game4mix:quizChild, mix:title
  - game4:question (string) mandatory internationalized
  - game4:help (string) internationalized
- - game4:nbExpectedAnswer (long)
+// - game4:nbExpectedAnswer (long)
  - game4:answers (string) mandatory multiple internationalized //TODO switch to answers
  - game4:randomSelection (boolean) = false autocreated indexed=no
  - game4:notUsedForScore (boolean) indexed=no

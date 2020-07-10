@@ -31,7 +31,7 @@ const Quiz = (props) => {
                 <Button variant="game4-quiz"
                         onClick={props.onClickNext}
                         disabled={!props.showNext}>
-                    Start
+                    Commencer
                 </Button>
 
                 <div className={"duration"}>

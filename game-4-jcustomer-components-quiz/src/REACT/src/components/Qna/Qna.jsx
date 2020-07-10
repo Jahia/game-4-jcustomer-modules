@@ -147,7 +147,6 @@ const Qna = (props) => {
         }
     }
 
-    //TODO revoir le layer visible si showResult
     return(
         <div className={`game4-quiz__item show-overlay ${props.show ? 'active':''} `}>
             <img className="d-block w-100"

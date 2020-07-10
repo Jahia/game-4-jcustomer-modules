@@ -72,9 +72,9 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
 
             final String occurrence = params.optString("occurrence","single");
             final String type =params.optString("type");
-            //TODO ajouter l'ID de la cards
+            final String cardName =params.optString("cardName");
 
-            logger.debug("occurrence : "+occurrence+" & type :"+type);
+            logger.debug("occurrence : "+occurrence+" & type :"+type+" & cardName :"+cardName);
 
             JCRNodeWrapper node = (JCRNodeWrapper)
                     ((context.get("contextParent") != null)
@@ -105,35 +105,40 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
 
                 for (int i = 0; i < profileProperties.length(); i++) {
                     JSONObject property = profileProperties.getJSONObject(i);
+                    String propertyCardName = getCardName(property);
+
                     boolean occurenceMatch = occurrence.equals("single")?
                             !property.optBoolean("multivalued") : property.optBoolean("multivalued");
                     boolean typeMatch = type.isEmpty()? true : property.optString("type").equals(type);
+                    //cardNameMatch remove property not associated to a card like *first visit* / *last visit*
+                    boolean cardNameMatch = cardName.isEmpty()?
+                            !propertyCardName.isEmpty(): cardName.equals(propertyCardName);
 
                     logger.debug("property.optBoolean(\"multivalued\") : "+property.optBoolean("multivalued"));
                     logger.debug("property.optString(\"type\") : "+property.optString("type"));
                     logger.debug("typeMatch : "+typeMatch);
                     logger.debug("occurenceMatch : "+occurenceMatch);
 
-                    if (occurenceMatch && typeMatch) {
+                    if (occurenceMatch && typeMatch && cardNameMatch) {
                         JSONObject metadata = property.getJSONObject("metadata");
-                        JSONArray systemTags = metadata.optJSONArray("systemTags");
-
-                        logger.debug("systemTags : "+systemTags.toString());
-                        logger.debug("cardDataTag : "+systemTags.toString().contains("cardDataTag/"));
-
-                        Pattern cardPattern = Pattern.compile("\"cardDataTag/(\\w+)/(\\d{1,2})/(.*?)\"");
-                        Matcher matcher = cardPattern.matcher(systemTags.toString());
-                        //String cardId = matcher.group(1);
-                        //String cardIndex = matcher.group(2);
-                        //String cardName = matcher.group(3);
-
-                        String cardName = "";
-                        if (matcher.find())
-                            cardName = " ( "+matcher.group(3)+" )";
-                        logger.debug("cardName : "+cardName);
+//                        JSONArray systemTags = metadata.optJSONArray("systemTags");
+//
+//                        logger.debug("systemTags : "+systemTags.toString());
+//                        logger.debug("cardDataTag : "+systemTags.toString().contains("cardDataTag/"));
+//
+//                        Pattern cardPattern = Pattern.compile("\"cardDataTag/(\\w+)/(\\d{1,2})/(.*?)\"");
+//                        Matcher matcher = cardPattern.matcher(systemTags.toString());
+//                        //String cardId = matcher.group(1);
+//                        //String cardIndex = matcher.group(2);
+//                        //String cardName = matcher.group(3);
+//
+//                        String cardName = "";
+//                        if (matcher.find())
+//                            cardName = " ( "+matcher.group(3)+" )";
+//                        logger.debug("cardName : "+cardName);
 
                         String itemId = property.optString("itemId");
-                        String displayName = metadata.optString("name",itemId)+cardName;
+                        String displayName = metadata.optString("name",itemId)+" ( "+propertyCardName+" )";
 
                         choiceListValues.add(new ChoiceListValue(displayName, null, new StringValue(itemId)));
                     }
@@ -176,5 +181,24 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
             //ascending order
             return displayName1.compareTo(displayName2);
         }
+    };
+
+    private String getCardName(JSONObject property) throws JSONException {
+        JSONObject metadata = property.getJSONObject("metadata");
+        JSONArray systemTags = metadata.optJSONArray("systemTags");
+
+        logger.debug("systemTags.toString() : "+systemTags.toString());
+
+        Pattern cardPattern = Pattern.compile("\"cardDataTag/(\\w+)/(\\d{1,2}(?:\\.\\d{1,2})?)/(.*?)\"");
+        Matcher matcher = cardPattern.matcher(systemTags.toString());
+        //matcher.group(1) = cardId (String);
+        //matcher.group(2) = cardIndex (String);
+        //matcher.group(3) = cardName (String);
+        String cardName = "";
+        if (matcher.find())
+            cardName = matcher.group(3);
+
+        logger.debug("cardName : "+cardName);
+        return cardName;
     };
 }
