@@ -1,12 +1,8 @@
 import React from 'react';
 import PropTypes from "prop-types";
 import { CircularProgressbar } from 'react-circular-progressbar';
-import {Col, Button, Carousel} from "react-bootstrap";
 
-import get from "lodash.get";
 import {JContext} from "contexts";
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Score = (props) => {
     const {files_endpoint} =  React.useContext(JContext);

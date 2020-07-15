@@ -4,9 +4,15 @@ const cnd_type = {
     WARMUP:"game4nt:warmup"
 }
 const validMark="[*]";
+const consent_status={
+    GRANTED:"GRANTED",
+    DENIED:"DENIED",
+    REVOKED:"REVOKED"
+};
 
 export {
     workspace,
     cnd_type,
-    validMark
+    validMark,
+    consent_status
 }

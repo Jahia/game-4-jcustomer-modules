@@ -1,15 +1,14 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {Col, Button, Form} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 
+import {useQuery} from "@apollo/react-hooks";
 import get from "lodash.get";
 import {JContext} from "contexts";
+import uTracker from "unomi-analytics";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {useQuery} from "@apollo/react-hooks";
 import {GET_QNA} from "./QnaGraphQL";
 import Answer from "./Answer";
-import uTracker from "unomi-analytics";
 import {getRandomString} from "misc/utils";
 
 class _Qna{
@@ -77,6 +76,7 @@ const Qna = (props) => {
             const qnaData = get(data, "response.qna", {});
             // console.log("Qna ",qnaData.id," : init");
             setQna(new _Qna(qnaData,quiz_validMark));
+            console.log("window.cxs",window.cxs);
         }
 
     }, [loading,data]);

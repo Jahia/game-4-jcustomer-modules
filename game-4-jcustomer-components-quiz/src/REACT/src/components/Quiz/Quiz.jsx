@@ -1,24 +1,47 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {Col, Button, Carousel} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 
-import get from "lodash.get";
 import {JContext} from "contexts";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Consent from "components/Consent";
+import uTracker from "unomi-analytics";
 
 const Quiz = (props) => {
-    const {files_endpoint} =  React.useContext(JContext);
+    const {files_endpoint,consent_status} =  React.useContext(JContext);
+    //used for consent approval; list of consentID checked
+    //I use an array structure in case I want to use multiple consent in future
+    const [checked, setChecked] = React.useState([]);
 
-    // const quiz = {
-    //     title: get(props.quizData, "title", ""),
-    //     subtitle: get(props.quizData, "subtitle.value", ""),
-    //     description: get(props.quizData, "description.value", ""),
-    //     duration: get(props.quizData, "duration.value", ""),
-    //     ctaLink: get(props.quizData, "ctaLink.value", ""),
-    //     cover: get(props.quizData, "cover.node.path", ""),
-    //     consent: get(props.quizData, "consent.node.uuid", ""),
-    // };
+    const handleChange= (e) => {
+        console.log("handleChange : ",e.target.id);
+
+        //case checkbox
+        const index = checked.indexOf(e.target.id);
+        if(index === -1){//checked
+            setChecked([...checked, e.target.id]);
+        }else{//unchecked
+            checked.splice(index,1);
+            setChecked([...checked]);
+        }
+    }
+
+    const onCLick = (e) => {
+        //TODO call consent et definir une onCLick qui envoie l'update du consent + execute props.onCLickNext()
+        uTracker.track("modifyConsent",{
+            consent: {
+                typeIdentifier: "newsletter", //TODO getConsentId
+                scope: "example",//TODO getScope
+                status: consent_status.GRANTED,//TODO use context
+                statusDate: "2018-05-22T09:27:09.473Z",//TODO Date.now()
+                revokeDate: "2020-05-21T09:27:09.473Z"//TODO Date.now()+ 2ans
+            }
+        });
+
+        props.onClickNext();
+    }
+
 
     return(
         <div className={`game4-quiz__item show-overlay ${props.show ? 'active':''} `}>
@@ -28,16 +51,28 @@ const Quiz = (props) => {
             <div className="game4-quiz__caption d-none d-md-block">
                 <h2 className="text-uppercase">{props.quiz.title}<span className="subtitle">{props.quiz.subtitle}</span></h2>
                 <div className="lead" dangerouslySetInnerHTML={{__html:props.quiz.description}}></div>
+
+                <div className={"duration"}>
+                    <FontAwesomeIcon icon={['far','clock']} />
+                    {props.quiz.duration}
+                </div>
+
                 <Button variant="game4-quiz"
                         onClick={props.onClickNext}
                         disabled={!props.showNext}>
                     Commencer
                 </Button>
 
-                <div className={"duration"}>
-                    <FontAwesomeIcon icon={['far','clock']} />
-                    {props.quiz.duration}
-                </div>
+
+                {props.quiz.consent &&
+                    <Consent
+                        id={props.quiz.consent}
+                        checked={checked.includes(props.quiz.consent)}
+                        setChecked={setChecked}
+                        handleChange={handleChange}
+                    />
+                }
+
             </div>
         </div>
     );

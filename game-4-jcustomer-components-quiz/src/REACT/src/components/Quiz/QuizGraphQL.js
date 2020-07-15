@@ -28,7 +28,7 @@ export const GET_QUIZ = gql`
                 }
                 consent: property(name:"game4:consentType"){
                     node: refNode {
-                        uuid
+                        id: uuid
                     }
                 }
                 children{

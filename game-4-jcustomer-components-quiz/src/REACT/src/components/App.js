@@ -63,7 +63,7 @@ class _Quiz{
         this.duration= get(quizData, "duration.value", "");
         // this.ctaLink= get(quizData, "ctaLink.value", "");
         this.cover= get(quizData, "cover.node.path", "");
-        this.consent= get(quizData, "consent.node.uuid", "");
+        this.consent= get(quizData, "consent.node.id", "");
         this.childNodes = get(quizData,"children.nodes",[]).map(node =>{
             return {
                 id: get(node, "id"),
@@ -246,7 +246,7 @@ const App = ({context})=> {
                                 onClickNext={onClickNext}
                                 showNext={showNext}
                             />
-                            {quiz.childNodes.map( (node,i) =>{
+                            {quiz.childNodes.map( (node,i) => {
                                 if(node.type === context.cnd_type.QNA)
                                     return <Qna
                                             key={node.id}
@@ -269,6 +269,7 @@ const App = ({context})=> {
                                         index={index}
                                         onClickNext={onClickNext}
                                     />
+                                return <p className="text-danger">node type {node.type} is not supported</p>
                                 })
                             }
                             <Score

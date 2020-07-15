@@ -1,6 +1,5 @@
-import React,{useState,useEffect} from 'react';
+import React from 'react';
 import PropTypes from "prop-types";
-import {getRandomString} from "misc/utils";
 import {Form} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
