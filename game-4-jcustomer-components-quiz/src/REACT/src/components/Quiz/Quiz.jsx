@@ -9,38 +9,97 @@ import Consent from "components/Consent";
 import uTracker from "unomi-analytics";
 
 const Quiz = (props) => {
-    const {files_endpoint,consent_status} =  React.useContext(JContext);
+    const {files_endpoint,consent_status,scope} =  React.useContext(JContext);
     //used for consent approval; list of consentID checked
     //I use an array structure in case I want to use multiple consent in future
-    const [checked, setChecked] = React.useState([]);
+    const [checked, setChecked] = React.useState({});
+    const [granted, setGranted] = React.useState([]);
+    const [consentSet,setConsentSet] = React.useState([]);
+    const [disabledStartBtn, setDisabledStartBtn] = React.useState(!props.showNext);
+
+    React.useEffect(() => {
+        console.log("Quiz useEffect : !props.showNext : ",!props.showNext);
+        //if nothing to show after return immediately
+        if(!props.showNext)
+            return;
+
+        let allConsentChecked = false;
+
+        if(props.quiz.consents){
+            const checkedConsentIds = Object.keys(checked);
+            const consentIds2Check = [...granted,...checkedConsentIds];
+            const activedConsentIds = props.quiz.consents
+                .filter(consent => consent.actived)
+                .map(consent => consent.id);
+            const results = consentIds2Check.filter(consentId => activedConsentIds.includes(consentId));
+            allConsentChecked = results.length === activedConsentIds.length;
+        }
+
+        setDisabledStartBtn(!allConsentChecked);
+
+    }, [checked,granted]);
 
     const handleChange= (e) => {
-        console.log("handleChange : ",e.target.id);
+        // console.log("handleChange  target.id : ",e.target.id,"; target.name : ",e.target.name);
 
         //case checkbox
-        const index = checked.indexOf(e.target.id);
+        const index = Object.keys(checked).indexOf(e.target.id);
+
         if(index === -1){//checked
-            setChecked([...checked, e.target.id]);
+            // const clone = {...checked};
+            // clone[e.target.id]=e.target.name;
+            // setChecked(clone);
+            setChecked({...checked, [e.target.id]:e.target.name } );
+
         }else{//unchecked
-            checked.splice(index,1);
-            setChecked([...checked]);
+            delete checked[e.target.id]
+            setChecked({...checked});
+
+            // checked.splice(index,1);
+            // setChecked([...checked]);
         }
     }
 
     const onCLick = (e) => {
         //TODO call consent et definir une onCLick qui envoie l'update du consent + execute props.onCLickNext()
-        uTracker.track("modifyConsent",{
-            consent: {
-                typeIdentifier: "newsletter", //TODO getConsentId
-                scope: "example",//TODO getScope
-                status: consent_status.GRANTED,//TODO use context
-                statusDate: "2018-05-22T09:27:09.473Z",//TODO Date.now()
-                revokeDate: "2020-05-21T09:27:09.473Z"//TODO Date.now()+ 2ans
-            }
-        });
+
+        const statusDate = new Date();
+        const revokeDate = new Date(statusDate);
+        revokeDate.setFullYear(revokeDate.getFullYear()+2);
+
+        Object.keys(checked).forEach(consentId => {
+            uTracker.track("modifyConsent",{
+                consent: {
+                    typeIdentifier: checked[consentId],
+                    scope: scope,
+                    status: consent_status.GRANTED,
+                    statusDate: statusDate.toISOString(),//"2018-05-22T09:27:09.473Z",
+                    revokeDate: revokeDate.toISOString()//"2020-05-21T09:27:09.473Z"
+                }
+            });
+        })
+
 
         props.onClickNext();
-    }
+    };
+    //TODO move to fx
+    const btnDisabledHandler = () => {
+        let consentChecked = true;
+
+        if(props.quiz.consents){
+            const checkedConsents = Object.keys(checked);
+            const consents2Check = [...granted,...checkedConsents];
+            const activedConsent = props.quiz.consents.filter(consent => consent.actived);
+            const results = consents2Check.filter(item => activedConsent.includes(item));
+            consentChecked = results.length === activedConsent.length;
+        }
+
+        // const consentChecked = props.quiz.consent ?
+        //     Object.keys(checked).includes(props.quiz.consent)
+        //     : true;
+
+        return !props.showNext || !consentChecked;
+    };
 
 
     return(
@@ -48,32 +107,48 @@ const Quiz = (props) => {
             <img className="d-block w-100"
                  src={`${files_endpoint}${encodeURI(props.quiz.cover)}`}
                  alt={props.quiz.title}/>
-            <div className="game4-quiz__caption d-none d-md-block">
-                <h2 className="text-uppercase">{props.quiz.title}<span className="subtitle">{props.quiz.subtitle}</span></h2>
+            <div className="game4-quiz__caption">
+                <h2 className="text-uppercase">{props.quiz.title}
+                    <span className="subtitle">{props.quiz.subtitle}</span>
+
+                    <div className={"duration"}>
+                        <FontAwesomeIcon icon={['far','clock']} />
+                        {props.quiz.duration}
+                    </div>
+
+                </h2>
                 <div className="lead" dangerouslySetInnerHTML={{__html:props.quiz.description}}></div>
 
-                <div className={"duration"}>
-                    <FontAwesomeIcon icon={['far','clock']} />
-                    {props.quiz.duration}
-                </div>
-
                 <Button variant="game4-quiz"
-                        onClick={props.onClickNext}
-                        disabled={!props.showNext}>
+                        onClick={onCLick}
+                        disabled={disabledStartBtn}>
                     Commencer
                 </Button>
-
-
-                {props.quiz.consent &&
-                    <Consent
-                        id={props.quiz.consent}
-                        checked={checked.includes(props.quiz.consent)}
-                        setChecked={setChecked}
-                        handleChange={handleChange}
-                    />
-                }
-
             </div>
+            {
+                props.quiz.consents.length > 0 &&
+                <div className="game4-quiz__consent">
+                    <h5>consentement</h5>
+                    <ul>
+                        {
+                            props.quiz.consents.map( consent =>{
+                                if(consent.actived)
+                                    return <Consent
+                                        key={consent.id}
+                                        id={consent.id}
+                                        checked={Object.keys(checked).includes(consent.id)}
+                                        setChecked={setChecked}
+                                        handleChange={handleChange}
+                                        cxs={props.cxs}
+                                        setGranted={setGranted}
+                                        granted={granted}
+                                    />
+                                return <></>
+                            })
+                        }
+                    </ul>
+                </div>
+            }
         </div>
     );
 }
@@ -82,7 +157,8 @@ Quiz.propTypes={
     quiz:PropTypes.object.isRequired,
     show:PropTypes.bool.isRequired,
     onClickNext:PropTypes.func.isRequired,
-    showNext:PropTypes.bool.isRequired
+    showNext:PropTypes.bool.isRequired,
+    cxs:PropTypes.object.isRequired
 }
 
 export default Quiz;

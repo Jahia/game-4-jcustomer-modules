@@ -52,6 +52,8 @@ const Warmup = (props) => {
     });
 
     const [warmup, setWarmup] = React.useState({childNodes:[]});
+
+    // const {addItem2Slides} = props;
     React.useEffect(() => {
 
         if(loading === false && data){

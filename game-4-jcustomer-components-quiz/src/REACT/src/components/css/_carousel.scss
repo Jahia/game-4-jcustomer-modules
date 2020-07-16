@@ -301,3 +301,45 @@
 .game4-quiz__score-result{
   margin-top: 6rem;
 }
+
+.game4-quiz__consent{
+  position: absolute;
+  bottom: .5rem;
+  right: (100% - $game4-quiz__caption-width) / 2;
+  left: (100% - $game4-quiz__caption-width) / 2;
+  z-index: 10;
+  color: $game4-quiz__caption-color;
+
+  h5{
+    text-transform: capitalize;
+    text-decoration: underline;
+  }
+  ul{
+    list-style: none;
+    padding:0;
+  }
+
+  li{
+    margin-bottom: .5rem;
+  }
+
+  .consent-granted{
+    margin:0;
+
+    svg{
+      color: $game4-quiz__checkbox-primary-color;
+      margin-right: .5rem;
+    }
+  }
+
+  .consent-to-grant{
+    .custom-control{
+      &-label{
+        cursor: pointer;
+      }
+    }
+    i{
+      font-size: .75rem;
+    }
+  }
+}

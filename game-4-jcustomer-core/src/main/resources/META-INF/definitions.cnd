@@ -11,7 +11,7 @@
 [game4mix:usesConsents] mixin
 // extends=game4nt:quiz
 // itemtype=content
- - game4:consentType (weakreference,choicelist[nodes='$currentSite/consentTypes;wemnt:consentType']) nofulltext
+ - game4:consentType (weakreference,choicelist[nodes='$currentSite/consentTypes;wemnt:consentType']) nofulltext multiple
 
 [game4mix:usesNewProfileProperty] > jmix:templateMixin mixin
  extends = game4mix:usesResultAsProperty

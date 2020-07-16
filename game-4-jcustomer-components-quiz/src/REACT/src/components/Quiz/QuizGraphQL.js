@@ -26,9 +26,12 @@ export const GET_QUIZ = gql`
                         path
                     }
                 }
-                consent: property(name:"game4:consentType"){
-                    node: refNode {
+                consents: property(name:"game4:consentType"){
+                    nodes: refNodes {
                         id: uuid
+                        actived: property(language:$language,name:"wem:activated"){
+                            value
+                        }
                     }
                 }
                 children{

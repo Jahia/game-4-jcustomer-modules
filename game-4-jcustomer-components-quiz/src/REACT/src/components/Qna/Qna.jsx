@@ -72,11 +72,9 @@ const Qna = (props) => {
     React.useEffect(() => {
 
         if(loading === false && data){
-
             const qnaData = get(data, "response.qna", {});
             // console.log("Qna ",qnaData.id," : init");
             setQna(new _Qna(qnaData,quiz_validMark));
-            console.log("window.cxs",window.cxs);
         }
 
     }, [loading,data]);

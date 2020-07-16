@@ -63,7 +63,12 @@ class _Quiz{
         this.duration= get(quizData, "duration.value", "");
         // this.ctaLink= get(quizData, "ctaLink.value", "");
         this.cover= get(quizData, "cover.node.path", "");
-        this.consent= get(quizData, "consent.node.id", "");
+        this.consents= get(quizData, "consents.nodes", []).map(node =>{
+            return {
+                id:get(node,"id"),
+                actived:JSON.parse(get(node,"actived.value"))
+            }
+        });
         this.childNodes = get(quizData,"children.nodes",[]).map(node =>{
             return {
                 id: get(node, "id"),
@@ -81,13 +86,14 @@ const App = ({context})=> {
         variables:context.gql_variables,
     });
 
-    const [quiz, setQuiz] = React.useState({childNodes:[]});
+    const [quiz, setQuiz] = React.useState({consents:[],childNodes:[]});
 
     const [showResult, setShowResult] = React.useState(false);
     const [result, setResult] = React.useState(false);
     const [resultSet, setResultSet] = React.useState([]);
     const [slideIndex, setSlideIndex] = React.useState([]);
     const [index, setIndex] = React.useState();
+    const [cxs, setCxs] = React.useState({});
 
     const addItem2Slides = (ids,parentId) =>
         setSlideIndex(slideIndex => {
@@ -119,10 +125,10 @@ const App = ({context})=> {
             setIndex(quiz.id);
             setQuiz(quiz);
 
-            console.debug("App Quiz init slideIndex : ",slideIndex);
+            console.debug("App Quiz init");
 
             //init unomi tracker
-            if(context.gql_variables.workspace === "LIVE")
+            if(context.gql_variables.workspace === "LIVE"){
                 uTracker.initialize({
                     "Apache Unomi": {
                         scope: context.scope,
@@ -130,6 +136,11 @@ const App = ({context})=> {
                         sessionId:`qZ-${quiz.key}-${Date.now()}`
                     }
                 });
+                uTracker.ready( () => {
+                    setCxs(window.cxs);
+                })
+            }
+
 
             context.content={
                 id: quiz.id,
@@ -245,6 +256,7 @@ const App = ({context})=> {
                                 show={ index===quiz.id }
                                 onClickNext={onClickNext}
                                 showNext={showNext}
+                                cxs={cxs}
                             />
                             {quiz.childNodes.map( (node,i) => {
                                 if(node.type === context.cnd_type.QNA)
