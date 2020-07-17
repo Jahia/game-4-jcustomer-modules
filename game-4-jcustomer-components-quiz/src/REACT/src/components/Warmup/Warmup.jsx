@@ -59,13 +59,13 @@ const Warmup = (props) => {
         if(loading === false && data){
 
             const warmup=new _Warmup(get(data, "response.warmup", {}),files_endpoint);
-            console.log("Warmup ",warmup.id," : init");
+            // console.log("Warmup ",warmup.id," : init");
 
             const nodesIds = [];
             warmup.childNodes.forEach(node => nodesIds.push(node.id));
             props.addItem2Slides(nodesIds,warmup.id);
 
-            console.debug("warmup.id : ",warmup.id,"; warmup.video : ",warmup.video);
+            // console.debug("warmup.id : ",warmup.id,"; warmup.video : ",warmup.video);
             setWarmup(warmup);
         }
     },[loading,data]);

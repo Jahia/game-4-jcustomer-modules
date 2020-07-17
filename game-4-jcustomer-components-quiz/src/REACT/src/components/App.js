@@ -93,7 +93,7 @@ const App = ({context})=> {
     const [resultSet, setResultSet] = React.useState([]);
     const [slideIndex, setSlideIndex] = React.useState([]);
     const [index, setIndex] = React.useState();
-    const [cxs, setCxs] = React.useState({});
+    const [cxs, setCxs] = React.useState(null);
 
     const addItem2Slides = (ids,parentId) =>
         setSlideIndex(slideIndex => {

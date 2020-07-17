@@ -46,18 +46,19 @@ const Consent = (props)=> {
         const consentPath = `consents["${scope}/${consent.identifier}"].status`;
         const cxsConsentStatus = get(props.cxs,consentPath);
 
-        console.log("consent_status.GRANTED : ",consent_status.GRANTED);
+        // console.log("consent : ",consentPath," : ",consent_status.GRANTED);
+        // console.log("props.granted : ",props.granted);
         if(consent_status.GRANTED === cxsConsentStatus){
             setConsentGranted(true);
             props.setGranted([...props.granted,consent.id]);
         }
-        console.log("useEffect props.cxs",props.cxs);
-    },[consent,props.cxs]);
+        // console.log("useEffect props.cxs",props.cxs);
+    },[consent]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
-    console.log("consent do");
+    // console.log("consent do");
     return(
         <li>
             {consent.actived && !consentGranted &&
@@ -78,6 +79,7 @@ const Consent = (props)=> {
                 <p className="consent-granted">
                     <FontAwesomeIcon icon={['fas','check']}/>
                     {consent.title}
+                    <i>{consent.description}</i>
                 </p>
             }
         </li>

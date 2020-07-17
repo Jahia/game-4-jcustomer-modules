@@ -282,6 +282,15 @@
     }
   }
 
+  .duration{
+    font-size: 1.2rem;
+    margin: 2rem auto;
+
+    svg{
+      margin-right: .5rem;
+    }
+  }
+
   fieldset{
     text-align: left;
     legend{
@@ -329,6 +338,10 @@
     svg{
       color: $game4-quiz__checkbox-primary-color;
       margin-right: .5rem;
+    }
+    i{
+      display: block;
+      font-size: .75rem;
     }
   }
 

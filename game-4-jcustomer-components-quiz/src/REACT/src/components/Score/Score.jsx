@@ -6,7 +6,7 @@ import {JContext} from "contexts";
 
 const Score = (props) => {
     const {files_endpoint} =  React.useContext(JContext);
-    console.log("Score props.show :",props.show);
+    // console.log("Score props.show :",props.show);
     return(
         <div className={`game4-quiz__item show-overlay ${props.show ? 'active':''} `}>
             <img className="d-block w-100"

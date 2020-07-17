@@ -14,11 +14,10 @@ const Quiz = (props) => {
     //I use an array structure in case I want to use multiple consent in future
     const [checked, setChecked] = React.useState({});
     const [granted, setGranted] = React.useState([]);
-    const [consentSet,setConsentSet] = React.useState([]);
     const [disabledStartBtn, setDisabledStartBtn] = React.useState(!props.showNext);
 
     React.useEffect(() => {
-        console.log("Quiz useEffect : !props.showNext : ",!props.showNext);
+        // console.log("*** Quiz checked OR granted useEffect : !props.showNext : ",!props.showNext);
         //if nothing to show after return immediately
         if(!props.showNext)
             return;
@@ -26,6 +25,7 @@ const Quiz = (props) => {
         let allConsentChecked = false;
 
         if(props.quiz.consents){
+            // console.log("*** granted :",granted);
             const checkedConsentIds = Object.keys(checked);
             const consentIds2Check = [...granted,...checkedConsentIds];
             const activedConsentIds = props.quiz.consents
@@ -34,6 +34,7 @@ const Quiz = (props) => {
             const results = consentIds2Check.filter(consentId => activedConsentIds.includes(consentId));
             allConsentChecked = results.length === activedConsentIds.length;
         }
+        // console.log("*** allConsentChecked :",allConsentChecked);
 
         setDisabledStartBtn(!allConsentChecked);
 
@@ -46,17 +47,11 @@ const Quiz = (props) => {
         const index = Object.keys(checked).indexOf(e.target.id);
 
         if(index === -1){//checked
-            // const clone = {...checked};
-            // clone[e.target.id]=e.target.name;
-            // setChecked(clone);
             setChecked({...checked, [e.target.id]:e.target.name } );
 
         }else{//unchecked
             delete checked[e.target.id]
             setChecked({...checked});
-
-            // checked.splice(index,1);
-            // setChecked([...checked]);
         }
     }
 
@@ -82,26 +77,8 @@ const Quiz = (props) => {
 
         props.onClickNext();
     };
-    //TODO move to fx
-    const btnDisabledHandler = () => {
-        let consentChecked = true;
 
-        if(props.quiz.consents){
-            const checkedConsents = Object.keys(checked);
-            const consents2Check = [...granted,...checkedConsents];
-            const activedConsent = props.quiz.consents.filter(consent => consent.actived);
-            const results = consents2Check.filter(item => activedConsent.includes(item));
-            consentChecked = results.length === activedConsent.length;
-        }
-
-        // const consentChecked = props.quiz.consent ?
-        //     Object.keys(checked).includes(props.quiz.consent)
-        //     : true;
-
-        return !props.showNext || !consentChecked;
-    };
-
-
+    // console.log("quiz do ");
     return(
         <div className={`game4-quiz__item show-overlay ${props.show ? 'active':''} `}>
             <img className="d-block w-100"
@@ -110,13 +87,13 @@ const Quiz = (props) => {
             <div className="game4-quiz__caption">
                 <h2 className="text-uppercase">{props.quiz.title}
                     <span className="subtitle">{props.quiz.subtitle}</span>
-
-                    <div className={"duration"}>
-                        <FontAwesomeIcon icon={['far','clock']} />
-                        {props.quiz.duration}
-                    </div>
-
                 </h2>
+
+                <div className={"duration"}>
+                    <FontAwesomeIcon icon={['far','clock']} />
+                    {props.quiz.duration}
+                </div>
+
                 <div className="lead" dangerouslySetInnerHTML={{__html:props.quiz.description}}></div>
 
                 <Button variant="game4-quiz"
@@ -126,7 +103,7 @@ const Quiz = (props) => {
                 </Button>
             </div>
             {
-                props.quiz.consents.length > 0 &&
+                props.quiz.consents.length > 0 && props.cxs &&
                 <div className="game4-quiz__consent">
                     <h5>consentement</h5>
                     <ul>
@@ -158,7 +135,7 @@ Quiz.propTypes={
     show:PropTypes.bool.isRequired,
     onClickNext:PropTypes.func.isRequired,
     showNext:PropTypes.bool.isRequired,
-    cxs:PropTypes.object.isRequired
+    cxs:PropTypes.object
 }
 
 export default Quiz;
