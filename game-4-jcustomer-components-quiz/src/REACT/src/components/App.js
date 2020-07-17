@@ -201,11 +201,14 @@ const App = ({context})=> {
             setIndex(slideIndex[current+1]);
 
         //keep track of result in cdp
-        // if(current+1 === max)
+        if(current+1 === max)
         //     uTracker.track("setQuizScore",{
         //         quizKey : quiz.key,
         //         score:getFinalScore()
         //     })
+            uTracker.track("setQuizScore",{
+                score:`${quiz.key}::${getFinalScore()}`
+            })
 
     }
 

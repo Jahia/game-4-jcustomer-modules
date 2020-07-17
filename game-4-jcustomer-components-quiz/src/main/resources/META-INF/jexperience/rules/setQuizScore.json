@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "id": "setQuizScore",
+    "name": "Set Quiz Score",
+    "description": "Update visitor data quizScores with the score of a Quiz"
+  },
+  "raiseEventOnlyOnceForProfile": false,
+  "raiseEventOnlyOnceForSession": false,
+  "condition": {
+    "type": "eventTypeCondition",
+    "parameterValues": {
+      "eventTypeId": "setQuizScore"
+    }
+  },
+  "actions": [
+    {
+      "type": "setOrUpdateDistinctObjectValuesAction",
+      "parameterValues": {
+        "setPropertyName":"quizScores",
+        "setPropertyValue":"eventProperty::properties(score)"
+      }
+    }
+  ],
+  "itemType": "rule"
+}
