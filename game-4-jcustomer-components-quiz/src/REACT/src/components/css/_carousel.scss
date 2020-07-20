@@ -338,6 +338,13 @@
     svg{
       color: $game4-quiz__checkbox-primary-color;
       margin-right: .5rem;
+
+      &.consent-denied{
+        cursor: pointer;
+        color: $game4-quiz__checkbox-consent-denied-color;
+        width: .6rem;
+        margin-left: .25rem;
+      }
     }
     i{
       display: block;

@@ -13,7 +13,7 @@ import {JContext} from "contexts";
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons';
-import { faHandPointLeft,faCheckDouble,faCheck,faTimesCircle,faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faHandPointLeft,faCheckDouble,faCheck,faTimesCircle,faTimes,faBan } from '@fortawesome/free-solid-svg-icons';
 import { faClock,faCheckCircle} from '@fortawesome/free-regular-svg-icons';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -37,7 +37,8 @@ library.add(
     faCheckDouble,
     faCheck,
     faTimesCircle,
-    faTimes
+    faTimes,
+    faBan
 );
 
 const Indicator = ({active,handleSelect}) =>{
@@ -156,8 +157,8 @@ const App = ({context})=> {
         if(Array.isArray(resultSet) && resultSet.length >0){
             const result = resultSet.slice(-1);
 
-            console.log("resultSet useEffect setResult result: ",result);
-            console.log("resultSet useEffect setResult ...result: ",...result);
+            console.debug("resultSet useEffect setResult result: ",result);
+            console.debug("resultSet useEffect setResult ...result: ",...result);
             setResult(...result);
             setShowResult(true);
         }
@@ -202,12 +203,8 @@ const App = ({context})=> {
 
         //keep track of result in cdp
         if(current+1 === max)
-        //     uTracker.track("setQuizScore",{
-        //         quizKey : quiz.key,
-        //         score:getFinalScore()
-        //     })
             uTracker.track("setQuizScore",{
-                score:`${quiz.key}::${getFinalScore()}`
+                score:`${quiz.key}${context.score_splitPattern}${getFinalScore()}`
             })
 
     }

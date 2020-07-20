@@ -17,7 +17,8 @@
       "type": "setOrUpdateDistinctObjectValuesAction",
       "parameterValues": {
         "setPropertyName":"quizScores",
-        "setPropertyValue":"eventProperty::properties(score)"
+        "setPropertyValue":"eventProperty::properties(score)",
+        "setSplitPattern":"::"
       }
     }
   ],

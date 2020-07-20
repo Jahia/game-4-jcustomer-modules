@@ -23,6 +23,7 @@ const Quiz = (props) => {
             return;
 
         let allConsentChecked = false;
+        console.log(" ** granted  : ",granted);
 
         if(props.quiz.consents){
             // console.log("*** granted :",granted);
@@ -56,28 +57,30 @@ const Quiz = (props) => {
     }
 
     const onCLick = (e) => {
-        //TODO call consent et definir une onCLick qui envoie l'update du consent + execute props.onCLickNext()
+        Object.keys(checked).forEach(consentId => {
+            handleConsentStatus(checked[consentId],consent_status.GRANTED);
+        });
+        props.onClickNext();
+    };
 
+    const handleConsentStatus = (typeIdentifier,status) => {
         const statusDate = new Date();
         const revokeDate = new Date(statusDate);
         revokeDate.setFullYear(revokeDate.getFullYear()+2);
+        console.log("handleConsentStatus status :",status);
 
-        Object.keys(checked).forEach(consentId => {
+
             uTracker.track("modifyConsent",{
                 consent: {
-                    typeIdentifier: checked[consentId],
-                    scope: scope,
-                    status: consent_status.GRANTED,
+                    typeIdentifier,
+                    scope,
+                    status,
                     statusDate: statusDate.toISOString(),//"2018-05-22T09:27:09.473Z",
                     revokeDate: revokeDate.toISOString()//"2020-05-21T09:27:09.473Z"
                 }
             });
-        })
 
-
-        props.onClickNext();
-    };
-
+    }
     // console.log("quiz do ");
     return(
         <div className={`game4-quiz__item show-overlay ${props.show ? 'active':''} `}>
@@ -119,6 +122,7 @@ const Quiz = (props) => {
                                         cxs={props.cxs}
                                         setGranted={setGranted}
                                         granted={granted}
+                                        handleConsentStatus={handleConsentStatus}
                                     />
                                 return <></>
                             })

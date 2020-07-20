@@ -20,6 +20,11 @@
       "id": "setPropertyValue",
       "type": "string",
       "multivalued": false
+    },
+    {
+      "id": "setSplitPattern",
+      "type": "string",
+      "multivalued": false
     }
   ]
 }

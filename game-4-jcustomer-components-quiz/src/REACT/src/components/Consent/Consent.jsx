@@ -43,12 +43,21 @@ const Consent = (props)=> {
     React.useEffect(() => {
         //get consent value and check if it was approuved
         //TODO verifier si workspace = LIVE et [si window.cxs sinon faire un setTimout? ou faire un status sur cxs loaded !]
-        const consentPath = `consents["${scope}/${consent.identifier}"].status`;
-        const cxsConsentStatus = get(props.cxs,consentPath);
+        const consentPath = `consents["${scope}/${consent.identifier}"]`;
+        const consentPathStatus= `${consentPath}.status`;
+        const consentPathRevokeDate=`${consentPath}.revokeDate`;
+        const cxsConsentStatus = get(props.cxs,consentPathStatus);
+        const cxsConsentRevokeDate = get(props.cxs,consentPathRevokeDate);
 
         // console.log("consent : ",consentPath," : ",consent_status.GRANTED);
         // console.log("props.granted : ",props.granted);
-        if(consent_status.GRANTED === cxsConsentStatus){
+
+        // console.log("cxsConsentRevokeDate : ",cxsConsentRevokeDate);
+        // console.log("Date.parse(cxsConsentRevokeDate) : ",Date.parse(cxsConsentRevokeDate));
+        // console.log("Date.now() : ",Date.now());
+        if(consent_status.GRANTED === cxsConsentStatus
+            && Date.now() < Date.parse(cxsConsentRevokeDate)
+        ){
             setConsentGranted(true);
             props.setGranted([...props.granted,consent.id]);
         }
@@ -57,6 +66,12 @@ const Consent = (props)=> {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
+
+    const handleDenied = () => {
+        props.handleConsentStatus(consent.identifier,consent_status.DENIED);
+        setConsentGranted(false);
+        props.setGranted(props.granted.filter(item =>item !== consent.id));
+    }
 
     // console.log("consent do");
     return(
@@ -79,6 +94,7 @@ const Consent = (props)=> {
                 <p className="consent-granted">
                     <FontAwesomeIcon icon={['fas','check']}/>
                     {consent.title}
+                    <FontAwesomeIcon className="consent-denied" icon={['fas','ban']} onClick={handleDenied}/>
                     <i>{consent.description}</i>
                 </p>
             }
@@ -93,7 +109,8 @@ Consent.propTypes={
     handleChange:PropTypes.func.isRequired,
     cxs:PropTypes.object.isRequired,
     setGranted:PropTypes.func.isRequired,
-    granted:PropTypes.array.isRequired
+    granted:PropTypes.array.isRequired,
+    handleConsentStatus:PropTypes.func.isRequired
 };
 
 export default Consent;
