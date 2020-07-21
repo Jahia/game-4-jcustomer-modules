@@ -71,8 +71,15 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
                 params = new JSONObject(param);
 
             final String occurrence = params.optString("occurrence","single");
-            final String type =params.optString("type");
-            final String cardName =params.optString("cardName");
+            final String type = params.optString("type");
+            final JSONArray jsonArrayCardName = params.optJSONArray("cardName");
+            final ArrayList<String> cardName = new ArrayList<String>();
+            if(jsonArrayCardName != null){
+                int len = jsonArrayCardName.length();
+                for (int i=0;i<len;i++){
+                    cardName.add(jsonArrayCardName.get(i).toString());
+                }
+            }
 
             logger.debug("occurrence : "+occurrence+" & type :"+type+" & cardName :"+cardName);
 
@@ -112,7 +119,7 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
                     boolean typeMatch = type.isEmpty()? true : property.optString("type").equals(type);
                     //cardNameMatch remove property not associated to a card like *first visit* / *last visit*
                     boolean cardNameMatch = cardName.isEmpty()?
-                            !propertyCardName.isEmpty(): cardName.equals(propertyCardName);
+                            !propertyCardName.isEmpty(): cardName.contains(propertyCardName);
 
                     logger.debug("property.optBoolean(\"multivalued\") : "+property.optBoolean("multivalued"));
                     logger.debug("property.optString(\"type\") : "+property.optString("type"));

@@ -22,6 +22,6 @@
  - game4:newjExpPropertyId (string) hidden indexed=no
 
 [game4mix:usesResultAsProperty] mixin
-//='{"occurrence":"single","type":"string","cardName":"Quiz"}' || ='{"type":"integer"}'
+//='{"occurrence":"single","type":"string","cardName":["Game4Quiz","xxxx"]}' || ='{"type":"integer"}'
 //TODO mettre le cards sous forme de tableau!
- - game4:jExpProperty (string,choicelist[jExpProfilePropertiesInitializer='{"cardName":"Game4Quiz"}',resourceBundle]) indexed=no
+ - game4:jExpProperty (string,choicelist[jExpProfilePropertiesInitializer='{"cardName":["Game4Quiz","Basic info","Personal info"]}',resourceBundle]) indexed=no

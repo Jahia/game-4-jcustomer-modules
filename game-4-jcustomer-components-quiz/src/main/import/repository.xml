@@ -13,6 +13,19 @@
                 <templates j:rootTemplatePath="/base" jcr:primaryType="jnt:templatesFolder">
                     <files jcr:primaryType="jnt:folder"/>
                     <contents jcr:primaryType="jnt:contentFolder"/>
+                    <game4quiz j:applyOn="game4nt:quiz"
+                       j:defaultTemplate="true"
+                       j:hiddenTemplate="false"
+                       jcr:primaryType="jnt:contentTemplate">
+                        <j:translation_en jcr:language="en"
+                                 jcr:mixinTypes="mix:title"
+                                 jcr:primaryType="jnt:translation"
+                                 jcr:title="Game4Quiz"/>
+                        <pagecontent jcr:primaryType="jnt:contentList">
+                            <header-1 jcr:primaryType="jnt:area"/>
+                            <main-resource-display j:mainResourceView="react" jcr:primaryType="jnt:mainResourceDisplay"/>
+                        </pagecontent>
+                    </game4quiz>
                 </templates>
                 
             </game-4-jcustomer-components-quiz>

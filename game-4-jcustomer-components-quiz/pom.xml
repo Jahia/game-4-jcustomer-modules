@@ -91,6 +91,7 @@
               org.jahia.se.modules.game.quiz.initializers.*
             </_dsannotations>
 <!--            <Export-Package>org.jahia.modules.bootstrap4</Export-Package>-->
+            <Jahia-Static-Resources>/css,/fonts,/javascript</Jahia-Static-Resources>
           </instructions>
         </configuration>
       </plugin>
