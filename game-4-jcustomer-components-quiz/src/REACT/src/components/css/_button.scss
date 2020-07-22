@@ -7,6 +7,7 @@
     background-color: $light-grey;
     //padding: 1rem 3rem;
     text-transform: uppercase;
+    letter-spacing: normal;
 
     .show-result .game4-quiz__caption & {
       display:none
@@ -39,6 +40,7 @@
     //padding: 0 .5rem;
     //height: 2rem;
     text-transform: capitalize;
+    letter-spacing: normal;
 
     &:after{
       position: absolute;

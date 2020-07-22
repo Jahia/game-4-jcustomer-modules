@@ -80,6 +80,13 @@ class _Quiz{
     };
 }
 
+// const updateLanguageBundle = (quizData,context) => {
+//     Object.assign(context.language_bundle,{
+//         btnStart:get(quizData,"id",null),
+//     })
+//     context.language_bundle.btnStart
+// }
+
 //NOPE ! TODO jCustomer/context.json -> context. jContext.value = {context,jCustomer}
 const App = ({context})=> {
     // console.log("App GET_QUIZ : ",GET_QUIZ);
@@ -116,6 +123,8 @@ const App = ({context})=> {
 
             const quizData = get(data, "response.quiz", {});
             const quiz = new _Quiz(quizData);
+
+            // updateLanguageBundle(quizData,context);
 
             const nodesIds = [quiz.id];
             quiz.childNodes.forEach(node => nodesIds.push(node.id));

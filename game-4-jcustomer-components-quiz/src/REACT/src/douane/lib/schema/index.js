@@ -56,6 +56,30 @@ export default{
                 type:"string",
                 format:"uri",
                 default:process.env.REACT_APP_JCUSTOMER_ENDPOINT //could be null in case of edit!
+            },
+            language_bundle:{
+                type:"object",
+                properties:{
+                    btnStart:{type:"string"},//"Démarrer",
+                    btnSubmit:{type:"string"},//"Soumettre",
+                    btnQuestion:{type:"string"},//"Question",
+                    btnNextQuestion:{type:"string"},//"Question suivante",
+                    btnShowResults:{type:"string"},//"Mon score",
+                    consentTitle:{type:"string"},//"Consentement",
+                    correctAnswer:{type:"string"},//"Correcte",
+                    wrongAnswer:{type:"string"}//"Incorrecte"
+                },
+                required: [
+                    "btnStart",
+                    "btnSubmit",
+                    "btnQuestion",
+                    "btnNextQuestion",
+                    "btnShowResults",
+                    "consentTitle",
+                    "correctAnswer",
+                    "wrongAnswer"
+                ],
+                additionalProperties:false
             }
         },
         required: [
@@ -66,7 +90,8 @@ export default{
             "gql_endpoint",
             // "gql_authorization",
             "gql_variables",
-            "cdp_endpoint"
+            "cdp_endpoint",
+            "language_bundle"
         ],
         additionalProperties:false
     }

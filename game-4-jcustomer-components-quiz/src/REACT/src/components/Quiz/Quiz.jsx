@@ -9,17 +9,19 @@ import Consent from "components/Consent";
 import uTracker from "unomi-analytics";
 
 const Quiz = (props) => {
-    const {files_endpoint,consent_status,scope} =  React.useContext(JContext);
+    const {files_endpoint,consent_status,scope,gql_variables} =  React.useContext(JContext);
     //used for consent approval; list of consentID checked
     //I use an array structure in case I want to use multiple consent in future
     const [checked, setChecked] = React.useState({});
     const [granted, setGranted] = React.useState([]);
-    const [disabledStartBtn, setDisabledStartBtn] = React.useState(!props.showNext);
+
+    const [disabledStartBtn, setDisabledStartBtn] = React.useState(!props.showNext && gql_variables.workspace === "LIVE");
 
     React.useEffect(() => {
+        console.log(" ** gql_variables.workspace !== 'LIVE'  : ",gql_variables.workspace !== "LIVE");
         // console.log("*** Quiz checked OR granted useEffect : !props.showNext : ",!props.showNext);
         //if nothing to show after return immediately
-        if(!props.showNext)
+        if(!props.showNext || gql_variables.workspace !== "LIVE")
             return;
 
         let allConsentChecked = false;
@@ -35,7 +37,7 @@ const Quiz = (props) => {
             const results = consentIds2Check.filter(consentId => activedConsentIds.includes(consentId));
             allConsentChecked = results.length === activedConsentIds.length;
         }
-        // console.log("*** allConsentChecked :",allConsentChecked);
+        console.log("*** allConsentChecked :",allConsentChecked);
 
         setDisabledStartBtn(!allConsentChecked);
 

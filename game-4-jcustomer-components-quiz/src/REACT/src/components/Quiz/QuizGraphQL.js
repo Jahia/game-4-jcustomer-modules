@@ -41,6 +41,30 @@ export const GET_QUIZ = gql`
                             value:name
                         }
                     }
+                },
+                btnStart: property(name:"game4:btnStart"){
+                    value
+                },
+                btnSubmit: property(name:"game4:btnSubmit"){
+                    value
+                },
+                btnQuestion: property(name:"game4:btnQuestion"){
+                    value
+                },
+                btnNextQuestion: property(name:"game4:btnNextQuestion"){
+                    value
+                },
+                btnShowResults: property(name:"game4:btnShowResults"){
+                    value
+                },
+                consentTitle: property(name:"game4:consentTitle"){
+                    value
+                },
+                correctAnswer: property(name:"game4:correctAnswer"){
+                    value
+                },
+                wrongAnswer: property(name:"game4:wrongAnswer"){
+                    value
                 }
             }
         }

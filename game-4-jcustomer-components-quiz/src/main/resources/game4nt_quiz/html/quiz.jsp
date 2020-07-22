@@ -28,6 +28,6 @@
             ${description}
         </p>
         <%-- TODO faire un content template--%>
-        <p><a class="btn btn-primary btn-sm px-3 py-2" href="${quiz}">Learn More</a></p>
+        <p><a class="btn btn-primary btn-sm px-3 py-2" href="${quiz}"><fmt:message key="label.read_more"/></a></p>
     </div>
 </div>

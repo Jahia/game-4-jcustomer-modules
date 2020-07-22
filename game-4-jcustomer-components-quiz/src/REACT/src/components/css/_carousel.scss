@@ -273,7 +273,8 @@
   }
 
   h2{
-    //color: $primary-color;
+    color: $game4-quiz__caption-color;
+    font-family: inherit;
     .subtitle{
       font-size: 65%;
       border-left: $game4-quiz__caption-pipe solid $primary-color;
@@ -322,6 +323,8 @@
   h5{
     text-transform: capitalize;
     text-decoration: underline;
+    color: $game4-quiz__caption-color;
+    font-family: inherit;
   }
   ul{
     list-style: none;

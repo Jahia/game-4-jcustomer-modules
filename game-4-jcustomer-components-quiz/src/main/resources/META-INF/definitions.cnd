@@ -17,7 +17,22 @@
 
 [game4mix:quizChild] mixin
 
-[game4nt:quiz] > jnt:content, game4mix:components, game4mix:showInTree, game4mix:usesConsents, mix:title orderable
+//TODO test le autocreated & utilisation resourceBundle pour avoir une valeu par defaut meme si la mixin n'est pas active
+//TODO -suite- dans ce cas plus besoin de l'object de config par défaut
+[game4mix:quizStaticLabels] mixin
+ extends = game4nt:quiz
+ itemtype = content
+ - game4:btnStart (string) internationalized
+ - game4:btnSubmit (string) internationalized
+ - game4:btnQuestion (string) internationalized
+ - game4:btnNextQuestion (string) internationalized
+ - game4:btnShowResults (string) internationalized
+ - game4:consentTitle (string) internationalized
+ - game4:correctAnswer (string) internationalized
+ - game4:wrongAnswer (string) internationalized
+
+
+[game4nt:quiz] > jnt:content, game4mix:quizStaticLabels, game4mix:components, game4mix:showInTree, game4mix:usesConsents, mix:title orderable
  - game4:quizKey (string) primary mandatory
  - game4:subtitle (string) internationalized
  - game4:description (string, richtext[ckeditor.customConfig='$context/modules/game-4-jcustomer-components-quiz/javascript/ckeditor/config/small.js']) internationalized
@@ -26,10 +41,6 @@
 // related contents are part of the page itself
 // - relatedContents (weakreference, picker[type='editoriallink']) < 'jmix:droppableContent'
  + * (game4mix:quizChild)
-// + * (game4nt:warmup)
-//workaround waiting for a UI enhancement - cannot create but I can copy past!
-// + * (wemnt:personalizedContent)
-// + * (wemnt:optimizationTest)
 
 [game4nt:warmup] > jnt:content, game4mix:showInTree, game4mix:quizChild, mix:title orderable
  - game4:subtitle (string) internationalized
@@ -39,14 +50,10 @@
  - game4:videoLink (string, choicelist[quizVideoTypeInitializer,resourceBundle]) indexed=no //< 'internal', 'external'
  - game4:qnaDuration (string,choicelist[resourceBundle]) = '5 mins' autocreated indexed=no < '5 mins', '10 mins', '30 mins', '1h' , '> 1h'
  + * (game4nt:qna)
-//workaround waiting for a UI enhancement - cannot create but I can copy past!
-// + * (wemnt:personalizedContent)
-// + * (wemnt:optimizationTest)
 
 [game4nt:qna] > jnt:content, game4mix:showInTree, game4mix:usesResultAsProperty, game4mix:quizChild, mix:title
  - game4:question (string) mandatory internationalized
  - game4:help (string) internationalized
-// - game4:nbExpectedAnswer (long)
  - game4:answers (string) mandatory multiple internationalized //TODO switch to answers
  - game4:randomSelection (boolean) = false autocreated indexed=no
  - game4:notUsedForScore (boolean) indexed=no
