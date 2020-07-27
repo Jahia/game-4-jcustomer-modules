@@ -58,7 +58,7 @@ class _Qna{
 }
 
 const Qna = (props) => {
-    const {gql_variables,files_endpoint,quiz_validMark} =  React.useContext(JContext);
+    const {gql_variables,files_endpoint,quiz_validMark,language_bundle} =  React.useContext(JContext);
     const variables = Object.assign(gql_variables,{id:props.id})
     const {loading, error, data} = useQuery(GET_QNA, {
         variables:variables,
@@ -172,7 +172,7 @@ const Qna = (props) => {
                 <Button variant="game4-quiz"
                         onClick={handleSubmit}
                         disabled={disableSubmit}>
-                    Submit
+                    {language_bundle && language_bundle.btnSubmit}
                 </Button>
 
             </div>

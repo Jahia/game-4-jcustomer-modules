@@ -42,28 +42,28 @@ export const GET_QUIZ = gql`
                         }
                     }
                 },
-                btnStart: property(name:"game4:btnStart"){
+                btnStart: property(language:$language, name:"game4:btnStart"){
                     value
                 },
-                btnSubmit: property(name:"game4:btnSubmit"){
+                btnSubmit: property(language:$language, name:"game4:btnSubmit"){
                     value
                 },
-                btnQuestion: property(name:"game4:btnQuestion"){
+                btnQuestion: property(language:$language, name:"game4:btnQuestion"){
                     value
                 },
-                btnNextQuestion: property(name:"game4:btnNextQuestion"){
+                btnNextQuestion: property(language:$language, name:"game4:btnNextQuestion"){
                     value
                 },
-                btnShowResults: property(name:"game4:btnShowResults"){
+                btnShowResults: property(language:$language, name:"game4:btnShowResults"){
                     value
                 },
-                consentTitle: property(name:"game4:consentTitle"){
+                consentTitle: property(language:$language, name:"game4:consentTitle"){
                     value
                 },
-                correctAnswer: property(name:"game4:correctAnswer"){
+                correctAnswer: property(language:$language, name:"game4:correctAnswer"){
                     value
                 },
-                wrongAnswer: property(name:"game4:wrongAnswer"){
+                wrongAnswer: property(language:$language, name:"game4:wrongAnswer"){
                     value
                 }
             }

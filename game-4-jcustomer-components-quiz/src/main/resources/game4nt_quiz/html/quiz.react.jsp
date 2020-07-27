@@ -11,10 +11,10 @@
 <%@ taglib prefix="s" uri="http://www.jahia.org/tags/search" %>
 
 <%--Add files used by the webapp--%>
-<template:addResources type="css" resources="REACTEmbeddedBuild/2.42836a8c.chunk.css" />
+<template:addResources type="css" resources="REACTEmbeddedBuild/2.f524894f.chunk.css" />
 <template:addResources type="css" resources="REACTEmbeddedBuild/main.542a84e8.chunk.css" />
-<template:addResources type="javascript" resources="REACTEmbeddedBuild/2.3679d8f9.chunk.js" />
-<template:addResources type="javascript" resources="REACTEmbeddedBuild/main.4d278a06.chunk.js" />
+<template:addResources type="javascript" resources="REACTEmbeddedBuild/2.bf9fa951.chunk.js" />
+<template:addResources type="javascript" resources="REACTEmbeddedBuild/main.1d533994.chunk.js" />
 
 
 <%--<c:set var="_path_" value="${currentNode.path}"/>--%>
@@ -28,15 +28,6 @@
 
 
 <c:set var="host" value="${url.server}"/>
-game4:btnStart (string) internationalized
-- game4:btnSubmit (string) internationalized
-- game4:btnQuestion (string) internationalized
-- game4:btnNextQuestion (string) internationalized
-- game4:btnShowResults (string) internationalized
-- game4:consentTitle (string) internationalized
-- game4:correctAnswer (string) internationalized
-- game4:wrongAnswer
-
 <%--<c:set var="token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vamFoaWEuY29tIiwic3ViIjoiYXBpIHZlcmlmaWNhdGlvbiIsImlzcyI6ImR4Iiwic2NvcGVzIjpbImVsMiJdLCJpYXQiOjE1ODg3ODEwODMsImp0aSI6IjAwNzUzZjAwLThlYjgtNGFkMS1hMzk5LTMzMGU0N2MxZDIwZCJ9.4iQMBy_olTt-w5VuDXTocCN6IGdwEnWm71xU7dQ3MN8"/>--%>
 
 <%--<utility:logger level="INFO" value="**** MA REQUEST : ${renderContext.request.requestURL}******"/>--%>
@@ -57,16 +48,6 @@ game4:btnStart (string) internationalized
         gql_variables:{
             id:"${_uuid_}",
             language: "${language}",
-        },
-        language_bundle:{
-            btnStart:<fmt:message key="label.game4_btnStart"/>,
-            btnSubmit:<fmt:message key="label.game4_btnSubmit"/>,
-            btnQuestion:<fmt:message key="label.game4_btnQuestion"/>,
-            btnNextQuestion:<fmt:message key="label.game4_btnNextQuestion"/>,
-            btnShowResults:<fmt:message key="label.game4_btnShowResults"/>,
-            consentTitle:<fmt:message key="label.game4_consentTitle"/>,
-            correctAnswer:<fmt:message key="label.game4_correctAnswer"/>,
-            wrongAnswer:<fmt:message key="label.game4_wrongAnswer"/>
         },
         cdp_endpoint:window.digitalData?window.digitalData.contextServerPublicUrl:undefined//digitalData is set in live mode only
     };

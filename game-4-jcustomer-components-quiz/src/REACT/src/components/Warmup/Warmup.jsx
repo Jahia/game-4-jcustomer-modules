@@ -44,7 +44,7 @@ class _Warmup{
 };
 
 const Warmup = (props) => {
-    const {gql_variables,files_endpoint} =  useContext(JContext);
+    const {gql_variables,files_endpoint,language_bundle} =  useContext(JContext);
     const variables = Object.assign(gql_variables,{id:props.id})
     // const query = loader("./Warmup.graphql.disabled");
     const {loading, error, data} = useQuery(GET_WARMUP, {
@@ -95,7 +95,7 @@ const Warmup = (props) => {
                     <Button variant="game4-quiz"
                             onClick={props.onClickNext}>
                         {/*disabled={!props.showNext}*/}
-                        question
+                        {language_bundle && language_bundle.btnQuestion}
                     </Button>
                 </div>
             </div>

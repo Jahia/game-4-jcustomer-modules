@@ -9,7 +9,7 @@ import Consent from "components/Consent";
 import uTracker from "unomi-analytics";
 
 const Quiz = (props) => {
-    const {files_endpoint,consent_status,scope,gql_variables} =  React.useContext(JContext);
+    const {files_endpoint,consent_status,scope,gql_variables,language_bundle} =  React.useContext(JContext);
     //used for consent approval; list of consentID checked
     //I use an array structure in case I want to use multiple consent in future
     const [checked, setChecked] = React.useState({});
@@ -104,13 +104,13 @@ const Quiz = (props) => {
                 <Button variant="game4-quiz"
                         onClick={onCLick}
                         disabled={disabledStartBtn}>
-                    Commencer
+                    {language_bundle && language_bundle.btnStart}
                 </Button>
             </div>
             {
                 props.quiz.consents.length > 0 && props.cxs &&
                 <div className="game4-quiz__consent">
-                    <h5>consentement</h5>
+                    <h5>{language_bundle && language_bundle.consentTitle}</h5>
                     <ul>
                         {
                             props.quiz.consents.map( consent =>{

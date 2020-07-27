@@ -4,16 +4,24 @@ package org.jahia.se.modules.games4jcustomer.componentsquiz.rules
 import org.jahia.services.content.rules.*
 import org.jahia.services.content.JCRContentUtils
 import org.slf4j.Logger
-import org.jahia.se.modules.game.core.rules.CU_UserProperty
+//import org.jahia.se.modules.game.core.rules.CU_UserProperty
 
-expander rules.dsl
+//expander rules.dsl
 
 // declare any global variables here
 global User user
 global Service service
 global Logger logger
 global JCRContentUtils jcrUtils
-global CU_UserProperty cU_UserProperty
+//global CU_UserProperty cU_UserProperty
+
+//rule "Enable default quiz label"
+//    when
+//        A new node is created
+//        - it has the type game4nt:quiz
+//    then
+//        Add the type game4mix:quizStaticLabels
+//end
 
 //rule "Create user profile attribute"
 //    when
@@ -24,15 +32,15 @@ global CU_UserProperty cU_UserProperty
 //        Create or update jCustomer property "{\"id\":\"x\",\"name\":\""+node.getNode().getProperty("game4:jExpPropertyName").getString()+"\"}" from node
 //end
 
-rule "Update & Remove user profile attribute"
-    when
-        A property game4:jExpPropertyName has been set on a node
-        - the node has the type game4mix:usesResultAsProperty
-//        - it has the extension type game4mix:usesResultAsProperty
-    then
-//        Log "property.getNode() : " + property.getNode().getProperty("game4:jExpPropertyName").getString()
-//        Log "property.getProperty( : " + property.getProperty().getString()
-//        Log "property.getStringValue() " + property.getStringValue()
-//        Log "node " + node
-        Create or update jCustomer property from node
-end
+//rule "Update & Remove user profile attribute"
+//    when
+//        A property game4:jExpPropertyName has been set on a node
+//        - the node has the type game4mix:usesResultAsProperty
+////        - it has the extension type game4mix:usesResultAsProperty
+//    then
+////        Log "property.getNode() : " + property.getNode().getProperty("game4:jExpPropertyName").getString()
+////        Log "property.getProperty( : " + property.getProperty().getString()
+////        Log "property.getStringValue() " + property.getStringValue()
+////        Log "node " + node
+//        Create or update jCustomer property from node
+//end

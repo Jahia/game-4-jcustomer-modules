@@ -16,6 +16,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import { faHandPointLeft,faCheckDouble,faCheck,faTimesCircle,faTimes,faBan } from '@fortawesome/free-solid-svg-icons';
 import { faClock,faCheckCircle} from '@fortawesome/free-regular-svg-icons';
 
+//todo voir si je peux le desactiver dynamiquement
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'components/App.scss';
 import 'react-circular-progressbar/dist/styles.css';
@@ -80,12 +81,23 @@ class _Quiz{
     };
 }
 
-// const updateLanguageBundle = (quizData,context) => {
-//     Object.assign(context.language_bundle,{
-//         btnStart:get(quizData,"id",null),
-//     })
-//     context.language_bundle.btnStart
-// }
+const initLanguageBundle = quizData => {
+    const keys = [
+        "btnStart",
+        "btnSubmit",
+        "btnQuestion",
+        "btnNextQuestion",
+        "btnShowResults",
+        "consentTitle",
+        "correctAnswer",
+        "wrongAnswer"
+    ];
+    return keys.reduce((bundle,key)=>{
+        bundle[key] = get(quizData,`${key}.value`);
+        console.debug("bundle: ",bundle);
+        return bundle;
+    },{});
+}
 
 //NOPE ! TODO jCustomer/context.json -> context. jContext.value = {context,jCustomer}
 const App = ({context})=> {
@@ -124,7 +136,7 @@ const App = ({context})=> {
             const quizData = get(data, "response.quiz", {});
             const quiz = new _Quiz(quizData);
 
-            // updateLanguageBundle(quizData,context);
+            context.language_bundle = initLanguageBundle(quizData);
 
             const nodesIds = [quiz.id];
             quiz.childNodes.forEach(node => nodesIds.push(node.id));
@@ -235,15 +247,23 @@ const App = ({context})=> {
                     <div className={`game4-quiz slide ${showResult?"show-result":""}`}>
                         <div className="game4-quiz__header">
                             <span className="game4-quiz__header-result">
-                                {result && "correct"}
-                                {!result && "incorrect"}
+                                {result &&
+                                    context.language_bundle &&
+                                    context.language_bundle.correctAnswer}
+                                {!result &&
+                                    context.language_bundle &&
+                                    context.language_bundle.wrongAnswer}
                             </span>
 
                             <Button variant="game4-quiz-header"
                                     onClick={onClickNext}
                                     disabled={!showNext}>
-                                {!showScore && "question suivante"}
-                                {showScore && "mon score"}
+                                {!showScore &&
+                                    context.language_bundle &&
+                                    context.language_bundle.btnNextQuestion}
+                                {showScore &&
+                                    context.language_bundle &&
+                                    context.language_bundle.btnShowResults}
                             </Button>
 
                         </div>
