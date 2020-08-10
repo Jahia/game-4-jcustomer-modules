@@ -14,7 +14,7 @@
 <template:addResources type="css" resources="REACTEmbeddedBuild/2.f524894f.chunk.css" />
 <template:addResources type="css" resources="REACTEmbeddedBuild/main.542a84e8.chunk.css" />
 <template:addResources type="javascript" resources="REACTEmbeddedBuild/2.bf9fa951.chunk.js" />
-<template:addResources type="javascript" resources="REACTEmbeddedBuild/main.1d533994.chunk.js" />
+<template:addResources type="javascript" resources="REACTEmbeddedBuild/main.8306f7d2.chunk.js" />
 
 
 <%--<c:set var="_path_" value="${currentNode.path}"/>--%>
@@ -53,16 +53,27 @@
     };
 
     window.addEventListener("DOMContentLoaded", (event) => {
-        const isEditing = window.parent.jahiaGWTParameters !== undefined;
         //in case if edit mode slow down the load waiting for the jahia GWT UI was setup,
         // otherwise the react app failed (maybe loosing his position as the DOM is updated by the jahia UI at the same time)
-        if(isEditing){
+        <c:choose>
+        <c:when test="${renderContext.editMode}" >
             setTimeout(() => {
                 window.quizUIApp("root",context);
             },500);
-        }else{
+        </c:when>
+        <c:otherwise>
             window.quizUIApp("root",context);
-        }
+        </c:otherwise>
+        </c:choose>
+
+        // const isEditing = window.parent.jahiaGWTParameters !== undefined;
+        // if(isEditing){
+        //     setTimeout(() => {
+        //         window.quizUIApp("root",context);
+        //     },500);
+        // }else{
+        //     window.quizUIApp("root",context);
+        // }
     });
 
 </script>

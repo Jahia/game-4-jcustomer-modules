@@ -31,7 +31,7 @@ const render=(target,context)=>{
       <ApolloProvider client={client}>
         <App context={context}/>
       </ApolloProvider>,
-      document.getElementById('root')
+      document.getElementById(target)
     );
 
   }catch(e){
