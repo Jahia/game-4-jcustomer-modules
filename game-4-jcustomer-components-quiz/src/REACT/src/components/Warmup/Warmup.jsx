@@ -53,7 +53,6 @@ const Warmup = (props) => {
 
     const [warmup, setWarmup] = React.useState({childNodes:[]});
 
-    // const {addItem2Slides} = props;
     React.useEffect(() => {
 
         if(loading === false && data){
@@ -63,7 +62,12 @@ const Warmup = (props) => {
 
             const nodesIds = [];
             warmup.childNodes.forEach(node => nodesIds.push(node.id));
-            props.addItem2Slides(nodesIds,warmup.id);
+            props.dispatch({
+                case:"ADD_SLIDES",
+                slides:nodesIds,
+                parentSlide:warmup.id
+            });
+            // props.addItem2Slides(nodesIds,warmup.id);
 
             // console.debug("warmup.id : ",warmup.id,"; warmup.video : ",warmup.video);
             setWarmup(warmup);
@@ -74,9 +78,12 @@ const Warmup = (props) => {
     if (error) return <p>Error :(</p>;
     // console.log("warmup.video global : ",warmup.video);
 
+    const {currentSlide} = props.state;
+    const show = currentSlide === props.id;
+
     return(
         <>
-            <div className={`game4-quiz__item show-overlay ${props.show ? 'active':''} `}>
+            <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
                 <img className="d-block w-100"
                      src={`${files_endpoint}${warmup.cover}`}
                      alt={warmup.title}/>
@@ -93,7 +100,7 @@ const Warmup = (props) => {
                         </div>
                     }
                     <Button variant="game4-quiz"
-                            onClick={props.onClickNext}>
+                            onClick={ () => props.dispatch({case:"NEXT_SLIDE"}) }>
                         {/*disabled={!props.showNext}*/}
                         {language_bundle && language_bundle.btnQuestion}
                     </Button>
@@ -103,10 +110,8 @@ const Warmup = (props) => {
                 <Qna
                     key={node.id}
                     id={node.id}
-                    show={props.index === node.id}
-                    // quizKey={props.quizKey}
-                    resultSet={props.resultSet}
-                    setResultSet={props.setResultSet}
+                    state={props.state}
+                    dispatch={props.dispatch}
                 />
             )}
         </>
@@ -115,13 +120,8 @@ const Warmup = (props) => {
 
 Warmup.propTypes={
     id:PropTypes.string.isRequired,
-    show:PropTypes.bool.isRequired,
-    // quizKey:PropTypes.string.isRequired,
-    resultSet:PropTypes.array.isRequired,
-    setResultSet:PropTypes.func.isRequired,
-    addItem2Slides:PropTypes.func.isRequired,
-    index:PropTypes.string.isRequired,
-    onClickNext:PropTypes.func.isRequired
+    state:PropTypes.object.isRequired,
+    dispatch:PropTypes.func.isRequired
 }
 
 export default Warmup;

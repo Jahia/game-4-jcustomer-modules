@@ -17,6 +17,7 @@ import { faHandPointLeft,faCheckDouble,faCheck,faTimesCircle,faTimes,faBan } fro
 import { faClock,faCheckCircle} from '@fortawesome/free-regular-svg-icons';
 
 //todo voir si je peux le desactiver dynamiquement
+//todo comment bootstrap to build to jahia view
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'components/App.scss';
 import 'react-circular-progressbar/dist/styles.css';
@@ -42,16 +43,22 @@ library.add(
     faBan
 );
 
-const Indicator = ({active,handleSelect}) =>{
-    // console.log("active :",active);
-    // console.log("handleSelect :",handleSelect);
+const Indicator = (props) =>{
+    const {currentSlide} = props.state;
+    const active = currentSlide === props.id;
+
     return(
         <li className={`${active ? 'active':''}`}
-            onClick={handleSelect}>
+            onClick={ () => props.dispatch({case:"SHOW_SLIDE",slide:props.id}) }>
         </li>
     )
 }
 
+Indicator.propTypes={
+    id:PropTypes.string.isRequired,
+    state:PropTypes.object.isRequired,
+    dispatch:PropTypes.func.isRequired
+}
 
 class _Quiz{
     //NOTE be sure string value like "false" or "true" are boolean I use JSON.parse to cast
@@ -99,6 +106,131 @@ const initLanguageBundle = quizData => {
     },{});
 }
 
+const initialState = {
+    quiz:{consents:[],childNodes:[]},
+    resultSet:[],//array of boolean, order is the same a slideSet
+    currentResult:false,//previously result
+    slideSet:[],//previously slideIndex
+    currentSlide:null,//previously index
+    showResult:false,
+    showNext:false,
+    showScore:false,
+    max:-1,
+    score:0
+}
+
+function init(initialState) {
+    return initialState;
+}
+
+function reducer(state, action) {
+
+    const showNext = ({slideSet,max,slide}) =>
+        slideSet.indexOf(slide) < max;
+
+    switch (action.case) {
+        case "START": {
+            //prepare slideIds
+            const quiz = action.quiz;
+            const slideSet = [quiz.id];
+            quiz.childNodes.forEach(node => slideSet.push(node.id));
+            slideSet.push(quiz.scoreIndex);
+
+            const max = slideSet.length -1;
+
+            return {
+                ...state,
+                quiz,
+                currentSlide:quiz.id,
+                slideSet,
+                showNext:showNext({slideSet,max,slide:quiz.id}),
+                max
+            };
+        }
+        //previously ADD_RESULT
+        case "SHOW_RESULT": {
+            const currentResult = action.result;
+            const currentIndex = state.slideSet.indexOf(state.currentSlide);
+            const showScore = currentIndex === state.max-1;
+
+            console.debug("SHOW_RESULT - currentResult: ", currentResult);
+            console.debug("SHOW_RESULT - showScore: ", showScore,", currentIndex: ",currentIndex,", max : ",state.max);
+            return {
+                ...state,
+                showScore,
+                resultSet: [...state.resultSet, currentResult],
+                currentResult,
+                showResult: true
+            };
+        }
+        case "ADD_SLIDES": {
+            const slides = action.slides;
+            const parentSlide = action.parentSlide;
+            let slideSet = state.slideSet;
+
+            if (parentSlide && slideSet.includes(parentSlide)) {
+                const position = slideSet.indexOf(parentSlide) + 1;
+                slideSet.splice(position, 0, ...slides);
+            } else {
+                slideSet = [...slideSet, ...slides];
+            }
+
+            const max = slideSet.length -1;
+
+            console.debug("ADD_SLIDE - slides: ",slides," parentSlide: ",parentSlide);
+            return {
+                ...state,
+                slideSet,
+                showNext:showNext({slideSet,max,slide:state.currentSlide}),
+                max
+            };
+        }
+        case "NEXT_SLIDE":{
+            const currentIndex = state.slideSet.indexOf(state.currentSlide);
+            const nextIndex = currentIndex+1;
+
+            console.debug("NEXT_SLIDE - currentIndex: ",currentIndex,", max : ",state.max);
+
+            let nextSlide = state.currentSlide;
+            let score = state.score;
+
+            if(currentIndex  < state.max )
+                nextSlide = state.slideSet[nextIndex];
+
+            //next slide is the result page, time tp keep track of result in cdp
+            if(nextIndex === state.max){
+                const goodAnswers = state.resultSet.filter(result => result).length;
+                const answers = state.resultSet.length;
+                score = Math.floor((goodAnswers/answers)*100);
+                uTracker.track("setQuizScore",{
+                    score:`${state.quiz.key}${state.splitPattern}${score}`
+                })
+            }
+
+            return {
+                ...state,
+                currentSlide:nextSlide,
+                showNext: showNext({...state,slide:nextSlide}),
+                showResult:false,
+                score
+            };
+        }
+        case "SHOW_SLIDE": {
+            const slide = action.slide
+            return {
+                ...state,
+                currentSlide: slide,
+                showNext: showNext({...state, slide})
+            };
+        }
+        case "RESET":
+            // return init(action.payload);
+            return initialState;
+        default:
+            throw new Error();
+    }
+}
+
 //NOPE ! TODO jCustomer/context.json -> context. jContext.value = {context,jCustomer}
 const App = ({context})=> {
     // console.log("App GET_QUIZ : ",GET_QUIZ);
@@ -106,27 +238,12 @@ const App = ({context})=> {
         variables:context.gql_variables,
     });
 
-    const [quiz, setQuiz] = React.useState({consents:[],childNodes:[]});
-
-    const [showResult, setShowResult] = React.useState(false);
-    const [result, setResult] = React.useState(false);
-    const [resultSet, setResultSet] = React.useState([]);
-    const [slideIndex, setSlideIndex] = React.useState([]);
-    const [index, setIndex] = React.useState();
+    const [state, dispatch] = React.useReducer(
+        reducer,
+        Object.assign({splitPattern:context.score_splitPattern},initialState)
+        //init
+    );
     const [cxs, setCxs] = React.useState(null);
-
-    const addItem2Slides = (ids,parentId) =>
-        setSlideIndex(slideIndex => {
-            console.debug("addItem2Slides__setSlideIndex; ids : ",ids,", parentId : ",parentId,", slideIndex : ",slideIndex);
-
-            if (parentId && slideIndex.includes(parentId)) {
-                const position = slideIndex.indexOf(parentId) + 1;
-                slideIndex.splice(position, 0, ...ids);
-                return [...slideIndex];
-            } else {
-                return [...slideIndex, ...ids];
-            }
-        });
 
     React.useEffect(() => {
         console.debug("App Quiz init !");
@@ -135,19 +252,9 @@ const App = ({context})=> {
 
             const quizData = get(data, "response.quiz", {});
             const quiz = new _Quiz(quizData);
-
             context.language_bundle = initLanguageBundle(quizData);
 
-            const nodesIds = [quiz.id];
-            quiz.childNodes.forEach(node => nodesIds.push(node.id));
-            nodesIds.push(quiz.scoreIndex);
-
-            addItem2Slides(nodesIds);
-
-            setIndex(quiz.id);
-            setQuiz(quiz);
-
-            console.debug("App Quiz init");
+            dispatch({case:"START",quiz});
 
             //init unomi tracker
             if(context.gql_variables.workspace === "LIVE"){
@@ -171,97 +278,32 @@ const App = ({context})=> {
         }
     }, [loading,data]);
 
-    React.useEffect(() => {
-        //when an update occurs that means a new result was added. So it is time to show result
-        console.debug("useEffect resultSet : ",resultSet);
-
-        if(Array.isArray(resultSet) && resultSet.length >0){
-            const result = resultSet.slice(-1);
-
-            console.debug("resultSet useEffect setResult result: ",result);
-            console.debug("resultSet useEffect setResult ...result: ",...result);
-            setResult(...result);
-            setShowResult(true);
-        }
-
-    },[resultSet])
-
     // console.log(`useQuery: loading ->${loading}; error-> ${error} ; data ->${data}`);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
-
-    const max = slideIndex.length -1;//quizChildNodes.length;//O is quiz child start at 1
-
-    const showNext =
-        slideIndex.indexOf(index) < max;
-
-    const showScore =
-        slideIndex.indexOf(index) === max-1;
-    // const showFinalResult =
-    //     index === max &&
-    //     quizDone;
-
-    // const handleClose = () => {
-    //     if(modalIndex === maxQuizIndex)
-    //         setQuizDone(true);
-    //     setModalIndex(-2);
-    // }
-    // const handleStart = () => setModalIndex(startIndex);
-
-    // No prev button in this quiz
-    // const onClickPrev = () => {
-    //     if(index.indexOf(indexValue) > 0)
-    //         setIndex(index-1);
-    // }
-
-    const onClickNext = () => {
-        setShowResult(false);
-        console.log("index : ",index);
-        const current = slideIndex.indexOf(index);
-        console.log("current : ",current);
-        if(current < max)
-            setIndex(slideIndex[current+1]);
-
-        //keep track of result in cdp
-        if(current+1 === max)
-            uTracker.track("setQuizScore",{
-                score:`${quiz.key}${context.score_splitPattern}${getFinalScore()}`
-            })
-
-    }
-
-    const handleSelect = (selectedIndex, e) => {
-        setIndex(selectedIndex);
-    };
-
-    const getFinalScore = () => {
-        const goodAnswers = resultSet.filter(result => result).length;
-        const answers = resultSet.length;
-        return Math.floor((goodAnswers/answers)*100);
-    }
 
     return (
         <JContext.Provider value={context}>
             <Container>
                 <Row>
-                    <div className={`game4-quiz slide ${showResult?"show-result":""}`}>
+                    <div className={`game4-quiz slide ${state.showResult?"show-result":""}`}>
                         <div className="game4-quiz__header">
                             <span className="game4-quiz__header-result">
-                                {result &&
+                                {state.currentResult &&
                                     context.language_bundle &&
                                     context.language_bundle.correctAnswer}
-                                {!result &&
+                                {!state.currentResult &&
                                     context.language_bundle &&
                                     context.language_bundle.wrongAnswer}
                             </span>
 
                             <Button variant="game4-quiz-header"
-                                    onClick={onClickNext}
-                                    disabled={!showNext}>
-                                {!showScore &&
+                                    onClick={ () => dispatch({case:"NEXT_SLIDE"}) }
+                                    disabled={!state.showNext}>
+                                {!state.showScore &&
                                     context.language_bundle &&
                                     context.language_bundle.btnNextQuestion}
-                                {showScore &&
+                                {state.showScore &&
                                     context.language_bundle &&
                                     context.language_bundle.btnShowResults}
                             </Button>
@@ -269,54 +311,44 @@ const App = ({context})=> {
                         </div>
 
                         <ol className="game4-quiz__indicators">
-                            {slideIndex.map( itemId =>
+                            {state.slideSet.map( itemId =>
                                 <Indicator
                                     key={itemId}
-                                    active={index=== itemId}
-                                    handleSelect={()=>handleSelect(itemId)}
+                                    id={itemId}
+                                    state={state}
+                                    dispatch={dispatch}
                                 />
                             )}
                         </ol>
 
                         <div className="game4-quiz__inner">
                             <Quiz
-                                key={quiz.id}
-                                quiz={quiz}
-                                show={ index===quiz.id }
-                                onClickNext={onClickNext}
-                                showNext={showNext}
+                                key={state.quiz.id}
+                                state={state}
+                                dispatch={dispatch}
                                 cxs={cxs}
                             />
-                            {quiz.childNodes.map( (node,i) => {
+                            {state.quiz.childNodes.map( (node,i) => {
                                 if(node.type === context.cnd_type.QNA)
                                     return <Qna
                                             key={node.id}
                                             id={node.id}
-                                            show={index === node.id}
-                                            // quizKey={quiz.key}
-                                            resultSet={resultSet}
-                                            setResultSet={setResultSet}
+                                            state={state}
+                                            dispatch={dispatch}
                                         />
 
                                 if(node.type === context.cnd_type.WARMUP)
                                     return <Warmup
                                         key={node.id}
                                         id={node.id}
-                                        show={index === node.id}
-                                        // quizKey={quiz.key}
-                                        resultSet={resultSet}
-                                        setResultSet={setResultSet}
-                                        addItem2Slides={addItem2Slides}
-                                        index={index}
-                                        onClickNext={onClickNext}
+                                        state={state}
+                                        dispatch={dispatch}
                                     />
                                 return <p className="text-danger">node type {node.type} is not supported</p>
                                 })
                             }
                             <Score
-                                quiz={quiz}
-                                show={index === quiz.scoreIndex}
-                                score={getFinalScore}
+                                state={state}
                             />
                         </div>
                     </div>

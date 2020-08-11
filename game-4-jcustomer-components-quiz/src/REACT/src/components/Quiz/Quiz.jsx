@@ -8,30 +8,34 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Consent from "components/Consent";
 import uTracker from "unomi-analytics";
 
+//TODO create a reducer to simplify the stuff!
 const Quiz = (props) => {
+    const {quiz,showNext,currentSlide} = props.state;
+    const show = currentSlide === quiz.id;
+
     const {files_endpoint,consent_status,scope,gql_variables,language_bundle} =  React.useContext(JContext);
     //used for consent approval; list of consentID checked
     //I use an array structure in case I want to use multiple consent in future
     const [checked, setChecked] = React.useState({});
     const [granted, setGranted] = React.useState([]);
 
-    const [disabledStartBtn, setDisabledStartBtn] = React.useState(!props.showNext && gql_variables.workspace === "LIVE");
+    const [disabledStartBtn, setDisabledStartBtn] = React.useState(!showNext && gql_variables.workspace === "LIVE");
 
     React.useEffect(() => {
         console.log(" ** gql_variables.workspace !== 'LIVE'  : ",gql_variables.workspace !== "LIVE");
-        // console.log("*** Quiz checked OR granted useEffect : !props.showNext : ",!props.showNext);
+        // console.log("*** Quiz checked OR granted useEffect : !showNext : ",!showNext);
         //if nothing to show after return immediately
-        if(!props.showNext || gql_variables.workspace !== "LIVE")
+        if(!showNext || gql_variables.workspace !== "LIVE")
             return;
 
         let allConsentChecked = false;
         console.log(" ** granted  : ",granted);
 
-        if(props.quiz.consents){
+        if(quiz.consents){
             // console.log("*** granted :",granted);
             const checkedConsentIds = Object.keys(checked);
             const consentIds2Check = [...granted,...checkedConsentIds];
-            const activedConsentIds = props.quiz.consents
+            const activedConsentIds = quiz.consents
                 .filter(consent => consent.actived)
                 .map(consent => consent.id);
             const results = consentIds2Check.filter(consentId => activedConsentIds.includes(consentId));
@@ -62,7 +66,7 @@ const Quiz = (props) => {
         Object.keys(checked).forEach(consentId => {
             handleConsentStatus(checked[consentId],consent_status.GRANTED);
         });
-        props.onClickNext();
+        props.dispatch({case:"NEXT_SLIDE"});
     };
 
     const handleConsentStatus = (typeIdentifier,status) => {
@@ -85,21 +89,21 @@ const Quiz = (props) => {
     }
     // console.log("quiz do ");
     return(
-        <div className={`game4-quiz__item show-overlay ${props.show ? 'active':''} `}>
+        <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
             <img className="d-block w-100"
-                 src={`${files_endpoint}${encodeURI(props.quiz.cover)}`}
-                 alt={props.quiz.title}/>
+                 src={`${files_endpoint}${encodeURI(quiz.cover)}`}
+                 alt={quiz.title}/>
             <div className="game4-quiz__caption">
-                <h2 className="text-uppercase">{props.quiz.title}
-                    <span className="subtitle">{props.quiz.subtitle}</span>
+                <h2 className="text-uppercase">{quiz.title}
+                    <span className="subtitle">{quiz.subtitle}</span>
                 </h2>
 
                 <div className={"duration"}>
                     <FontAwesomeIcon icon={['far','clock']} />
-                    {props.quiz.duration}
+                    {quiz.duration}
                 </div>
 
-                <div className="lead" dangerouslySetInnerHTML={{__html:props.quiz.description}}></div>
+                <div className="lead" dangerouslySetInnerHTML={{__html:quiz.description}}></div>
 
                 <Button variant="game4-quiz"
                         onClick={onCLick}
@@ -108,12 +112,12 @@ const Quiz = (props) => {
                 </Button>
             </div>
             {
-                props.quiz.consents.length > 0 && props.cxs &&
+                quiz.consents.length > 0 && props.cxs &&
                 <div className="game4-quiz__consent">
                     <h5>{language_bundle && language_bundle.consentTitle}</h5>
                     <ul>
                         {
-                            props.quiz.consents.map( consent =>{
+                            quiz.consents.map( consent =>{
                                 if(consent.actived)
                                     return <Consent
                                         key={consent.id}
@@ -137,10 +141,8 @@ const Quiz = (props) => {
 }
 
 Quiz.propTypes={
-    quiz:PropTypes.object.isRequired,
-    show:PropTypes.bool.isRequired,
-    onClickNext:PropTypes.func.isRequired,
-    showNext:PropTypes.bool.isRequired,
+    state:PropTypes.object.isRequired,
+    dispatch:PropTypes.func.isRequired,
     cxs:PropTypes.object
 }
 

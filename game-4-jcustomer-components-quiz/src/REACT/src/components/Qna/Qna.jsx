@@ -58,6 +58,7 @@ class _Qna{
 }
 
 const Qna = (props) => {
+
     const {gql_variables,files_endpoint,quiz_validMark,language_bundle} =  React.useContext(JContext);
     const variables = Object.assign(gql_variables,{id:props.id})
     const {loading, error, data} = useQuery(GET_QNA, {
@@ -97,6 +98,9 @@ const Qna = (props) => {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
+    const {currentSlide} = props.state;
+    const show = currentSlide === props.id;
+
     const handleChange= (e) => {
         // console.log("handleChange : ",e.target.id);
         // console.log("qna.computedNbExpectedAnswer : ",qna.computedNbExpectedAnswer);
@@ -115,10 +119,14 @@ const Qna = (props) => {
     }
 
     const handleSubmit = () => {
-        console.log("[handleSubmit] props.resultSet => ",props.resultSet);
-        console.log("[handleSubmit] ...props.resultSet => ",...props.resultSet);
+
         console.log("[handleSubmit] qna.valid() => ",qna.valid());
-        props.setResultSet([...props.resultSet,qna.valid()]);
+        props.dispatch({
+            case:"SHOW_RESULT",
+            result:qna.valid()
+        });
+
+        // props.setResultSet([...props.resultSet,qna.valid()]);
         // console.log("[handleSubmit] qna.jExpField2Map => ",qna.jExpField2Map);
         if(qna.jExpField2Map){
             //Get response label
@@ -146,7 +154,7 @@ const Qna = (props) => {
     }
 
     return(
-        <div className={`game4-quiz__item show-overlay ${props.show ? 'active':''} `}>
+        <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
             <img className="d-block w-100"
                  src={`${files_endpoint}${qna.cover}`}
                  alt={qna.title}/>
@@ -182,10 +190,8 @@ const Qna = (props) => {
 
 Qna.propTypes={
     id:PropTypes.string.isRequired,
-    show:PropTypes.bool.isRequired,
-    // quizKey:PropTypes.string.isRequired,
-    resultSet:PropTypes.array.isRequired,
-    setResultSet:PropTypes.func.isRequired
+    state:PropTypes.object.isRequired,
+    dispatch:PropTypes.func.isRequired
 }
 
 export default Qna;
