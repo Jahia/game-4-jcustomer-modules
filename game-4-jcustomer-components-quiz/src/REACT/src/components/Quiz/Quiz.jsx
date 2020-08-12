@@ -2,132 +2,116 @@ import React from 'react';
 import PropTypes from "prop-types";
 import {Button} from "react-bootstrap";
 
-import {JContext, StoreContext} from "contexts";
+import {StoreContext} from "contexts";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Consent from "components/Consent";
-import uTracker from "unomi-analytics";
 
-// const initialState = {
-//     checked:{},
-//     granted:[],//array of boolean, order is the same a slideSet
-//     disabledStartBtn
-// }
-//
-//
-// function reducer(state, action) {
-//
-//     switch (action.case) {
-//         case "START": {
-//             //prepare slideIds
-//             const quiz = action.quiz;
-//             const slideSet = [quiz.id];
-//             quiz.childNodes.forEach(node => slideSet.push(node.id));
-//             slideSet.push(quiz.scoreIndex);
-//
-//             const max = slideSet.length -1;
-//
-//             return {
-//                 ...state,
-//                 quiz,
-//                 currentSlide:quiz.id,
-//                 slideSet,
-//                 showNext:showNext({slideSet,max,slide:quiz.id}),
-//                 max
-//             };
-//         }
-//         default:
-//             throw new Error();
-//     }
-// }
+const init = variables =>{
+    return {
+        ...variables,
+        consents:[]//list of consent
+    }
+}
+
+function reducer(state, action) {
+    const { payload } = action;
+
+    const computeEnableStartBtn = ({consents = state.consents}) => {
+        const {showNext,workspace} = state;
+
+        if(showNext && workspace !== "LIVE")
+            return true;
+
+        const granted = consents.filter( consent => consent.checked || consent.granted );
+        return consents.length === granted.length;
+    }
+
+    switch (action.case) {
+        case "ADD_CONSENT":{
+            let {consents} = state;
+            const {consent} = payload;
+
+            return{
+                ...state,
+                consents:[...consents,consent],
+                enableStartBtn:computeEnableStartBtn({consents:[...consents,consent]})
+            }
+        }
+        case "DENIED_CONSENT":{
+            const {consents} = state;
+            const {consent} = payload;
+
+            return{
+                ...state,
+                consents:consents.map(_consent => {
+                    if(_consent.id === consent.id)
+                        return consent;
+                    return _consent
+                }),
+                enableStartBtn:false
+            }
+        }
+        case "TOGGLE_CONSENT": {
+            const {consents} = state;
+            const {consent} = payload;
+
+            return{
+                ...state,
+                consents:consents.map(_consent => {
+                    if(_consent.id === consent.id)
+                        return consent;
+                    return _consent
+                }),
+                enableStartBtn:computeEnableStartBtn({consents:[...consents,consent]})
+            }
+        }
+        default:
+            throw new Error();
+    }
+}
 
 //TODO create a reducer to simplify the stuff!
 const Quiz = (props) => {
     const { state, dispatch } = React.useContext(StoreContext);
 
-    const {quiz,showNext,currentSlide} = state;
+    const {quiz,showNext,currentSlide,jContent,cxs} = state;
+    const {files_endpoint,consent_status,scope,gql_variables,language_bundle} = jContent;
+
+    const [quizState, quizDispatch] = React.useReducer(
+        reducer,
+        {
+            enableStartBtn: showNext && gql_variables.workspace !== "LIVE",
+            workspace:gql_variables.workspace,
+            showNext
+        },
+        init
+    );
+
     const show = currentSlide === quiz.id;
 
-    const {files_endpoint,consent_status,scope,gql_variables,language_bundle} =  React.useContext(JContext);
-    //used for consent approval; list of consentID checked
-    //I use an array structure in case I want to use multiple consent in future
-    const [checked, setChecked] = React.useState({});
-    const [granted, setGranted] = React.useState([]);
+    const onClick = () => {
+        quizState.consents.forEach(consent=>{
+            //already granted nothing to do
+            if(consent.granted)
+                return;
 
-    const [disabledStartBtn, setDisabledStartBtn] = React.useState(!showNext && gql_variables.workspace === "LIVE");
+            consent.syncStatus({scope,status:consent_status.GRANTED});
+        })
 
-    React.useEffect(() => {
-        console.log(" ** gql_variables.workspace !== 'LIVE'  : ",gql_variables.workspace !== "LIVE");
-        // console.log("*** Quiz checked OR granted useEffect : !showNext : ",!showNext);
-        //if nothing to show after return immediately
-        if(!showNext || gql_variables.workspace !== "LIVE")
-            return;
-
-        let allConsentChecked = false;
-        console.log(" ** granted  : ",granted);
-
-        if(quiz.consents){
-            // console.log("*** granted :",granted);
-            const checkedConsentIds = Object.keys(checked);
-            const consentIds2Check = [...granted,...checkedConsentIds];
-            const activedConsentIds = quiz.consents
-                .filter(consent => consent.actived)
-                .map(consent => consent.id);
-            const results = consentIds2Check.filter(consentId => activedConsentIds.includes(consentId));
-            allConsentChecked = results.length === activedConsentIds.length;
-        }
-        console.log("*** allConsentChecked :",allConsentChecked);
-
-        setDisabledStartBtn(!allConsentChecked);
-
-    }, [checked,granted]);
-
-    const handleChange= (e) => {
-        // console.log("handleChange  target.id : ",e.target.id,"; target.name : ",e.target.name);
-
-        //case checkbox
-        const index = Object.keys(checked).indexOf(e.target.id);
-
-        if(index === -1){//checked
-            setChecked({...checked, [e.target.id]:e.target.name } );
-
-        }else{//unchecked
-            delete checked[e.target.id]
-            setChecked({...checked});
-        }
-    }
-
-    const onCLick = (e) => {
-        Object.keys(checked).forEach(consentId => {
-            handleConsentStatus(checked[consentId],consent_status.GRANTED);
+        dispatch({
+            case:"NEXT_SLIDE"
         });
-        dispatch({case:"NEXT_SLIDE"});
     };
 
-    const handleConsentStatus = (typeIdentifier,status) => {
-        const statusDate = new Date();
-        const revokeDate = new Date(statusDate);
-        revokeDate.setFullYear(revokeDate.getFullYear()+2);
-        console.log("handleConsentStatus status :",status);
-
-
-            uTracker.track("modifyConsent",{
-                consent: {
-                    typeIdentifier,
-                    scope,
-                    status,
-                    statusDate: statusDate.toISOString(),//"2018-05-22T09:27:09.473Z",
-                    revokeDate: revokeDate.toISOString()//"2020-05-21T09:27:09.473Z"
-                }
-            });
-
-    }
-    // console.log("quiz do ");
     return(
         <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
-            <img className="d-block w-100"
-                 src={`${files_endpoint}${encodeURI(quiz.cover)}`}
-                 alt={quiz.title}/>
+            {quiz.cover &&
+                <img className="d-block w-100"
+                     src={`${files_endpoint}${encodeURI(quiz.cover)}`}
+                     alt={quiz.title}/>
+            }
+
             <div className="game4-quiz__caption">
                 <h2 className="text-uppercase">{quiz.title}
                     <span className="subtitle">{quiz.subtitle}</span>
@@ -141,13 +125,13 @@ const Quiz = (props) => {
                 <div className="lead" dangerouslySetInnerHTML={{__html:quiz.description}}></div>
 
                 <Button variant="game4-quiz"
-                        onClick={onCLick}
-                        disabled={disabledStartBtn}>
+                        onClick={onClick}
+                        disabled={!quizState.enableStartBtn}>
                     {language_bundle && language_bundle.btnStart}
                 </Button>
             </div>
             {
-                quiz.consents.length > 0 && props.cxs &&
+                quiz.consents.length > 0 && cxs &&
                 <div className="game4-quiz__consent">
                     <h5>{language_bundle && language_bundle.consentTitle}</h5>
                     <ul>
@@ -157,13 +141,8 @@ const Quiz = (props) => {
                                     return <Consent
                                         key={consent.id}
                                         id={consent.id}
-                                        checked={Object.keys(checked).includes(consent.id)}
-                                        setChecked={setChecked}
-                                        handleChange={handleChange}
-                                        cxs={props.cxs}
-                                        setGranted={setGranted}
-                                        granted={granted}
-                                        handleConsentStatus={handleConsentStatus}
+                                        quizState={quizState}
+                                        quizDispatch={quizDispatch}
                                     />
                                 return <></>
                             })
@@ -175,8 +154,6 @@ const Quiz = (props) => {
     );
 }
 
-Quiz.propTypes={
-    cxs:PropTypes.object
-}
+Quiz.propTypes={}
 
 export default Quiz;

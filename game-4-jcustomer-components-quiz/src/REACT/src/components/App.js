@@ -7,9 +7,7 @@ import { useQuery } from '@apollo/react-hooks';
 import uTracker from 'unomi-analytics';
 import get from "lodash.get";
 
-import {JContext,StoreContext} from "contexts";
-
-// import JCustomer from "jCustomer/index";
+import {StoreContext} from "contexts";
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons';
@@ -108,20 +106,17 @@ const initLanguageBundle = quizData => {
     ];
     return keys.reduce((bundle,key)=>{
         bundle[key] = get(quizData,`${key}.value`);
-        console.debug("bundle: ",bundle);
+        // console.debug("bundle: ",bundle);
         return bundle;
     },{});
 }
 
 //NOPE ! TODO jCustomer/context.json -> context. jContext.value = {context,jCustomer}
-const App = ({jContent})=> {
+const App = (props)=> {
     // console.log("App GET_QUIZ : ",GET_QUIZ);
-    const {loading, error, data} = useQuery(GET_QUIZ, {
-        variables:jContent.gql_variables,
-    });
-
     const { state, dispatch } = React.useContext(StoreContext);
     const {
+        jContent,
         quiz,
         slideSet,
         currentResult,
@@ -130,7 +125,12 @@ const App = ({jContent})=> {
         showScore
     } = state;
 
-    const [cxs, setCxs] = React.useState(null);
+
+    const {loading, error, data} = useQuery(GET_QUIZ, {
+        variables:jContent.gql_variables,
+    });
+
+    // const [cxs, setCxs] = React.useState(null);
 
     React.useEffect(() => {
         console.debug("App Quiz init !");
@@ -140,6 +140,8 @@ const App = ({jContent})=> {
             const quizData = get(data, "response.quiz", {});
             const quiz = new _Quiz(quizData);
             jContent.language_bundle = initLanguageBundle(quizData);
+
+            console.debug("jContent.language_bundle: ",jContent.language_bundle);
 
             dispatch({
                 case:"START",
@@ -157,15 +159,15 @@ const App = ({jContent})=> {
                         sessionId:`qZ-${quiz.key}-${Date.now()}`
                     }
                 });
-                uTracker.ready( () => {
-                    setCxs(window.cxs);
-                })
+                uTracker.ready( () =>
+                    dispatch({
+                        case:"ADD_CXS",
+                        payload:{
+                            cxs:window.cxs
+                        }
+                    })
+                );
             }
-
-            jContent.content={
-                id: quiz.id,
-                type: get(quizData, "type.value")
-            };
         }
     }, [loading,data]);
 
@@ -179,75 +181,70 @@ const App = ({jContent})=> {
         });
 
     return (
-        <JContext.Provider value={jContent}>
-            <Container>
-                <Row>
-                    <div className={`game4-quiz slide ${showResult?"show-result":""}`}>
-                        <div className="game4-quiz__header">
-                            <span className="game4-quiz__header-result">
-                                {currentResult &&
-                                    jContent.language_bundle &&
-                                    jContent.language_bundle.correctAnswer}
-                                {!currentResult &&
-                                    jContent.language_bundle &&
-                                    jContent.language_bundle.wrongAnswer}
-                            </span>
+        <Container>
+            <Row>
+                <div className={`game4-quiz slide ${showResult?"show-result":""}`}>
+                    <div className="game4-quiz__header">
+                        <span className="game4-quiz__header-result">
+                            {currentResult &&
+                                jContent.language_bundle &&
+                                jContent.language_bundle.correctAnswer}
+                            {!currentResult &&
+                                jContent.language_bundle &&
+                                jContent.language_bundle.wrongAnswer}
+                        </span>
 
-                            <Button variant="game4-quiz-header"
-                                    onClick={handleNextSlide}
-                                    disabled={!showNext}>
-                                {!showScore &&
-                                    jContent.language_bundle &&
-                                    jContent.language_bundle.btnNextQuestion}
-                                {showScore &&
-                                    jContent.language_bundle &&
-                                    jContent.language_bundle.btnShowResults}
-                            </Button>
+                        <Button variant="game4-quiz-header"
+                                onClick={handleNextSlide}
+                                disabled={!showNext}>
+                            {!showScore &&
+                                jContent.language_bundle &&
+                                jContent.language_bundle.btnNextQuestion}
+                            {showScore &&
+                                jContent.language_bundle &&
+                                jContent.language_bundle.btnShowResults}
+                        </Button>
 
-                        </div>
+                    </div>
 
-                        <ol className="game4-quiz__indicators">
-                            {slideSet.map( itemId =>
-                                <Indicator
-                                    key={itemId}
-                                    id={itemId}
-                                />
-                            )}
-                        </ol>
-
-                        <div className="game4-quiz__inner">
-                            <Quiz
-                                key={quiz.id}
-                                cxs={cxs}
+                    <ol className="game4-quiz__indicators">
+                        {slideSet.map( itemId =>
+                            <Indicator
+                                key={itemId}
+                                id={itemId}
                             />
-                            {quiz.childNodes.map( (node,i) => {
-                                if(node.type === jContent.cnd_type.QNA)
-                                    return <Qna
-                                            key={node.id}
-                                            id={node.id}
-                                        />
+                        )}
+                    </ol>
 
-                                if(node.type === jContent.cnd_type.WARMUP)
-                                    return <Warmup
+                    <div className="game4-quiz__inner">
+                        <Quiz
+                            key={quiz.id}
+                        />
+                        {quiz.childNodes.map( (node,i) => {
+                            if(node.type === jContent.cnd_type.QNA)
+                                return <Qna
                                         key={node.id}
                                         id={node.id}
                                     />
-                                return <p className="text-danger">node type {node.type} is not supported</p>
-                                })
-                            }
 
-                            <Score/>
+                            if(node.type === jContent.cnd_type.WARMUP)
+                                return <Warmup
+                                    key={node.id}
+                                    id={node.id}
+                                />
+                            return <p className="text-danger">node type {node.type} is not supported</p>
+                            })
+                        }
 
-                        </div>
+                        <Score/>
+
                     </div>
-                </Row>
-            </Container>
-        </JContext.Provider>
+                </div>
+            </Row>
+        </Container>
     );
 };
 
-App.propTypes={
-    jContent:PropTypes.object.isRequired
-}
+App.propTypes={}
 
 export default App;

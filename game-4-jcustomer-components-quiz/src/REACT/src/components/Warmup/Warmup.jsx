@@ -1,17 +1,17 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import PropTypes from "prop-types";
 import {Button} from "react-bootstrap";
 
 import get from "lodash.get";
-import {JContext, StoreContext} from "contexts";
+
+import {StoreContext} from "contexts";
+
 import {GET_WARMUP} from "./WarmupGraphQL";
 import VideoPlayer from "components/VideoPlayer";
 
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {useQuery} from "@apollo/react-hooks";
 import Qna from "components/Qna";
-// import {getRandomString} from "misc/utils";
-// import { loader } from 'graphql.macro';
 
 
 class _Warmup{
@@ -45,10 +45,9 @@ class _Warmup{
 
 const Warmup = (props) => {
     const { state, dispatch } = React.useContext(StoreContext);
-    const {currentSlide} = state;
+    const { currentSlide,jContent} = state;
+    const { gql_variables,files_endpoint,language_bundle } =  jContent;
 
-
-    const {gql_variables,files_endpoint,language_bundle} =  useContext(JContext);
     const variables = Object.assign(gql_variables,{id:props.id})
     // const query = loader("./Warmup.graphql.disabled");
     const {loading, error, data} = useQuery(GET_WARMUP, {
@@ -92,9 +91,11 @@ const Warmup = (props) => {
     return(
         <>
             <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
-                <img className="d-block w-100"
-                     src={`${files_endpoint}${warmup.cover}`}
-                     alt={warmup.title}/>
+                {warmup.cover &&
+                    <img className="d-block w-100"
+                         src={`${files_endpoint}${encodeURI(warmup.cover)}`}
+                         alt={warmup.title}/>
+                }
 
                 <div className="game4-quiz__caption d-none d-md-block">
                     <h2 className="text-uppercase">{warmup.title}<span className="subtitle">{warmup.subtitle}</span></h2>

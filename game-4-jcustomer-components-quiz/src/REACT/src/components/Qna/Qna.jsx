@@ -4,8 +4,9 @@ import {Button} from "react-bootstrap";
 
 import {useQuery} from "@apollo/react-hooks";
 import get from "lodash.get";
-import {JContext, StoreContext} from "contexts";
+
 import uTracker from "unomi-analytics";
+import {StoreContext} from "contexts";
 
 import {GET_QNA} from "./QnaGraphQL";
 import Answer from "./Answer";
@@ -56,9 +57,9 @@ class _Qna{
 
 const Qna = (props) => {
     const { state, dispatch } = React.useContext(StoreContext);
-    const {currentSlide} = state;
+    const { currentSlide,jContent } = state;
+    const { gql_variables,files_endpoint,quiz_validMark,language_bundle } =  jContent;
 
-    const {gql_variables,files_endpoint,quiz_validMark,language_bundle} =  React.useContext(JContext);
     const variables = Object.assign(gql_variables,{id:props.id})
     const {loading, error, data} = useQuery(GET_QNA, {
         variables:variables,
@@ -153,9 +154,12 @@ const Qna = (props) => {
 
     return(
         <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
-            <img className="d-block w-100"
-                 src={`${files_endpoint}${qna.cover}`}
-                 alt={qna.title}/>
+            {qna.cover &&
+                <img className="d-block w-100"
+                     src={`${files_endpoint}${encodeURI(qna.cover)}`}
+                     alt={qna.title}/>
+            }
+
             <div className="game4-quiz__caption d-none d-md-block">
                 <fieldset>
                     <legend>{qna.question}

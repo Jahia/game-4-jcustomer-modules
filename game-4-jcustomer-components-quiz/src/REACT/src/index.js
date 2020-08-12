@@ -11,7 +11,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 
 import {contextValidator} from "douane";
 
-import {Store} from "contexts";
+import {Store} from "components/Store";
 
 import 'index.css';
 
@@ -30,9 +30,9 @@ const render=(target,context)=>{
 
     // console.log("lesson : ",src.data.jcr.lesson);
     ReactDOM.render(
-      <Store>
+      <Store jContent={context}>
         <ApolloProvider client={client}>
-          <App jContent={context}/>
+          <App />
         </ApolloProvider>
       </Store>,
       document.getElementById(target)

@@ -1,35 +1,28 @@
-import React, {useContext, useRef} from 'react';
+import React, {useRef} from 'react';
 import PropTypes from "prop-types";
-import {JContext} from "contexts";
+import {StoreContext} from "contexts";
 
 import ReactPlayer from "react-player";
 import uTracker from 'unomi-analytics';
 
-const VideoPlayer = ({videoURL,warmupID})=>{
-    // const {content,jCustomer} =  useContext(JContext);
-    const {content} =  useContext(JContext);
-    // console.log("content : ",content);
-    // console.log("__jCustomer : ",window.__jCustomer);
-    // const {sessionId} = useContext(CXSContextJs);
-
-    // console.log("sessionId_Videoplayer : ",sessionId);
-    // const [progress,handleProgress] = useState();
-
+const VideoPlayer = (props)=>{
+    const { state } = React.useContext(StoreContext);
+    const {quiz} = state;
 
     const player = useRef(null);
     // async function collectEvent({status}){
-    function collectEvent({status}){
+    const collectEvent = ({status}) => {
         console.log("collectEvent start uTracker: ",uTracker);
         //if tracker is not initialized the track event is not send
         uTracker.track("video",{
-            id:content.id,
-            type:content.type,
-            game4Quiz:{//lesson is already map to string by Elastic so we cannot reuse this name
-                id:content.id,
-                type:content.type
+            id:quiz.id,
+            type:quiz.type,
+            game4Quiz:{
+                id:quiz.id,
+                type:quiz.type
             },
             game4Warmup:{
-                id:warmupID
+                id:props.warmupID
             },
             game4Video:{
                 duration: player.current.getDuration(),
@@ -63,7 +56,7 @@ const VideoPlayer = ({videoURL,warmupID})=>{
             <ReactPlayer
                 ref={player}
                 className='react-player'
-                url={videoURL}
+                url={props.videoURL}
                 controls
                 width='100%'
                 height='100%'
