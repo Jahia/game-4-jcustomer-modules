@@ -7,7 +7,7 @@ import { useQuery } from '@apollo/react-hooks';
 import uTracker from 'unomi-analytics';
 import get from "lodash.get";
 
-import {JContext} from "contexts";
+import {JContext,StoreContext} from "contexts";
 
 // import JCustomer from "jCustomer/index";
 
@@ -44,20 +44,27 @@ library.add(
 );
 
 const Indicator = (props) =>{
-    const {currentSlide} = props.state;
+    const { state, dispatch } = React.useContext(StoreContext);
+    const {currentSlide} = state;
+
     const active = currentSlide === props.id;
+    const handleCLick = () =>
+        dispatch({
+            case:"SHOW_SLIDE",
+            payload:{
+                slide:props.id
+            }
+        });
 
     return(
         <li className={`${active ? 'active':''}`}
-            onClick={ () => props.dispatch({case:"SHOW_SLIDE",slide:props.id}) }>
+            onClick={handleCLick}>
         </li>
     )
 }
 
 Indicator.propTypes={
     id:PropTypes.string.isRequired,
-    state:PropTypes.object.isRequired,
-    dispatch:PropTypes.func.isRequired
 }
 
 class _Quiz{
@@ -106,143 +113,23 @@ const initLanguageBundle = quizData => {
     },{});
 }
 
-const initialState = {
-    quiz:{consents:[],childNodes:[]},
-    resultSet:[],//array of boolean, order is the same a slideSet
-    currentResult:false,//previously result
-    slideSet:[],//previously slideIndex
-    currentSlide:null,//previously index
-    showResult:false,
-    showNext:false,
-    showScore:false,
-    max:-1,
-    score:0
-}
-
-function init(initialState) {
-    return initialState;
-}
-
-function reducer(state, action) {
-
-    const showNext = ({slideSet,max,slide}) =>
-        slideSet.indexOf(slide) < max;
-
-    switch (action.case) {
-        case "START": {
-            //prepare slideIds
-            const quiz = action.quiz;
-            const slideSet = [quiz.id];
-            quiz.childNodes.forEach(node => slideSet.push(node.id));
-            slideSet.push(quiz.scoreIndex);
-
-            const max = slideSet.length -1;
-
-            return {
-                ...state,
-                quiz,
-                currentSlide:quiz.id,
-                slideSet,
-                showNext:showNext({slideSet,max,slide:quiz.id}),
-                max
-            };
-        }
-        //previously ADD_RESULT
-        case "SHOW_RESULT": {
-            const currentResult = action.result;
-            const currentIndex = state.slideSet.indexOf(state.currentSlide);
-            const showScore = currentIndex === state.max-1;
-
-            console.debug("SHOW_RESULT - currentResult: ", currentResult);
-            console.debug("SHOW_RESULT - showScore: ", showScore,", currentIndex: ",currentIndex,", max : ",state.max);
-            return {
-                ...state,
-                showScore,
-                resultSet: [...state.resultSet, currentResult],
-                currentResult,
-                showResult: true
-            };
-        }
-        case "ADD_SLIDES": {
-            const slides = action.slides;
-            const parentSlide = action.parentSlide;
-            let slideSet = state.slideSet;
-
-            if (parentSlide && slideSet.includes(parentSlide)) {
-                const position = slideSet.indexOf(parentSlide) + 1;
-                slideSet.splice(position, 0, ...slides);
-            } else {
-                slideSet = [...slideSet, ...slides];
-            }
-
-            const max = slideSet.length -1;
-
-            console.debug("ADD_SLIDE - slides: ",slides," parentSlide: ",parentSlide);
-            return {
-                ...state,
-                slideSet,
-                showNext:showNext({slideSet,max,slide:state.currentSlide}),
-                max
-            };
-        }
-        case "NEXT_SLIDE":{
-            const currentIndex = state.slideSet.indexOf(state.currentSlide);
-            const nextIndex = currentIndex+1;
-
-            console.debug("NEXT_SLIDE - currentIndex: ",currentIndex,", max : ",state.max);
-
-            let nextSlide = state.currentSlide;
-            let score = state.score;
-
-            if(currentIndex  < state.max )
-                nextSlide = state.slideSet[nextIndex];
-
-            //next slide is the result page, time tp keep track of result in cdp
-            if(nextIndex === state.max){
-                const goodAnswers = state.resultSet.filter(result => result).length;
-                const answers = state.resultSet.length;
-                score = Math.floor((goodAnswers/answers)*100);
-                uTracker.track("setQuizScore",{
-                    score:`${state.quiz.key}${state.splitPattern}${score}`
-                })
-            }
-
-            return {
-                ...state,
-                currentSlide:nextSlide,
-                showNext: showNext({...state,slide:nextSlide}),
-                showResult:false,
-                score
-            };
-        }
-        case "SHOW_SLIDE": {
-            const slide = action.slide
-            return {
-                ...state,
-                currentSlide: slide,
-                showNext: showNext({...state, slide})
-            };
-        }
-        case "RESET":
-            // return init(action.payload);
-            return initialState;
-        default:
-            throw new Error();
-    }
-}
-
 //NOPE ! TODO jCustomer/context.json -> context. jContext.value = {context,jCustomer}
-const App = ({context})=> {
+const App = ({jContent})=> {
     // console.log("App GET_QUIZ : ",GET_QUIZ);
     const {loading, error, data} = useQuery(GET_QUIZ, {
-        variables:context.gql_variables,
+        variables:jContent.gql_variables,
     });
 
-    const [state, dispatch] = React.useReducer(
-        reducer,
-        Object.assign({splitPattern:context.score_splitPattern},initialState)
-        //init
-    );
+    const { state, dispatch } = React.useContext(StoreContext);
+    const {
+        quiz,
+        slideSet,
+        currentResult,
+        showResult,
+        showNext,
+        showScore
+    } = state;
+
     const [cxs, setCxs] = React.useState(null);
 
     React.useEffect(() => {
@@ -252,16 +139,21 @@ const App = ({context})=> {
 
             const quizData = get(data, "response.quiz", {});
             const quiz = new _Quiz(quizData);
-            context.language_bundle = initLanguageBundle(quizData);
+            jContent.language_bundle = initLanguageBundle(quizData);
 
-            dispatch({case:"START",quiz});
+            dispatch({
+                case:"START",
+                payload:{
+                    quiz
+                }
+            });
 
             //init unomi tracker
-            if(context.gql_variables.workspace === "LIVE"){
+            if(jContent.gql_variables.workspace === "LIVE"){
                 uTracker.initialize({
                     "Apache Unomi": {
-                        scope: context.scope,
-                        url: context.cdp_endpoint,
+                        scope: jContent.scope,
+                        url: jContent.cdp_endpoint,
                         sessionId:`qZ-${quiz.key}-${Date.now()}`
                     }
                 });
@@ -270,8 +162,7 @@ const App = ({context})=> {
                 })
             }
 
-
-            context.content={
+            jContent.content={
                 id: quiz.id,
                 type: get(quizData, "type.value")
             };
@@ -282,74 +173,71 @@ const App = ({context})=> {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
+    const handleNextSlide = () =>
+        dispatch({
+            case:"NEXT_SLIDE"
+        });
+
     return (
-        <JContext.Provider value={context}>
+        <JContext.Provider value={jContent}>
             <Container>
                 <Row>
-                    <div className={`game4-quiz slide ${state.showResult?"show-result":""}`}>
+                    <div className={`game4-quiz slide ${showResult?"show-result":""}`}>
                         <div className="game4-quiz__header">
                             <span className="game4-quiz__header-result">
-                                {state.currentResult &&
-                                    context.language_bundle &&
-                                    context.language_bundle.correctAnswer}
-                                {!state.currentResult &&
-                                    context.language_bundle &&
-                                    context.language_bundle.wrongAnswer}
+                                {currentResult &&
+                                    jContent.language_bundle &&
+                                    jContent.language_bundle.correctAnswer}
+                                {!currentResult &&
+                                    jContent.language_bundle &&
+                                    jContent.language_bundle.wrongAnswer}
                             </span>
 
                             <Button variant="game4-quiz-header"
-                                    onClick={ () => dispatch({case:"NEXT_SLIDE"}) }
-                                    disabled={!state.showNext}>
-                                {!state.showScore &&
-                                    context.language_bundle &&
-                                    context.language_bundle.btnNextQuestion}
-                                {state.showScore &&
-                                    context.language_bundle &&
-                                    context.language_bundle.btnShowResults}
+                                    onClick={handleNextSlide}
+                                    disabled={!showNext}>
+                                {!showScore &&
+                                    jContent.language_bundle &&
+                                    jContent.language_bundle.btnNextQuestion}
+                                {showScore &&
+                                    jContent.language_bundle &&
+                                    jContent.language_bundle.btnShowResults}
                             </Button>
 
                         </div>
 
                         <ol className="game4-quiz__indicators">
-                            {state.slideSet.map( itemId =>
+                            {slideSet.map( itemId =>
                                 <Indicator
                                     key={itemId}
                                     id={itemId}
-                                    state={state}
-                                    dispatch={dispatch}
                                 />
                             )}
                         </ol>
 
                         <div className="game4-quiz__inner">
                             <Quiz
-                                key={state.quiz.id}
-                                state={state}
-                                dispatch={dispatch}
+                                key={quiz.id}
                                 cxs={cxs}
                             />
-                            {state.quiz.childNodes.map( (node,i) => {
-                                if(node.type === context.cnd_type.QNA)
+                            {quiz.childNodes.map( (node,i) => {
+                                if(node.type === jContent.cnd_type.QNA)
                                     return <Qna
                                             key={node.id}
                                             id={node.id}
-                                            state={state}
-                                            dispatch={dispatch}
                                         />
 
-                                if(node.type === context.cnd_type.WARMUP)
+                                if(node.type === jContent.cnd_type.WARMUP)
                                     return <Warmup
                                         key={node.id}
                                         id={node.id}
-                                        state={state}
-                                        dispatch={dispatch}
                                     />
                                 return <p className="text-danger">node type {node.type} is not supported</p>
                                 })
                             }
-                            <Score
-                                state={state}
-                            />
+
+                            <Score/>
+
                         </div>
                     </div>
                 </Row>
@@ -359,7 +247,7 @@ const App = ({context})=> {
 };
 
 App.propTypes={
-    context:PropTypes.object.isRequired
+    jContent:PropTypes.object.isRequired
 }
 
 export default App;

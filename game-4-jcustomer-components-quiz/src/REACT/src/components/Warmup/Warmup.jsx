@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {Button} from "react-bootstrap";
 
 import get from "lodash.get";
-import {JContext} from "contexts";
+import {JContext, StoreContext} from "contexts";
 import {GET_WARMUP} from "./WarmupGraphQL";
 import VideoPlayer from "components/VideoPlayer";
 
@@ -44,6 +44,10 @@ class _Warmup{
 };
 
 const Warmup = (props) => {
+    const { state, dispatch } = React.useContext(StoreContext);
+    const {currentSlide} = state;
+
+
     const {gql_variables,files_endpoint,language_bundle} =  useContext(JContext);
     const variables = Object.assign(gql_variables,{id:props.id})
     // const query = loader("./Warmup.graphql.disabled");
@@ -62,12 +66,13 @@ const Warmup = (props) => {
 
             const nodesIds = [];
             warmup.childNodes.forEach(node => nodesIds.push(node.id));
-            props.dispatch({
+            dispatch({
                 case:"ADD_SLIDES",
-                slides:nodesIds,
-                parentSlide:warmup.id
+                payload:{
+                    slides:nodesIds,
+                    parentSlide:warmup.id
+                }
             });
-            // props.addItem2Slides(nodesIds,warmup.id);
 
             // console.debug("warmup.id : ",warmup.id,"; warmup.video : ",warmup.video);
             setWarmup(warmup);
@@ -78,8 +83,11 @@ const Warmup = (props) => {
     if (error) return <p>Error :(</p>;
     // console.log("warmup.video global : ",warmup.video);
 
-    const {currentSlide} = props.state;
     const show = currentSlide === props.id;
+    const handleCLick = () =>
+        dispatch({
+            case:"NEXT_SLIDE"
+        });
 
     return(
         <>
@@ -100,7 +108,7 @@ const Warmup = (props) => {
                         </div>
                     }
                     <Button variant="game4-quiz"
-                            onClick={ () => props.dispatch({case:"NEXT_SLIDE"}) }>
+                            onClick={ handleCLick }>
                         {/*disabled={!props.showNext}*/}
                         {language_bundle && language_bundle.btnQuestion}
                     </Button>
@@ -110,8 +118,6 @@ const Warmup = (props) => {
                 <Qna
                     key={node.id}
                     id={node.id}
-                    state={props.state}
-                    dispatch={props.dispatch}
                 />
             )}
         </>
@@ -119,9 +125,7 @@ const Warmup = (props) => {
 }
 
 Warmup.propTypes={
-    id:PropTypes.string.isRequired,
-    state:PropTypes.object.isRequired,
-    dispatch:PropTypes.func.isRequired
+    id:PropTypes.string.isRequired
 }
 
 export default Warmup;

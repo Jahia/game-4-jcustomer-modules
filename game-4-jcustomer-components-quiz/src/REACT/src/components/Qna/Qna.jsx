@@ -4,7 +4,7 @@ import {Button} from "react-bootstrap";
 
 import {useQuery} from "@apollo/react-hooks";
 import get from "lodash.get";
-import {JContext} from "contexts";
+import {JContext, StoreContext} from "contexts";
 import uTracker from "unomi-analytics";
 
 import {GET_QNA} from "./QnaGraphQL";
@@ -37,27 +37,26 @@ class _Qna{
 
         this.computedNbExpectedAnswer = this.answers.filter(answer => answer.valid).length;
     };
-    // getNbExpectedAnswer(){
-    //     return this.answers.filter(answer => answer.valid).length;
-    // };
 
     valid() {
-        console.log("qna isValid this.notUsedForScore : ",this.notUsedForScore);
+        console.debug("qna isValid this.notUsedForScore : ",this.notUsedForScore);
         if(this.notUsedForScore)
             return true;
 
-        console.log("qna isValid start eval");
+        console.debug("qna isValid start eval");
         const isValid = this.answers.reduce((result,answer)=>{
             if(answer.valid)
                 result.push(answer.checked);
             return result;
         },[]).reduce((result,checked) => result && checked,true);
-        console.log("qna isValid : ",isValid);
+        console.debug("qna isValid : ",isValid);
         return isValid;
     };
 }
 
 const Qna = (props) => {
+    const { state, dispatch } = React.useContext(StoreContext);
+    const {currentSlide} = state;
 
     const {gql_variables,files_endpoint,quiz_validMark,language_bundle} =  React.useContext(JContext);
     const variables = Object.assign(gql_variables,{id:props.id})
@@ -98,7 +97,6 @@ const Qna = (props) => {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
-    const {currentSlide} = props.state;
     const show = currentSlide === props.id;
 
     const handleChange= (e) => {
@@ -119,14 +117,14 @@ const Qna = (props) => {
     }
 
     const handleSubmit = () => {
-
-        console.log("[handleSubmit] qna.valid() => ",qna.valid());
-        props.dispatch({
+        console.debug("[handleSubmit] qna.valid() => ",qna.valid());
+        dispatch({
             case:"SHOW_RESULT",
-            result:qna.valid()
+            payload:{
+                result:qna.valid()
+            }
         });
 
-        // props.setResultSet([...props.resultSet,qna.valid()]);
         // console.log("[handleSubmit] qna.jExpField2Map => ",qna.jExpField2Map);
         if(qna.jExpField2Map){
             //Get response label
@@ -189,9 +187,7 @@ const Qna = (props) => {
 }
 
 Qna.propTypes={
-    id:PropTypes.string.isRequired,
-    state:PropTypes.object.isRequired,
-    dispatch:PropTypes.func.isRequired
+    id:PropTypes.string.isRequired
 }
 
 export default Qna;

@@ -2,15 +2,50 @@ import React from 'react';
 import PropTypes from "prop-types";
 import {Button} from "react-bootstrap";
 
-import {JContext} from "contexts";
+import {JContext, StoreContext} from "contexts";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Consent from "components/Consent";
 import uTracker from "unomi-analytics";
 
+// const initialState = {
+//     checked:{},
+//     granted:[],//array of boolean, order is the same a slideSet
+//     disabledStartBtn
+// }
+//
+//
+// function reducer(state, action) {
+//
+//     switch (action.case) {
+//         case "START": {
+//             //prepare slideIds
+//             const quiz = action.quiz;
+//             const slideSet = [quiz.id];
+//             quiz.childNodes.forEach(node => slideSet.push(node.id));
+//             slideSet.push(quiz.scoreIndex);
+//
+//             const max = slideSet.length -1;
+//
+//             return {
+//                 ...state,
+//                 quiz,
+//                 currentSlide:quiz.id,
+//                 slideSet,
+//                 showNext:showNext({slideSet,max,slide:quiz.id}),
+//                 max
+//             };
+//         }
+//         default:
+//             throw new Error();
+//     }
+// }
+
 //TODO create a reducer to simplify the stuff!
 const Quiz = (props) => {
-    const {quiz,showNext,currentSlide} = props.state;
+    const { state, dispatch } = React.useContext(StoreContext);
+
+    const {quiz,showNext,currentSlide} = state;
     const show = currentSlide === quiz.id;
 
     const {files_endpoint,consent_status,scope,gql_variables,language_bundle} =  React.useContext(JContext);
@@ -66,7 +101,7 @@ const Quiz = (props) => {
         Object.keys(checked).forEach(consentId => {
             handleConsentStatus(checked[consentId],consent_status.GRANTED);
         });
-        props.dispatch({case:"NEXT_SLIDE"});
+        dispatch({case:"NEXT_SLIDE"});
     };
 
     const handleConsentStatus = (typeIdentifier,status) => {
@@ -141,8 +176,6 @@ const Quiz = (props) => {
 }
 
 Quiz.propTypes={
-    state:PropTypes.object.isRequired,
-    dispatch:PropTypes.func.isRequired,
     cxs:PropTypes.object
 }
 

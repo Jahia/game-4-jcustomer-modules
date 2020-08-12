@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from "prop-types";
 import { CircularProgressbar } from 'react-circular-progressbar';
 
-import {JContext} from "contexts";
+import {JContext, StoreContext} from "contexts";
 
 const Score = (props) => {
-    const {quiz,currentSlide,score} = props.state;
+    const { state } = React.useContext(StoreContext);
+    const {quiz,currentSlide,score} = state;
     const show = currentSlide === quiz.scoreIndex;
 
     const {files_endpoint} =  React.useContext(JContext);
@@ -26,8 +27,6 @@ const Score = (props) => {
     );
 }
 
-Score.propTypes={
-    state:PropTypes.object.isRequired
-}
+Score.propTypes={}
 
 export default Score;
