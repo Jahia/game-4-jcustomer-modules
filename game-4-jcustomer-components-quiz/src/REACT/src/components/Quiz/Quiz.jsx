@@ -67,7 +67,7 @@ function reducer(state, action) {
             }
         }
         default:
-            throw new Error();
+            throw new Error(`QUIZ action case '${action.case}' is unknown `);
     }
 }
 

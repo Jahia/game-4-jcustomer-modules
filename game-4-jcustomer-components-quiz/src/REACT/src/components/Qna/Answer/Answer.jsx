@@ -5,37 +5,44 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
 const Answer = (props) =>{
-    // const [checked,toggleChecked] = useState(props.answer.checked);
-    // const _ID_ = getRandomString(5,"#aA");
+    const {qna, qnaDispatch,answer} = props;
 
-    const isValid = props.answer.valid || (props.qna.notUsedForScore ? props.answer.checked : false);
+    const isValid = answer.valid || (qna.notUsedForScore ? answer.checked : false);
+    const handleChange = () =>
+        qnaDispatch({
+            case:"TOGGLE_ANSWER",
+            payload:{
+                answer
+            }
+        });
+
     return(
-        <li className={props.answer.checked?"checked":""}>
+        <li className={answer.checked?"checked":""}>
             <div className={`result ${isValid?"valid":""}`}>
                 {isValid &&
-                <FontAwesomeIcon icon={['fas','check']}/>
+                    <FontAwesomeIcon icon={['fas','check']}/>
                 }
                 {!isValid &&
-                <FontAwesomeIcon icon={['fas','times']}/>
+                    <FontAwesomeIcon icon={['fas','times']}/>
                 }
             </div>
             <Form.Check
                 custom
-                type={props.qna.computedNbExpectedAnswer >1 ?"checkbox":"radio"}
-                name={props.qna.id}
-                id={props.answer.id}
-                label={props.answer.label}
-                onChange={props.handleChange}
-                checked={props.checked}
+                type={qna.inputType}
+                name={qna.id}
+                id={answer.id}
+                label={answer.label}
+                onChange={handleChange}
+                checked={answer.checked}
             />
         </li>
     );
 };
+
 Answer.propTypes={
     qna:PropTypes.object.isRequired,
+    qnaDispatch:PropTypes.func.isRequired,
     answer:PropTypes.object.isRequired,
-    checked:PropTypes.bool.isRequired,
-    handleChange:PropTypes.func.isRequired
 }
 
 export default Answer;

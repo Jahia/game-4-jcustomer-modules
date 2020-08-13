@@ -12,52 +12,101 @@ import {GET_QNA} from "./QnaGraphQL";
 import Answer from "./Answer";
 import {getRandomString} from "misc/utils";
 
-class _Qna{
-    //NOTE be sure string value like "false" or "true" are boolean I use JSON.parse to cast
-    constructor(qnaData,quiz_validMark) {
-        // console.log("Warmup : ",quiz);
-        this.id= get(qnaData, "id");
-        this.title= get(qnaData, "title");
-        this.question= get(qnaData, "question.value", "");
-        this.help= get(qnaData, "help.value", "");
-        // this.nbExpectedAnswer= get(qnaData, "nbExpectedAnswer.value", "");
-        this.randomSelection= JSON.parse(get(qnaData, "randomSelection.value", false));
-        this.notUsedForScore= JSON.parse(get(qnaData, "notUsedForScore.value", false));
-        this.cover= get(qnaData, "cover.node.path", "");
-        this.jExpField2Map= get(qnaData, "jExpField2Map.value", "");
-        this.answers= get(qnaData, "answers.values", []).map(answer=>{
-            const id = getRandomString(5,"#aA");
-            const valid = answer.indexOf(quiz_validMark) === 0;
-            if(valid)
-                answer = answer.substring(quiz_validMark.length+1);//+1 is for space between mark and label
+const initialQNA = {
+    enableSubmit:false,
+}
 
-            return {id,label:answer,checked:false,valid}
-        })
-        if(this.randomSelection)
-            this.answers.sort( (a,b) => a.id > b.id );
+// const init = () => {
+//     return {
+//         enableSubmit:false,
+//         // checkedAnswers:[]
+//     }
+// };
 
-        this.computedNbExpectedAnswer = this.answers.filter(answer => answer.valid).length;
-    };
+const _QNA_ = (qnaData,quiz_validMark) =>{
+    const randomSelection=JSON.parse(get(qnaData, "randomSelection.value", false));
+    const answers= get(qnaData, "answers.values", []).map(answer=>{
+        const id = getRandomString(5,"#aA");
+        const valid = answer.indexOf(quiz_validMark) === 0;
+        if(valid)
+            answer = answer.substring(quiz_validMark.length+1);//+1 is for space between mark and label
 
-    valid() {
-        console.debug("qna isValid this.notUsedForScore : ",this.notUsedForScore);
-        if(this.notUsedForScore)
-            return true;
+        return {id,label:answer,checked:false,valid}
+    })
 
-        console.debug("qna isValid start eval");
-        const isValid = this.answers.reduce((result,answer)=>{
-            if(answer.valid)
-                result.push(answer.checked);
-            return result;
-        },[]).reduce((result,checked) => result && checked,true);
-        console.debug("qna isValid : ",isValid);
-        return isValid;
+    if(randomSelection)
+        answers.sort( (a,b) => a.id > b.id );
+
+    // const nbExpectedAnswer = answers.filter(answer => answer.valid).length;
+    const inputType = answers.filter(answer => answer.valid).length > 1 ?"checkbox":"radio"
+
+    return {
+        id: get(qnaData, "id"),
+        title: get(qnaData, "title"),
+        question: get(qnaData, "question.value", ""),
+        help: get(qnaData, "help.value", ""),
+        notUsedForScore: JSON.parse(get(qnaData, "notUsedForScore.value", false)),
+        cover: get(qnaData, "cover.node.path", ""),
+        jExpField2Map: get(qnaData, "jExpField2Map.value", ""),
+        randomSelection,
+        answers,
+        inputType
+        // nbExpectedAnswer
+    }
+}
+
+const reducer = (qna, action) => {
+    const { payload } = action;
+
+    switch (action.case) {
+        case "DATA_READY": {
+            const {qnaData,quiz_validMark} = payload;
+            console.debug("[QNA] DATA_READY -> qnaData :",qnaData);
+
+            return {
+                ...qna,
+                ..._QNA_(qnaData,quiz_validMark)
+            }
+        }
+        case "TOGGLE_ANSWER": {
+            const {answer} = payload;//answer id
+            console.debug("[QNA] TOGGLE_ANSWER -> answer :",answer);
+            let {answers} = qna;
+            if(qna.inputType === "radio")
+                answers = answers.map( answer =>{ return {...answer,checked:false} });
+
+            answers = answers.map(_answer => {
+                if(_answer.id === answer.id)
+                    return {
+                        ..._answer,
+                        checked:!_answer.checked
+                    };
+                return _answer
+            });
+            const enableSubmit = answers.filter(answer => answer.checked).length > 0
+
+            return{
+                ...qna,
+                answers,
+                enableSubmit
+            }
+        }
+        case "RESET":{
+            const {qnaData,quiz_validMark} = payload;
+            console.debug("[QNA] RESET -> qnaData :",qnaData);
+            return{
+                ...initialQNA,
+                ..._QNA_(qnaData,quiz_validMark)
+            }
+        }
+        default:
+            throw new Error(`QNA action case '${action.case}' is unknown `);
     };
 }
 
 const Qna = (props) => {
     const { state, dispatch } = React.useContext(StoreContext);
-    const { currentSlide,jContent } = state;
+    const { currentSlide,jContent,reset } = state;
     const { gql_variables,files_endpoint,quiz_validMark,language_bundle } =  jContent;
 
     const variables = Object.assign(gql_variables,{id:props.id})
@@ -65,64 +114,55 @@ const Qna = (props) => {
         variables:variables,
     });
 
-    // const [answers, setAnswers] = React.useState([]);
-    const [qna, setQna] = React.useState({answers:[]});
-    const [disableSubmit, setDisableSubmit] = React.useState(true);
-    const [checked, setChecked] = React.useState([]);
+    const [qna, qnaDispatch] = React.useReducer(
+        reducer,
+        initialQNA
+    );
 
     React.useEffect(() => {
-
         if(loading === false && data){
             const qnaData = get(data, "response.qna", {});
-            // console.log("Qna ",qnaData.id," : init");
-            setQna(new _Qna(qnaData,quiz_validMark));
+            qnaDispatch({
+                case:"DATA_READY",
+                payload:{
+                    qnaData,
+                    quiz_validMark
+                }
+            });
         }
-
     }, [loading,data]);
 
     React.useEffect(() => {
-        let disable = true;//used to handleDisableSubmit
-
-        qna.answers.forEach(answer=>{
-            answer.checked = checked.includes(answer.id);
-            if(answer.checked)
-                disable = false;
-        })
-        // console.log("qna.answers : ",qna.answers);
-        // setQna(qna);
-        setDisableSubmit(disable);
-
-    }, [checked]);
-
+        if(reset && data){
+            const qnaData = get(data, "response.qna", {});
+            qnaDispatch({
+                case:"RESET",
+                payload:{
+                    qnaData,
+                    quiz_validMark
+                }
+            });
+        }
+    }, [reset,data]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
+    // console.log("*** qna data : ",data);
+    console.log("*** qna qna : ",qna);
+
 
     const show = currentSlide === props.id;
 
-    const handleChange= (e) => {
-        // console.log("handleChange : ",e.target.id);
-        // console.log("qna.computedNbExpectedAnswer : ",qna.computedNbExpectedAnswer);
-
-        if(qna.computedNbExpectedAnswer <= 1){//case radio, <=1 is required to manage question not used for score
-            setChecked(e.target.id)
-        }else {//case checkbox
-            const index = checked.indexOf(e.target.id);
-            if(index === -1){//checked
-                setChecked([...checked, e.target.id]);
-            }else{//unchecked
-                checked.splice(index,1);
-                setChecked([...checked]);
-            }
-        }
-    }
-
     const handleSubmit = () => {
-        console.debug("[handleSubmit] qna.valid() => ",qna.valid());
+
         dispatch({
             case:"SHOW_RESULT",
             payload:{
-                result:qna.valid()
+                result:qna.notUsedForScore ?
+                        true :
+                        qna.answers
+                        .filter(answer => answer.valid)
+                        .reduce( (test,answer) => test && answer.checked,true)
             }
         });
 
@@ -132,12 +172,12 @@ const Qna = (props) => {
             //TODO manage case multiple later
             const values =
                 qna.answers
-                .filter(answers => answers.checked)
+                .filter(answer => answer.checked)
                 .reduce(
                     (label,answer) =>
-                        (answer.label && 0 < answer.label.length)
-                            ?answer.label
-                            :null
+                        (answer.label && answer.label.length > 0) ?
+                            answer.label :
+                            null
                     ,null
                 );
 
@@ -165,23 +205,23 @@ const Qna = (props) => {
                     <legend>{qna.question}
                         <i>{qna.help}</i>
                     </legend>
-                    <ol className="game4-quiz__answer-list">
-                        {qna.answers.map((answer,i)=>
-                            <Answer
-                                key={i}
-                                qna={qna}
-                                answer={answer}
-                                checked={checked.includes(answer.id)}
-                                handleChange={handleChange}
-                            />)
-                        }
-                    </ol>
-
+                    {qna.answers &&
+                        <ol className="game4-quiz__answer-list">
+                            {qna.answers.map( answer =>
+                                <Answer
+                                    key={answer.id}
+                                    qna={qna}
+                                    qnaDispatch={qnaDispatch}
+                                    answer={answer}
+                                />)
+                            }
+                        </ol>
+                    }
                 </fieldset>
 
                 <Button variant="game4-quiz"
                         onClick={handleSubmit}
-                        disabled={disableSubmit}>
+                        disabled={!qna.enableSubmit}>
                     {language_bundle && language_bundle.btnSubmit}
                 </Button>
 

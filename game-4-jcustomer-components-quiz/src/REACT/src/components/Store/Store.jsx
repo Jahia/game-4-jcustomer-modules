@@ -4,7 +4,7 @@ import {StoreContext} from "contexts";
 
 const init = jContent => {
     return {
-        jContent:{...jContent},
+        jContent,
         quiz:{consents:[],childNodes:[]},
         resultSet:[],//array of boolean, order is the same a slideSet
         currentResult:false,//previously result
@@ -15,7 +15,8 @@ const init = jContent => {
         showScore:false,
         max:-1,
         score:0,
-        cxs:null
+        cxs:null,
+        reset:false
     }
 }
 
@@ -26,10 +27,10 @@ const reducer = (state, action) => {
         slideSet.indexOf(slide) < max;
 
     switch (action.case) {
-        case "START": {
+        case "DATA_READY": {
             //prepare slideIds
             const quiz = payload.quiz;
-            console.debug("START - quiz: ",quiz);
+            console.debug("[STORE] DATA_READY - quiz: ",quiz);
             const slideSet = [quiz.id];
             quiz.childNodes.forEach(node => slideSet.push(node.id));
             slideSet.push(quiz.scoreIndex);
@@ -47,7 +48,7 @@ const reducer = (state, action) => {
         }
         case "ADD_CXS": {
             const cxs = payload.cxs;
-            console.debug("ADD_CXS - cxs: ",cxs);
+            console.debug("[STORE] ADD_CXS - cxs: ",cxs);
             return {
                 ...state,
                 cxs
@@ -67,7 +68,7 @@ const reducer = (state, action) => {
 
             const max = slideSet.length -1;
 
-            console.debug("ADD_SLIDE - slides: ",slides," parentSlide: ",parentSlide);
+            console.debug("[STORE] ADD_SLIDE - slides: ",slides," parentSlide: ",parentSlide);
             return {
                 ...state,
                 slideSet,
@@ -79,35 +80,26 @@ const reducer = (state, action) => {
             const currentIndex = state.slideSet.indexOf(state.currentSlide);
             const nextIndex = currentIndex+1;
 
-            console.debug("NEXT_SLIDE - currentIndex: ",currentIndex,", max : ",state.max);
+            console.debug("[STORE] NEXT_SLIDE - currentIndex: ",currentIndex,", max : ",state.max);
 
             let nextSlide = state.currentSlide;
-            let score = state.score;
+            // let score = state.score;
 
             if(currentIndex  < state.max )
                 nextSlide = state.slideSet[nextIndex];
-
-            //next slide is the result page, time tp keep track of result in cdp
-            if(nextIndex === state.max){
-                const goodAnswers = state.resultSet.filter(result => result).length;
-                const answers = state.resultSet.length;
-                score = Math.floor((goodAnswers/answers)*100);
-                uTracker.track("setQuizScore",{
-                    score:`${state.quiz.key}${state.jContent.score_splitPattern}${score}`
-                })
-            }
 
             return {
                 ...state,
                 currentSlide:nextSlide,
                 showNext: showNext({...state,slide:nextSlide}),
                 showResult:false,
-                score
+                reset:false
+                // score
             };
         }
         case "SHOW_SLIDE": {
             const slide = payload.slide
-            console.debug("SHOW_SLIDE - slide: ",slide);
+            console.debug("[STORE] SHOW_SLIDE - slide: ",slide);
             return {
                 ...state,
                 currentSlide: slide,
@@ -119,8 +111,8 @@ const reducer = (state, action) => {
             const currentIndex = state.slideSet.indexOf(state.currentSlide);
             const showScore = currentIndex === state.max-1;
 
-            console.debug("SHOW_RESULT - currentResult: ", currentResult);
-            console.debug("SHOW_RESULT - showScore: ", showScore,", currentIndex: ",currentIndex,", max : ",state.max);
+            console.debug("[STORE] SHOW_RESULT - currentResult: ", currentResult);
+            // console.debug("SHOW_RESULT - showScore: ", showScore,", currentIndex: ",currentIndex,", max : ",state.max);
             return {
                 ...state,
                 showScore,
@@ -129,16 +121,42 @@ const reducer = (state, action) => {
                 showResult: true
             };
         }
-        case "RESET": {
-            //TODO voir ce truc
-            console.debug("RESET - jContent: ",payload.jContent);
+        case "SHOW_SCORE": {
+            console.debug("[STORE] SHOW_SCORE");
+            const [slide] = state.slideSet.slice(-1);
+
+            const goodAnswers = state.resultSet.filter(result => result).length;
+            const answers = state.resultSet.length;
+            const score = Math.floor((goodAnswers/answers)*100);
+
+            uTracker.track("setQuizScore",{
+                score:`${state.quiz.key}${state.jContent.score_splitPattern}${score}`
+            })
+
             return {
-                ...init(payload.jContent),
-                quiz:payload.quiz
+                ...state,
+                currentSlide: slide,
+                showNext: showNext({...state, slide}),
+                showResult:false,
+                score
+            };
+        }
+        case "RESET": {
+            console.debug("[STORE] RESET");
+
+            const [currentSlide] = state.slideSet.slice(0,1);
+            console.debug("[STORE] RESET slideSet",state.slideSet);
+
+            return {
+                ...state,
+                currentSlide,
+                resultSet:[],
+                currentResult:false,
+                reset:true
             }
         }
         default:
-            throw new Error();
+            throw new Error(`STORE action case '${action.case}' is unknown `);
     };
 }
 

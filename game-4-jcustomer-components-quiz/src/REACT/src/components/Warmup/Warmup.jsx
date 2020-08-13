@@ -40,12 +40,21 @@ class _Warmup{
             this.video= this.videoIntPath ?
                 `${files_endpoint}${encodeURI(this.videoIntPath)}`:
                 get(warmupData, "videoExtPath.value")
-    };
+    }
+
+    // get video(){
+    //     if(!this.videoLink)
+    //         return null;
+    //
+    //     return this.videoIntPath ?
+    //         `${files_endpoint}${encodeURI(this.videoIntPath)}`:
+    //         get(warmupData, "videoExtPath.value")
+    // }
 };
 
 const Warmup = (props) => {
     const { state, dispatch } = React.useContext(StoreContext);
-    const { currentSlide,jContent} = state;
+    const { currentSlide,jContent,slideSet} = state;
     const { gql_variables,files_endpoint,language_bundle } =  jContent;
 
     const variables = Object.assign(gql_variables,{id:props.id})
@@ -61,7 +70,7 @@ const Warmup = (props) => {
         if(loading === false && data){
 
             const warmup=new _Warmup(get(data, "response.warmup", {}),files_endpoint);
-            // console.log("Warmup ",warmup.id," : init");
+            // console.log("*** warmup useEffect");
 
             const nodesIds = [];
             warmup.childNodes.forEach(node => nodesIds.push(node.id));
@@ -80,7 +89,8 @@ const Warmup = (props) => {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
-    // console.log("warmup.video global : ",warmup.video);
+    console.log("*** warmup data : ",data);
+    // console.log("*** warmup slideSet : ",slideSet);
 
     const show = currentSlide === props.id;
     const handleCLick = () =>

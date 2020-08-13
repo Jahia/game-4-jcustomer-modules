@@ -13,10 +13,7 @@ const Score = (props) => {
     //TODO voire ca
     const onClick = () => {
         dispatch({
-            case:"START",
-            payload:{
-                quiz
-            }
+            case:"RESET"
         });
     }
 
@@ -30,16 +27,16 @@ const Score = (props) => {
             }
             <div className="game4-quiz__caption d-none d-md-block">
                 <h2 className="text-uppercase">{quiz.title}<span className="subtitle">{quiz.subtitle}</span></h2>
-                <div className="game4-quiz__score-result col-6 offset-3 col-md-4 offset-md-4">
+                <div className="game4-quiz__score-result col-6 offset-3 col-md-4 offset-md-4 mb-5">
                     <CircularProgressbar value={score} text={`${score}%`}/>
                 </div>
-            </div>
 
-            {/*<Button variant="game4-quiz"*/}
-            {/*        onClick={onClick}>*/}
-            {/*        Reset*/}
-            {/*    /!*{language_bundle && language_bundle.btnStart}*!/*/}
-            {/*</Button>*/}
+                <Button variant="game4-quiz"
+                        onClick={onClick}>
+                    Reset
+                    {/*{language_bundle && language_bundle.btnStart}*/}
+                </Button>
+            </div>
         </div>
     );
 }

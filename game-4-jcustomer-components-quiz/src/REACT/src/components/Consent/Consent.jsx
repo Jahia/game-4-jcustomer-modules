@@ -77,8 +77,6 @@ const Consent = (props)=> {
     });
 
     const [consent, setConsent] = React.useState({});
-    // const [consentGranted, setConsentGranted] = React.useState(false);
-    // const [checked, setChecked] = React.useState([]);
 
     React.useEffect(() => {
 

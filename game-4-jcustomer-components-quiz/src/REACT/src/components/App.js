@@ -144,7 +144,7 @@ const App = (props)=> {
             console.debug("jContent.language_bundle: ",jContent.language_bundle);
 
             dispatch({
-                case:"START",
+                case:"DATA_READY",
                 payload:{
                     quiz
                 }
@@ -180,33 +180,41 @@ const App = (props)=> {
             case:"NEXT_SLIDE"
         });
 
+    const handleShowScore = () =>
+        dispatch({
+            case:"SHOW_SCORE"
+        });
+
     return (
         <Container>
             <Row>
                 <div className={`game4-quiz slide ${showResult?"show-result":""}`}>
-                    <div className="game4-quiz__header">
-                        <span className="game4-quiz__header-result">
-                            {currentResult &&
-                                jContent.language_bundle &&
-                                jContent.language_bundle.correctAnswer}
-                            {!currentResult &&
-                                jContent.language_bundle &&
-                                jContent.language_bundle.wrongAnswer}
-                        </span>
+                    {jContent.language_bundle &&
+                        <div className="game4-quiz__header">
 
-                        <Button variant="game4-quiz-header"
-                                onClick={handleNextSlide}
-                                disabled={!showNext}>
-                            {!showScore &&
-                                jContent.language_bundle &&
-                                jContent.language_bundle.btnNextQuestion}
-                            {showScore &&
-                                jContent.language_bundle &&
-                                jContent.language_bundle.btnShowResults}
-                        </Button>
+                                <span className="game4-quiz__header-result">
+                                    {currentResult &&
+                                        jContent.language_bundle.correctAnswer}
+                                    {!currentResult &&
+                                        jContent.language_bundle.wrongAnswer}
+                                </span>
+                                {!showScore &&
+                                    <Button variant="game4-quiz-header"
+                                        onClick={handleNextSlide}
+                                        disabled={!showNext}>
+                                        {jContent.language_bundle.btnNextQuestion}
+                                    </Button>
+                                }
+                                {showScore &&
+                                    <Button variant="game4-quiz-header"
+                                        onClick={handleShowScore}
+                                        disabled={!showNext}>
+                                        {jContent.language_bundle.btnShowResults}
+                                    </Button>
+                                }
 
-                    </div>
-
+                        </div>
+                    }
                     <ol className="game4-quiz__indicators">
                         {slideSet.map( itemId =>
                             <Indicator
