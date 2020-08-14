@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import {Button, Container, Row} from 'react-bootstrap';
 import { useQuery } from '@apollo/react-hooks';
 
-import uTracker from 'unomi-analytics';
 import get from "lodash.get";
 
 import {StoreContext} from "contexts";
@@ -25,8 +24,7 @@ import Quiz from "components/Quiz"
 import Qna from "components/Qna";
 import Warmup from "components/Warmup";
 import Score from "components/Score";
-import {getRandomString} from "misc/utils";
-
+import {syncTracker} from "misc/tracker";
 
 
 library.add(
@@ -44,18 +42,21 @@ library.add(
 const Indicator = (props) =>{
     const { state, dispatch } = React.useContext(StoreContext);
     const {currentSlide} = state;
+    const {id,enabled} = props;
 
-    const active = currentSlide === props.id;
-    const handleCLick = () =>
-        dispatch({
-            case:"SHOW_SLIDE",
-            payload:{
-                slide:props.id
-            }
-        });
+    const active = currentSlide === id;
+    const handleCLick = () =>{
+        if(enabled)
+            dispatch({
+                case:"SHOW_SLIDE",
+                payload:{
+                    slide:id
+                }
+            });
+    };
 
     return(
-        <li className={`${active ? 'active':''}`}
+        <li className={`${active ? 'active':''} ${enabled ? 'clickable':''}`}
             onClick={handleCLick}>
         </li>
     )
@@ -63,34 +64,7 @@ const Indicator = (props) =>{
 
 Indicator.propTypes={
     id:PropTypes.string.isRequired,
-}
-
-class _Quiz{
-    //NOTE be sure string value like "false" or "true" are boolean I use JSON.parse to cast
-    constructor(quizData) {
-        this.id= get(quizData, "id");
-        this.type= get(quizData, "type.value")
-        this.key = get(quizData, "key.value", {});
-        this.title= get(quizData, "title", "");
-        this.subtitle= get(quizData, "subtitle.value", "");
-        this.description= get(quizData, "description.value", "");
-        this.duration= get(quizData, "duration.value", "");
-        // this.ctaLink= get(quizData, "ctaLink.value", "");
-        this.cover= get(quizData, "cover.node.path", "");
-        this.consents= get(quizData, "consents.nodes", []).map(node =>{
-            return {
-                id:get(node,"id"),
-                actived:JSON.parse(get(node,"actived.value"))
-            }
-        });
-        this.childNodes = get(quizData,"children.nodes",[]).map(node =>{
-            return {
-                id: get(node, "id"),
-                type: get(node, "type.value")
-            };
-        });
-        this.scoreIndex= getRandomString(5,"#aA");
-    };
+    enabled:PropTypes.bool.isRequired
 }
 
 const initLanguageBundle = quizData => {
@@ -100,6 +74,7 @@ const initLanguageBundle = quizData => {
         "btnQuestion",
         "btnNextQuestion",
         "btnShowResults",
+        "btnReset",
         "consentTitle",
         "correctAnswer",
         "wrongAnswer"
@@ -113,7 +88,7 @@ const initLanguageBundle = quizData => {
 
 //NOPE ! TODO jCustomer/context.json -> context. jContext.value = {context,jCustomer}
 const App = (props)=> {
-    // console.log("App GET_QUIZ : ",GET_QUIZ);
+
     const { state, dispatch } = React.useContext(StoreContext);
     const {
         jContent,
@@ -125,12 +100,9 @@ const App = (props)=> {
         showScore
     } = state;
 
-
     const {loading, error, data} = useQuery(GET_QUIZ, {
         variables:jContent.gql_variables,
     });
-
-    // const [cxs, setCxs] = React.useState(null);
 
     React.useEffect(() => {
         console.debug("App Quiz init !");
@@ -138,40 +110,29 @@ const App = (props)=> {
             console.debug("App Quiz init Set Data!");
 
             const quizData = get(data, "response.quiz", {});
-            const quiz = new _Quiz(quizData);
-            jContent.language_bundle = initLanguageBundle(quizData);
+            const quizKey = get(quizData, "key.value");
 
+            jContent.language_bundle = initLanguageBundle(quizData);
             console.debug("jContent.language_bundle: ",jContent.language_bundle);
 
             dispatch({
                 case:"DATA_READY",
                 payload:{
-                    quiz
+                    quizData
                 }
             });
 
             //init unomi tracker
-            if(jContent.gql_variables.workspace === "LIVE"){
-                uTracker.initialize({
-                    "Apache Unomi": {
-                        scope: jContent.scope,
-                        url: jContent.cdp_endpoint,
-                        sessionId:`qZ-${quiz.key}-${Date.now()}`
-                    }
+            if(jContent.gql_variables.workspace === "LIVE")
+                syncTracker({
+                    scope: jContent.scope,
+                    url: jContent.cdp_endpoint,
+                    sessionId:`qZ-${quizKey}-${Date.now()}`,
+                    dispatch
                 });
-                uTracker.ready( () =>
-                    dispatch({
-                        case:"ADD_CXS",
-                        payload:{
-                            cxs:window.cxs
-                        }
-                    })
-                );
-            }
         }
     }, [loading,data]);
 
-    // console.log(`useQuery: loading ->${loading}; error-> ${error} ; data ->${data}`);
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
@@ -220,6 +181,7 @@ const App = (props)=> {
                             <Indicator
                                 key={itemId}
                                 id={itemId}
+                                enabled={jContent.allow_indicator_browsing}
                             />
                         )}
                     </ol>
@@ -243,9 +205,7 @@ const App = (props)=> {
                             return <p className="text-danger">node type {node.type} is not supported</p>
                             })
                         }
-
                         <Score/>
-
                     </div>
                 </div>
             </Row>

@@ -6,11 +6,11 @@ import {Button} from "react-bootstrap";
 
 const Score = (props) => {
     const { state,dispatch } = React.useContext(StoreContext);
-    const { quiz,currentSlide,score,jContent } = state;
-    const { files_endpoint } =  jContent;
+    const { quiz,currentSlide,score,scoreIndex,jContent } = state;
+    const { files_endpoint,language_bundle } =  jContent;
 
-    const show = currentSlide === quiz.scoreIndex;
-    //TODO voire ca
+    const show = currentSlide === scoreIndex;
+
     const onClick = () => {
         dispatch({
             case:"RESET"
@@ -33,8 +33,7 @@ const Score = (props) => {
 
                 <Button variant="game4-quiz"
                         onClick={onClick}>
-                    Reset
-                    {/*{language_bundle && language_bundle.btnStart}*/}
+                    {language_bundle && language_bundle.btnReset}
                 </Button>
             </div>
         </div>

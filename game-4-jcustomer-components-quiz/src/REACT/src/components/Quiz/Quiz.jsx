@@ -6,6 +6,9 @@ import {StoreContext} from "contexts";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Consent from "components/Consent";
+import get from "lodash.get";
+
+import {syncConsentStatus} from "misc/tracker";
 
 const init = variables =>{
     return {
@@ -14,60 +17,91 @@ const init = variables =>{
     }
 }
 
+const computeEnableStartBtn = (state) => {
+    const {showNext,workspace,consents} = state;
+
+    if(showNext && workspace !== "LIVE")
+        return true;
+
+    const granted = consents.filter( consent => consent.checked || consent.granted );
+    return consents.length === granted.length;
+}
+
+
 function reducer(state, action) {
     const { payload } = action;
 
-    const computeEnableStartBtn = ({consents = state.consents}) => {
-        const {showNext,workspace} = state;
-
-        if(showNext && workspace !== "LIVE")
-            return true;
-
-        const granted = consents.filter( consent => consent.checked || consent.granted );
-        return consents.length === granted.length;
-    }
-
     switch (action.case) {
-        case "ADD_CONSENT":{
+        case "DATA_READY_CONSENT":{
             let {consents} = state;
-            const {consent} = payload;
+            const {consentData,scope,cxs,consent_status} = payload;
+            console.debug("[QUIZ] DATA_READY_CONSENT -> consentData :",consentData);
+
+            const identifier = get(consentData, "identifier");
+
+            //compute granted
+            const consentPath = `consents["${scope}/${identifier}"]`;
+            const cxsConsentStatus = get(cxs,`${consentPath}.status`);
+            const cxsConsentRevokeDate = get(cxs,`${consentPath}.revokeDate`);
+            const granted = consent_status.GRANTED === cxsConsentStatus
+                && Date.now() < Date.parse(cxsConsentRevokeDate)
+
+            consents = [...consents,{
+                id : get(consentData, "id"),
+                title : get(consentData, "title"),
+                description : get(consentData, "description.value"),
+                actived : JSON.parse(get(consentData, "actived.value", false)),
+                checked : false,
+                identifier,
+                granted
+            }];
 
             return{
                 ...state,
-                consents:[...consents,consent],
-                enableStartBtn:computeEnableStartBtn({consents:[...consents,consent]})
+                consents,
+                enableStartBtn:computeEnableStartBtn({...state,consents})
             }
         }
         case "DENIED_CONSENT":{
             const {consents} = state;
-            const {consent} = payload;
+            const {id} = payload;
+            console.debug("[QUIZ] DENIED_CONSENT -> id :",id);
 
             return{
                 ...state,
-                consents:consents.map(_consent => {
-                    if(_consent.id === consent.id)
-                        return consent;
-                    return _consent
+                consents:consents.map( consent => {
+                    if( consent.id === id)
+                        return {
+                            ...consent,
+                            granted:false
+                        };
+                    return consent
                 }),
                 enableStartBtn:false
             }
         }
         case "TOGGLE_CONSENT": {
-            const {consents} = state;
-            const {consent} = payload;
+            let {consents} = state;
+            const {id} = payload;
+            console.debug("[QUIZ] TOGGLE_CONSENT -> id :",id);
+
+            consents = consents.map(consent => {
+                if(consent.id === id)
+                    return {
+                        ...consent,
+                        checked:!consent.checked
+                    };
+                return consent
+            });
 
             return{
                 ...state,
-                consents:consents.map(_consent => {
-                    if(_consent.id === consent.id)
-                        return consent;
-                    return _consent
-                }),
-                enableStartBtn:computeEnableStartBtn({consents:[...consents,consent]})
+                consents,
+                enableStartBtn:computeEnableStartBtn({...state,consents})
             }
         }
         default:
-            throw new Error(`QUIZ action case '${action.case}' is unknown `);
+            throw new Error(`[QUIZ] action case '${action.case}' is unknown `);
     }
 }
 
@@ -88,6 +122,7 @@ const Quiz = (props) => {
         init
     );
 
+    console.debug("*** paint quiz : ",quiz.title);
     const show = currentSlide === quiz.id;
 
     const onClick = () => {
@@ -96,7 +131,11 @@ const Quiz = (props) => {
             if(consent.granted)
                 return;
 
-            consent.syncStatus({scope,status:consent_status.GRANTED});
+            syncConsentStatus({
+                scope,
+                typeIdentifier:consent.identifier,
+                status:consent_status.GRANTED
+            });
         })
 
         dispatch({

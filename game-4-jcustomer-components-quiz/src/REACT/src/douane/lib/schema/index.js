@@ -24,6 +24,10 @@ export default{
                 format:"uri",
                 default:process.env.REACT_APP_JCONTENT_HOST || "http://localhost:8080"
             },
+            allow_indicator_browsing:{
+                type:"boolean",
+                default:false
+            },
             workspace:{
                 type:"string",
                 enum:workspace,
@@ -84,6 +88,7 @@ export default{
         },
         required: [
             "host",
+            "allow_indicator_browsing",
             "workspace",
             "scope",
             "files_endpoint",

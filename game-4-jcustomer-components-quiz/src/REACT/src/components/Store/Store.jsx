@@ -1,6 +1,9 @@
-import uTracker from "unomi-analytics";
 import React from "react";
 import {StoreContext} from "contexts";
+
+import {getRandomString} from "misc/utils";
+import {syncQuizScore} from "misc/tracker";
+import QuizMapper from "components/Quiz/QuizModel";
 
 const init = jContent => {
     return {
@@ -16,7 +19,8 @@ const init = jContent => {
         max:-1,
         score:0,
         cxs:null,
-        reset:false
+        reset:false,
+        scoreIndex:getRandomString(5,"#aA")
     }
 }
 
@@ -29,11 +33,13 @@ const reducer = (state, action) => {
     switch (action.case) {
         case "DATA_READY": {
             //prepare slideIds
-            const quiz = payload.quiz;
-            console.debug("[STORE] DATA_READY - quiz: ",quiz);
+            const {quizData} = payload;
+            console.debug("[STORE] DATA_READY - quizData: ",quizData);
+            const quiz = QuizMapper(quizData);
+
             const slideSet = [quiz.id];
             quiz.childNodes.forEach(node => slideSet.push(node.id));
-            slideSet.push(quiz.scoreIndex);
+            slideSet.push(state.scoreIndex);
 
             const max = slideSet.length -1;
 
@@ -79,11 +85,9 @@ const reducer = (state, action) => {
         case "NEXT_SLIDE":{
             const currentIndex = state.slideSet.indexOf(state.currentSlide);
             const nextIndex = currentIndex+1;
-
             console.debug("[STORE] NEXT_SLIDE - currentIndex: ",currentIndex,", max : ",state.max);
 
             let nextSlide = state.currentSlide;
-            // let score = state.score;
 
             if(currentIndex  < state.max )
                 nextSlide = state.slideSet[nextIndex];
@@ -94,7 +98,6 @@ const reducer = (state, action) => {
                 showNext: showNext({...state,slide:nextSlide}),
                 showResult:false,
                 reset:false
-                // score
             };
         }
         case "SHOW_SLIDE": {
@@ -110,9 +113,8 @@ const reducer = (state, action) => {
             const currentResult = payload.result;
             const currentIndex = state.slideSet.indexOf(state.currentSlide);
             const showScore = currentIndex === state.max-1;
-
             console.debug("[STORE] SHOW_RESULT - currentResult: ", currentResult);
-            // console.debug("SHOW_RESULT - showScore: ", showScore,", currentIndex: ",currentIndex,", max : ",state.max);
+
             return {
                 ...state,
                 showScore,
@@ -129,9 +131,11 @@ const reducer = (state, action) => {
             const answers = state.resultSet.length;
             const score = Math.floor((goodAnswers/answers)*100);
 
-            uTracker.track("setQuizScore",{
-                score:`${state.quiz.key}${state.jContent.score_splitPattern}${score}`
-            })
+            syncQuizScore({
+                quizKey:state.quiz.key,
+                split:state.jContent.score_splitPattern,
+                quizScore:score
+            });
 
             return {
                 ...state,
@@ -156,7 +160,7 @@ const reducer = (state, action) => {
             }
         }
         default:
-            throw new Error(`STORE action case '${action.case}' is unknown `);
+            throw new Error(`[STORE] action case '${action.case}' is unknown `);
     };
 }
 

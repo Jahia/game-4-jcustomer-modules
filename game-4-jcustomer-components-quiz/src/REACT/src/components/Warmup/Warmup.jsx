@@ -3,58 +3,17 @@ import PropTypes from "prop-types";
 import {Button} from "react-bootstrap";
 
 import get from "lodash.get";
+import {useQuery} from "@apollo/react-hooks";
 
 import {StoreContext} from "contexts";
-
 import {GET_WARMUP} from "./WarmupGraphQL";
 import VideoPlayer from "components/VideoPlayer";
-
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {useQuery} from "@apollo/react-hooks";
 import Qna from "components/Qna";
-
-
-class _Warmup{
-    //NOTE be sure string value like "false" or "true" are boolean I use JSON.parse to cast
-    constructor(warmupData,files_endpoint) {
-        // console.log("Warmup : ",quiz);
-        this.id= get(warmupData, "id", "");
-        this.title= get(warmupData, "title", "");
-        this.subtitle= get(warmupData, "subtitle.value", "");
-        this.content= get(warmupData, "content.value", "");
-        this.duration= get(warmupData, "duration.value", "");
-        this.videoLink= get(warmupData, "videoLink.value", "");
-        this.videoIntPath = get(warmupData, "videoIntPath.node.path");
-
-        this.cover= get(warmupData, "cover.node.path", "");
-        this.childNodes=
-            get(warmupData,"children.nodes",[])
-            .map(node => {
-                return{
-                    id: get(node, "id"),
-                    type: get(node, "type.value")
-                }
-            });
-
-        if(this.videoLink)
-            this.video= this.videoIntPath ?
-                `${files_endpoint}${encodeURI(this.videoIntPath)}`:
-                get(warmupData, "videoExtPath.value")
-    }
-
-    // get video(){
-    //     if(!this.videoLink)
-    //         return null;
-    //
-    //     return this.videoIntPath ?
-    //         `${files_endpoint}${encodeURI(this.videoIntPath)}`:
-    //         get(warmupData, "videoExtPath.value")
-    // }
-};
+import WarmupMapper from "components/Warmup/WarmupModel";
 
 const Warmup = (props) => {
     const { state, dispatch } = React.useContext(StoreContext);
-    const { currentSlide,jContent,slideSet} = state;
+    const { currentSlide,jContent} = state;
     const { gql_variables,files_endpoint,language_bundle } =  jContent;
 
     const variables = Object.assign(gql_variables,{id:props.id})
@@ -68,20 +27,14 @@ const Warmup = (props) => {
     React.useEffect(() => {
 
         if(loading === false && data){
-
-            const warmup=new _Warmup(get(data, "response.warmup", {}),files_endpoint);
-            // console.log("*** warmup useEffect");
-
-            const nodesIds = [];
-            warmup.childNodes.forEach(node => nodesIds.push(node.id));
+            const warmup = WarmupMapper(get(data, "response.warmup", {}),files_endpoint)
             dispatch({
                 case:"ADD_SLIDES",
                 payload:{
-                    slides:nodesIds,
+                    slides:warmup.childNodes.map(node=>node.id),
                     parentSlide:warmup.id
                 }
             });
-
             // console.debug("warmup.id : ",warmup.id,"; warmup.video : ",warmup.video);
             setWarmup(warmup);
         }
@@ -89,8 +42,7 @@ const Warmup = (props) => {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
-    console.log("*** warmup data : ",data);
-    // console.log("*** warmup slideSet : ",slideSet);
+    console.debug("*** paint warmup : ",warmup.title);
 
     const show = currentSlide === props.id;
     const handleCLick = () =>

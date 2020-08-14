@@ -5,7 +5,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 
 const Answer = (props) =>{
-    const {qna, qnaDispatch,answer} = props;
+    const {qna, qnaDispatch,id} = props;
+    const [answer] = qna.answers.filter(answer => answer.id === id);
 
     const isValid = answer.valid || (qna.notUsedForScore ? answer.checked : false);
     const handleChange = () =>
@@ -42,7 +43,7 @@ const Answer = (props) =>{
 Answer.propTypes={
     qna:PropTypes.object.isRequired,
     qnaDispatch:PropTypes.func.isRequired,
-    answer:PropTypes.object.isRequired,
+    id:PropTypes.string.isRequired,
 }
 
 export default Answer;

@@ -3,60 +3,44 @@ import PropTypes from "prop-types";
 import {StoreContext} from "contexts";
 
 import ReactPlayer from "react-player";
-import uTracker from 'unomi-analytics';
+import {syncVideoStatus} from "misc/tracker";
 
 const VideoPlayer = (props)=>{
+    const {warmupID,videoURL} = props;
     const { state } = React.useContext(StoreContext);
     const {quiz} = state;
 
     const player = useRef(null);
-    // async function collectEvent({status}){
-    const collectEvent = ({status}) => {
-        console.log("collectEvent start uTracker: ",uTracker);
-        //if tracker is not initialized the track event is not send
-        uTracker.track("video",{
-            id:quiz.id,
-            type:quiz.type,
-            game4Quiz:{
+
+    const handleVideoStatus = ({status}) => {
+        syncVideoStatus({
+            content:{
                 id:quiz.id,
                 type:quiz.type
             },
-            game4Warmup:{
-                id:props.warmupID
-            },
-            game4Video:{
-                duration: player.current.getDuration(),
-                currentTime: player.current.getCurrentTime(),
-                status: status
-            }
-        });
-    };
+            parent:warmupID,
+            player,
+            status
+        })
+    }
 
     // const onReadyHandler = () => {
     //     console.log("onReady seekTo 4.2s")
     //     player.current.seekTo(4.2,"seconds");
     // }
     const onStartHandler = () => {
-        console.log("onStart seekTo 4.2s")
         // player.current.seekTo(4.2,"seconds");
     }
+    const onPlayHandler = () => handleVideoStatus({status:"started"});
+    const onEndedHandler = () => handleVideoStatus({status:"end"});
+    const onPauseHandler = () => handleVideoStatus({status:"pause"});
 
-    const onPlayHandler = () => {
-        collectEvent({status:"started"});
-        console.log("onPlay called");
-    };
-    const onEndedHandler = () => {
-        collectEvent({status:"end"});
-    };
-    const onPauseHandler = () => {
-        collectEvent({status:"pause"});
-    };
     return (
         <div className='player-wrapper'>
             <ReactPlayer
                 ref={player}
                 className='react-player'
-                url={props.videoURL}
+                url={videoURL}
                 controls
                 width='100%'
                 height='100%'

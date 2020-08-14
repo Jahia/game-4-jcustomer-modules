@@ -57,6 +57,9 @@ export const GET_QUIZ = gql`
                 btnShowResults: property(language:$language, name:"game4:btnShowResults"){
                     value
                 },
+                btnReset: property(language:$language, name:"game4:btnReset"){
+                    value
+                },
                 consentTitle: property(language:$language, name:"game4:consentTitle"){
                     value
                 },

@@ -27,6 +27,7 @@
  - game4:btnQuestion (string) = resourceBundle('label.game4_btnQuestion') autocreated internationalized mandatory indexed=no
  - game4:btnNextQuestion (string) = resourceBundle('label.game4_btnNextQuestion') autocreated internationalized mandatory indexed=no
  - game4:btnShowResults (string) = resourceBundle('label.game4_btnShowResults') autocreated internationalized mandatory indexed=no
+ - game4:btnReset (string) = resourceBundle('label.game4_btnReset') autocreated internationalized mandatory indexed=no
  - game4:consentTitle (string) = resourceBundle('label.game4_consentTitle') autocreated internationalized mandatory indexed=no
  - game4:correctAnswer (string) = resourceBundle('label.game4_correctAnswer') autocreated internationalized mandatory indexed=no
  - game4:wrongAnswer (string) = resourceBundle('label.game4_wrongAnswer') autocreated internationalized mandatory indexed=no

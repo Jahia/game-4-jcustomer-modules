@@ -1,3 +1,4 @@
+
 const _WEAKREFERENCE_ = "WEAKREFERENCE";
 //TODO voir si avec SDL je peux passe l'URL des images!
 function getProperties(properties,context){
@@ -40,7 +41,6 @@ function getGQLWorkspace(workspace){
         "EDIT":
         workspace.toUpperCase()
 }
-
 
 export {
     getProperties,

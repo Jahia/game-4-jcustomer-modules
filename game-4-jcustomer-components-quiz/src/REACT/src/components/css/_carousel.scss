@@ -231,7 +231,7 @@
     margin-right: $game4-quiz__indicator-spacer;
     margin-left: $game4-quiz__indicator-spacer;
     text-indent: -999px;
-    cursor: pointer;
+
     background-color: $game4-quiz__indicator-active-bg;
     background-clip: padding-box;
     // Use transparent borders to increase the hit area by 10px on top and bottom.
@@ -243,10 +243,14 @@
     .show-result & {
       background-color:$game4-quiz__indicator-result-bg;
     }
-  }
 
-  .active {
-    opacity: 1;
+    &.clickable{
+      cursor: pointer;
+    }
+
+    &.active {
+      opacity: 1;
+    }
   }
 }
 
