@@ -42,7 +42,7 @@ const Warmup = (props) => {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
-    console.debug("*** paint warmup : ",warmup.title);
+    // console.debug("*** paint warmup : ",warmup.title);
 
     const show = currentSlide === props.id;
     const handleCLick = () =>

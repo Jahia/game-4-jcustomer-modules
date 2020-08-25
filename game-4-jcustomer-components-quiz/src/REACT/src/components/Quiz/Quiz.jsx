@@ -122,7 +122,7 @@ const Quiz = (props) => {
         init
     );
 
-    console.debug("*** paint quiz : ",quiz.title);
+    // console.debug("*** paint quiz : ",quiz.title);
     const show = currentSlide === quiz.id;
 
     const onClick = () => {

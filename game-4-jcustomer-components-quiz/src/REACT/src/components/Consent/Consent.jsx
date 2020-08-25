@@ -45,7 +45,7 @@ const Consent = (props)=> {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
-    console.debug("*** paint consent : ",id);
+    // console.debug("*** paint consent : ",id);
 
     const handleDenied = (consent) => {
         syncConsentStatus({

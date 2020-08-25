@@ -24,6 +24,7 @@ import Quiz from "components/Quiz"
 import Qna from "components/Qna";
 import Warmup from "components/Warmup";
 import Score from "components/Score";
+import Persona from "components/Persona";
 import {syncTracker} from "misc/tracker";
 
 
@@ -38,6 +39,43 @@ library.add(
     faTimes,
     faBan
 );
+
+
+const BtnDispatch = props =>{
+    const { state, dispatch } = React.useContext(StoreContext);
+    const {showScore,showPersona,showNext,jContent} = state;
+
+    const handleNextSlide = () =>
+        dispatch({
+            case:"NEXT_SLIDE"
+        });
+
+    const handleShowScore = () =>
+        dispatch({
+            case:"SHOW_SCORE"
+        });
+
+    let label = jContent.language_bundle.btnNextQuestion;
+    let handler = handleNextSlide;
+
+    switch(true){
+        case showPersona:
+            label = jContent.language_bundle.btnShowResults;
+            handler = handleNextSlide;
+            break;
+        case showScore:
+            label = jContent.language_bundle.btnShowResults;
+            handler = handleShowScore;
+            break;
+    }
+    return (
+        <Button variant="game4-quiz-header"
+                onClick={handler}
+                disabled={!showNext}>
+            {label}
+        </Button>
+    )
+}
 
 const Indicator = (props) =>{
     const { state, dispatch } = React.useContext(StoreContext);
@@ -95,9 +133,7 @@ const App = (props)=> {
         quiz,
         slideSet,
         currentResult,
-        showResult,
-        showNext,
-        showScore
+        showResult
     } = state;
 
     const {loading, error, data} = useQuery(GET_QUIZ, {
@@ -136,16 +172,7 @@ const App = (props)=> {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
-    const handleNextSlide = () =>
-        dispatch({
-            case:"NEXT_SLIDE"
-        });
-
-    const handleShowScore = () =>
-        dispatch({
-            case:"SHOW_SCORE"
-        });
-
+console.log("jContent.ask4persona : ",jContent.ask4persona);
     return (
         <Container>
             <Row>
@@ -159,21 +186,7 @@ const App = (props)=> {
                                     {!currentResult &&
                                         jContent.language_bundle.wrongAnswer}
                                 </span>
-                                {!showScore &&
-                                    <Button variant="game4-quiz-header"
-                                        onClick={handleNextSlide}
-                                        disabled={!showNext}>
-                                        {jContent.language_bundle.btnNextQuestion}
-                                    </Button>
-                                }
-                                {showScore &&
-                                    <Button variant="game4-quiz-header"
-                                        onClick={handleShowScore}
-                                        disabled={!showNext}>
-                                        {jContent.language_bundle.btnShowResults}
-                                    </Button>
-                                }
-
+                                <BtnDispatch/>
                         </div>
                     }
                     <ol className="game4-quiz__indicators">
@@ -204,6 +217,9 @@ const App = (props)=> {
                                 />
                             return <p className="text-danger">node type {node.type} is not supported</p>
                             })
+                        }
+                        {jContent.ask4persona &&
+                            <Persona/>
                         }
                         <Score/>
                     </div>

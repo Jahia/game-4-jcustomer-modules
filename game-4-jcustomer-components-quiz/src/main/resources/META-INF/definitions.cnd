@@ -17,8 +17,11 @@
 
 [game4mix:quizChild] mixin
 
-//TODO test le autocreated & utilisation resourceBundle pour avoir une valeu par defaut meme si la mixin n'est pas active
-//TODO -suite- dans ce cas plus besoin de l'object de config par défaut
+[game4mix:quizAdvancedParams] mixin
+ extends = game4nt:quiz
+ itemtype = content
+ - game4:ask4persona (boolean) = false indexed=no
+
 [game4mix:quizStaticLabels] mixin
 // extends = game4nt:quiz
 // itemtype = content

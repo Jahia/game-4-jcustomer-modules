@@ -109,7 +109,7 @@ const Qna = (props) => {
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
-    console.debug("*** paint qna : ",qna.title);
+    // console.debug("*** paint qna : ",qna.title);
 
     const show = currentSlide === props.id;
 

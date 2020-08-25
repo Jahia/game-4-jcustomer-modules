@@ -28,6 +28,10 @@ export default{
                 type:"boolean",
                 default:false
             },
+            ask4persona:{
+                type:"boolean",
+                default:true
+            },
             workspace:{
                 type:"string",
                 enum:workspace,
@@ -89,6 +93,7 @@ export default{
         required: [
             "host",
             "allow_indicator_browsing",
+            "ask4persona",
             "workspace",
             "scope",
             "files_endpoint",

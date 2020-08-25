@@ -26,6 +26,9 @@
 <c:set var="site" value="${renderContext.site.siteKey}"/>
 <c:set var="host" value="${url.server}"/>
 
+<c:set value="${currentNode.properties['game4:ask4persona'].boolean}" var="ask4persona" />
+<c:set value="${(empty ask4persona) ? false : ask4persona}" var="ask4persona" />
+
 
 <c:set var="host" value="${url.server}"/>
 <%--<c:set var="token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vamFoaWEuY29tIiwic3ViIjoiYXBpIHZlcmlmaWNhdGlvbiIsImlzcyI6ImR4Iiwic2NvcGVzIjpbImVsMiJdLCJpYXQiOjE1ODg3ODEwODMsImp0aSI6IjAwNzUzZjAwLThlYjgtNGFkMS1hMzk5LTMzMGU0N2MxZDIwZCJ9.4iQMBy_olTt-w5VuDXTocCN6IGdwEnWm71xU7dQ3MN8"/>--%>
@@ -42,6 +45,7 @@
         host:"${host}",
         workspace:"${workspace}",
         // allow_indicator_browsing:true,
+        //ask4persona:${ask4persona},
         scope:"${site}",//site key
         files_endpoint:"${host}/files/${workspace}",
         gql_endpoint:"${host}/modules/graphql",

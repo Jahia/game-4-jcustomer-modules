@@ -16,11 +16,13 @@ const init = jContent => {
         showResult:false,
         showNext:false,
         showScore:false,
+        showPersona:false,
         max:-1,
         score:0,
         cxs:null,
         reset:false,
-        scoreIndex:getRandomString(5,"#aA")
+        scoreIndex:getRandomString(8,"#aA"),
+        personaIndex:getRandomString(8,"#aA")
     }
 }
 
@@ -39,6 +41,8 @@ const reducer = (state, action) => {
 
             const slideSet = [quiz.id];
             quiz.childNodes.forEach(node => slideSet.push(node.id));
+            if(state.jContent.ask4persona)
+                slideSet.push(state.personaIndex);
             slideSet.push(state.scoreIndex);
 
             const max = slideSet.length -1;
@@ -97,6 +101,7 @@ const reducer = (state, action) => {
                 currentSlide:nextSlide,
                 showNext: showNext({...state,slide:nextSlide}),
                 showResult:false,
+                showPersona:false,
                 reset:false
             };
         }
@@ -113,11 +118,14 @@ const reducer = (state, action) => {
             const currentResult = payload.result;
             const currentIndex = state.slideSet.indexOf(state.currentSlide);
             const showScore = currentIndex === state.max-1;
+            const showPersona = currentIndex === state.max-2;
+
             console.debug("[STORE] SHOW_RESULT - currentResult: ", currentResult);
 
             return {
                 ...state,
                 showScore,
+                showPersona,
                 resultSet: [...state.resultSet, currentResult],
                 currentResult,
                 showResult: true
