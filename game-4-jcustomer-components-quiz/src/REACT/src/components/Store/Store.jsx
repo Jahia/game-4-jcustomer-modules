@@ -58,6 +58,7 @@ const reducer = (state, action) => {
         }
         case "ADD_CXS": {
             const cxs = payload.cxs;
+            //TODO verifier si j'ai deja un email ou pas et si c'est le cas, retirer de la liste le slide persona si actif
             console.debug("[STORE] ADD_CXS - cxs: ",cxs);
             return {
                 ...state,

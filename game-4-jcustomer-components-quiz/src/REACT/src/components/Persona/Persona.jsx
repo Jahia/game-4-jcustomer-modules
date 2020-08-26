@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import {StoreContext} from "contexts";
 import {Button,Form} from "react-bootstrap";
+import {syncVisitorData} from "misc/tracker";
 
 const Persona = (props) => {
     const { state,dispatch } = React.useContext(StoreContext);
@@ -11,10 +12,22 @@ const Persona = (props) => {
 
     const show = currentSlide === personaIndex;
 
-    const handleShowScore = () =>
+    const [email,setEmail] = React.useState();
+
+    const handleOnChange = (e) => setEmail(e.target.value);
+
+    const handleShowScore = () =>{
+        //update user email profile, normaly this slide is displayed only if user email is unknown
+        syncVisitorData({
+            propertyName:"properties.email",
+            propertyValue:email
+        });
+
         dispatch({
             case:"SHOW_SCORE"
         });
+    }
+
 
     console.log("Persona props.show :",props.show);
     return(
@@ -26,11 +39,15 @@ const Persona = (props) => {
             }
             <div className="game4-quiz__caption d-none d-md-block">
                 {/*<Form.Label>Email address</Form.Label>*/}
-                <Form.Control type="email" placeholder="name@example.com" />
+                <Form.Control
+                    type="email"
+                    placeholder="name@example.com"
+                    onChange={handleOnChange}
+                />
 
                 <Button variant="game4-quiz"
                         onClick={handleShowScore}
-                        disabled={!showNext}>
+                        disabled={!showNext || !email}>
                     {language_bundle && language_bundle.btnShowResults}
                 </Button>
             </div>

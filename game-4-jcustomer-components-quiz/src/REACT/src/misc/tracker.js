@@ -1,5 +1,8 @@
 import uTracker from "unomi-analytics";
 
+//TODO faire un POST /context.json pour recuperer l'email du user et voir s'il existe deja
+//TODO voir le code de la version eL2 sans tracker pour le call
+
 const syncTracker = ({scope,url,sessionId,dispatch}) => {
     uTracker.initialize({
         "Apache Unomi": {
@@ -65,6 +68,8 @@ const syncVisitorData = ({propertyName,propertyValue}) =>
             propertyValue
         }
     });
+
+//Todo syncMergeProfile
 
 export {
     syncTracker,
