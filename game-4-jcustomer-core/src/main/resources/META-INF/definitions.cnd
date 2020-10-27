@@ -6,7 +6,7 @@
 //<wemnt = 'http://www.jahia.org/jahia/wem/nt/1.0'>
 
 [game4mix:components] > jmix:droppableContent mixin
-[game4mix:showInTree] > jmix:cmContentTreeDisplayable, jmix:editorialContent mixin
+[game4mix:showInTree] > jmix:visibleInContentTree, jmix:editorialContent mixin
 
 [game4mix:usesConsents] mixin
 // extends=game4nt:quiz
