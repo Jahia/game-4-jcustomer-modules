@@ -4,17 +4,17 @@
     <parent>
         <artifactId>jahia-modules</artifactId>
         <groupId>org.jahia.modules</groupId>
-        <version>7.3.3.0</version>
+        <version>8.0.0.0</version>
     </parent>
     <groupId>org.jahia.se.modules</groupId>
     <artifactId>game-4-jcustomer</artifactId>
     <name>Game for jCustomer Main Module</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>8.0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <scm>
-        <connection>scm:dummy:uri</connection>
-        <developerConnection>scm:dummy:uri</developerConnection>
-    </scm>
+<!--    <scm>-->
+<!--        <connection>scm:dummy:uri</connection>-->
+<!--        <developerConnection>scm:dummy:uri</developerConnection>-->
+<!--    </scm>-->
     <repositories>
         <repository>
             <id>jahia-public</id>
