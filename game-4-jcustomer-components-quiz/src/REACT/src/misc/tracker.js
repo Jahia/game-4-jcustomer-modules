@@ -1,7 +1,7 @@
 import uTracker from "unomi-analytics";
 
 //TODO faire un POST /context.json pour recuperer l'email du user et voir s'il existe deja
-//TODO voir le code de la version eL2 sans tracker pour le call
+//TODO voir le code de la version eL2 sans tracker pour le call ou voir si je peux demander l'attri lors de l'init du cxs
 
 const syncTracker = ({scope,url,sessionId,dispatch}) => {
     uTracker.initialize({
