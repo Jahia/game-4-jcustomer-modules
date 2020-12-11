@@ -40,7 +40,7 @@ public class SetOrUpdateDistinctObjectValuesAction implements ActionExecutor {
             this.key=record[0];
             this.score=record[1];
         }
-        public String getKy(){
+        public String getKey(){
             return this.key;
         }
         public String getScore(){
@@ -94,7 +94,11 @@ public class SetOrUpdateDistinctObjectValuesAction implements ActionExecutor {
         logger.debug("scoreValues :"+scoreValues);
 
         //look for current value id, if exist update it else create new one
-        profile.setProperty(propertyName, updateDistinctValues(scoreValues,propertyValue));
+
+        List<String> updatedValues = updateDistinctValues(scoreValues,propertyValue);
+        logger.debug("updatedValues : "+updatedValues.toString());
+
+        profile.setProperty(propertyName, updatedValues);
 
         return EventService.PROFILE_UPDATED;
     }
@@ -106,7 +110,7 @@ public class SetOrUpdateDistinctObjectValuesAction implements ActionExecutor {
 
     private List<String> updateDistinctValues(List<Score> values, Score propertyValue){
 
-        logger.debug("getDistinctValues -> values : "+values);
+        logger.debug("getDistinctValues -> values_BEGIN : "+values);
         logger.debug("getDistinctValues -> propertyValue : "+propertyValue);
 
         int index = values.indexOf(propertyValue);
@@ -117,6 +121,7 @@ public class SetOrUpdateDistinctObjectValuesAction implements ActionExecutor {
         }else{
             values.add(propertyValue);
         }
+        logger.debug("getDistinctValues -> values_END : "+values);
         return values.stream().map(score -> score.toString()).collect(Collectors.toList());
     };
 }

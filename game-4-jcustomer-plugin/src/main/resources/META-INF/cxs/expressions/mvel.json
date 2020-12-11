@@ -1,0 +1,5 @@
+[
+  "\\Qevent.properties.update.propertyName.startsWith(\"properties.\") ? event.properties.update.propertyName : null\\E",
+  "\\Qevent.properties.update.propertyValue\\E"
+]
+

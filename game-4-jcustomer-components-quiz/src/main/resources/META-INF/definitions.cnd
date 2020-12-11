@@ -17,8 +17,6 @@
 
 [game4mix:quizChild] mixin
 
-//TODO test le autocreated & utilisation resourceBundle pour avoir une valeu par defaut meme si la mixin n'est pas active
-//TODO -suite- dans ce cas plus besoin de l'object de config par défaut
 [game4mix:quizStaticLabels] mixin
 // extends = game4nt:quiz
 // itemtype = content
@@ -31,7 +29,6 @@
  - game4:consentTitle (string) = resourceBundle('label.game4_consentTitle') autocreated internationalized mandatory indexed=no
  - game4:correctAnswer (string) = resourceBundle('label.game4_correctAnswer') autocreated internationalized mandatory indexed=no
  - game4:wrongAnswer (string) = resourceBundle('label.game4_wrongAnswer') autocreated internationalized mandatory indexed=no
-
 
 [game4nt:quiz] > jnt:content, game4mix:components, game4mix:showInTree, game4mix:usesConsents, mix:title, game4mix:quizStaticLabels orderable
  - game4:quizKey (string) primary mandatory
