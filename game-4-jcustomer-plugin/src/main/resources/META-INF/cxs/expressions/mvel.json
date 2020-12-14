@@ -1,5 +1,5 @@
 [
-  "\\Qevent.properties.update.propertyName.startsWith(\"properties.\") ? event.properties.update.propertyName : null\\E",
-  "\\Qevent.properties.update.propertyValue\\E"
+  "\\Qr = event.properties.update.propertyName.startsWith(\"properties.\") ? event.properties.update.propertyName : null\\E",
+  "\\Qr = event.properties.update.propertyValue\\E"
 ]
 
