@@ -64,7 +64,7 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
         List<ChoiceListValue> choiceListValues = new ArrayList<>();
 
         try {
-            logger.debug("param : "+param);
+            logger.info("param : "+param);
 
             JSONObject params= new JSONObject();
             if(!param.isEmpty())
@@ -81,7 +81,7 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
                 }
             }
 
-            logger.debug("occurrence : "+occurrence+" & type :"+type+" & cardName :"+cardName);
+            logger.info("occurrence : "+occurrence+" & type :"+type+" & cardName :"+cardName);
 
             JCRNodeWrapper node = (JCRNodeWrapper)
                     ((context.get("contextParent") != null)
@@ -107,8 +107,8 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
 
                 JSONObject responseBody = new JSONObject(future.get().getResponseBody());
                 JSONArray profileProperties = responseBody.getJSONArray("profiles");
-//                logger.info("responseBody : "+responseBody.toString());
-//                logger.info("profileProperties : "+profileProperties.toString());
+                logger.info("responseBody : "+responseBody.toString());
+                logger.info("profileProperties : "+profileProperties.toString());
 
                 for (int i = 0; i < profileProperties.length(); i++) {
                     JSONObject property = profileProperties.getJSONObject(i);

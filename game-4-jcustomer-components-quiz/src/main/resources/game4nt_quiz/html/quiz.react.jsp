@@ -38,7 +38,7 @@
 <div id="${targetId}"></div>
 
 <script>
-    const context={
+    const quiz_context_${targetId}={
         host:"${host}",
         workspace:"${workspace}",
         // allow_indicator_browsing:true,
@@ -62,11 +62,11 @@
         <c:choose>
         <c:when test="${renderContext.editMode}" >
             setTimeout(() => {
-                window.quizUIApp("${targetId}",context);
+                window.quizUIApp("${targetId}",quiz_context_${targetId});
             },500);
         </c:when>
         <c:otherwise>
-            window.quizUIApp("${targetId}",context);
+            window.quizUIApp("${targetId}",quiz_context_${targetId});
         </c:otherwise>
         </c:choose>
     });

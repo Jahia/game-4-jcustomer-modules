@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <content xmlns:j="http://www.jahia.org/jahia/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0">
-    <modules jcr:primaryType="jnt:modules">
-        <game-4-jcustomer-components-quiz j:dependencies="default game-4-jcustomer-core"
+   <modules jcr:primaryType="jnt:modules">
+      <game-4-jcustomer-components-quiz j:dependencies="default game-4-jcustomer-core"
                                         j:modulePriority="0"
                                         j:moduleType="module"
                                         j:title="Game for jCustomer Quiz Components Module"
                                         jcr:primaryType="jnt:module">
-                
-                <portlets jcr:primaryType="jnt:portletFolder"/>
-                <files jcr:primaryType="jnt:folder"/>
-                <contents jcr:primaryType="jnt:contentFolder"/>
-                <templates j:rootTemplatePath="/base" jcr:primaryType="jnt:templatesFolder">
-                    <files jcr:primaryType="jnt:folder"/>
-                    <contents jcr:primaryType="jnt:contentFolder"/>
-                    <game4quiz j:applyOn="game4nt:quiz"
+         <portlets jcr:primaryType="jnt:portletFolder"/>
+         <files jcr:primaryType="jnt:folder"/>
+         <contents jcr:primaryType="jnt:contentFolder"/>
+         <templates j:rootTemplatePath="/base" jcr:primaryType="jnt:templatesFolder">
+            <files jcr:primaryType="jnt:folder"/>
+            <contents jcr:primaryType="jnt:contentFolder"/>
+            <game4quiz j:applyOn="game4nt:quiz"
                        j:defaultTemplate="true"
                        j:hiddenTemplate="false"
                        jcr:primaryType="jnt:contentTemplate">
-                        <j:translation_en jcr:language="en"
+               <j:translation_en jcr:language="en"
                                  jcr:mixinTypes="mix:title"
                                  jcr:primaryType="jnt:translation"
                                  jcr:title="Game4Quiz"/>
-                        <pagecontent jcr:primaryType="jnt:contentList">
-                            <header-1 jcr:primaryType="jnt:area"/>
-                            <main-resource-display j:mainResourceView="react" jcr:primaryType="jnt:mainResourceDisplay"/>
-                        </pagecontent>
-                    </game4quiz>
-                </templates>
-                
-            </game-4-jcustomer-components-quiz>
-    </modules>
+               <pagecontent jcr:primaryType="jnt:contentList">
+                  <header-1 jcr:primaryType="jnt:area"/>
+                  <main-resource-display j:mainResourceView="react" jcr:primaryType="jnt:mainResourceDisplay"/>
+               </pagecontent>
+            </game4quiz>
+         </templates>
+      </game-4-jcustomer-components-quiz>
+   </modules>
 </content>
