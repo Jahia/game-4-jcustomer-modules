@@ -19,14 +19,14 @@
         {
           "type": "eventPropertyCondition",
           "parameterValues": {
-            "propertyName": "event.properties.update.propertyName",
+            "propertyName": "properties.update.propertyName",
             "comparisonOperator": "exists"
           }
         },
         {
           "type": "eventPropertyCondition",
           "parameterValues": {
-            "propertyName": "event.properties.update.propertyValue",
+            "propertyName": "properties.update.propertyValue",
             "comparisonOperator": "exists"
           }
         }
@@ -38,8 +38,8 @@
     {
       "type": "setPropertyAction",
       "parameterValues": {
-        "setPropertyName": "script::r = event.properties.update.propertyName.startsWith(\"properties.\") ? event.properties.update.propertyName : null",
-        "setPropertyValue": "script::r = event.properties.update.propertyValue",
+        "setPropertyName": "script::event.properties.update.propertyName.startsWith(\"properties.\") ? event.properties.update.propertyName : null",
+        "setPropertyValue": "script::event.properties.update.propertyValue",
         "setPropertyStrategy": "alwaysSet"
       }
     }
