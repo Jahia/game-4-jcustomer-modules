@@ -1,0 +1,55 @@
+{
+  "name": "game4nt:warmup",
+  "displayName": "Media Content",
+  "description": "",
+  "dynamic": false,
+  "fields": [
+    {
+      "name": "game4:videoLink",
+      "displayName": "",
+      "valueConstraints": [
+        {
+          "value": {
+            "type": "String",
+            "value": "widen"
+          },
+          "displayValue": "Widen (DAM)",
+          "propertyList": [
+            {
+              "name": "addMixin",
+              "value": "game4mix:damVideoLink"
+            }
+          ]
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "internal"
+          },
+          "displayValue": "jContent",
+          "propertyList": [
+            {
+              "name": "addMixin",
+              "value": "game4mix:internalVideoLink"
+            }
+          ]
+        },
+        {
+          "value": {
+            "type": "String",
+            "value": "external"
+          },
+          "displayValue": "URL",
+          "propertyList": [
+            {
+              "name": "addMixin",
+              "value": "game4mix:externalVideoLink"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+	
+ 

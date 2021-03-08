@@ -1,27 +1,18 @@
-<jnt = 'http://www.jahia.org/jahia/nt/1.0'>
-<jmix = 'http://www.jahia.org/jahia/mix/1.0'>
 <game4mix = 'http://modules.se.jahia.org/game-4-jcustomer/mix/1.0'>
-<game4nt = 'http://modules.se.jahia.org/game-4-jcustomer/nt/1.0'>
-<game4 = 'http://modules.se.jahia.org/game-4-jcustomer/1.0'>
-//<wemnt = 'http://www.jahia.org/jahia/wem/nt/1.0'>
+<jmix = 'http://www.jahia.org/jahia/mix/1.0'>
 
 [game4mix:components] > jmix:droppableContent mixin
+
 [game4mix:showInTree] > jmix:visibleInContentTree, jmix:editorialContent mixin
 
 [game4mix:usesConsents] mixin
-// extends=game4nt:quiz
-// itemtype=content
- - game4:consentType (weakreference,choicelist[nodes='$currentSite/consentTypes;wemnt:consentType']) nofulltext multiple
+ - game4:consentType (weakreference, choicelist[nodes='$currentSite/consentTypes;wemnt:consentType']) multiple nofulltext
 
 [game4mix:usesNewProfileProperty] > jmix:templateMixin mixin
  extends = game4mix:usesResultAsProperty
  - game4:newjExpPropertyName (string) indexed=no
-// - game4:cardName (string) indexed=no
-// - game4:newjExpPropertyType (string,choicelist) indexed=no < 'string', 'date', 'integer'
-// - game4:newjExpPropertyOccurence (string,choicelist) indexed=no < 'single', 'multivalued'//issue between this and type -> only string for multivalued...
  - game4:newjExpPropertyId (string) hidden indexed=no
 
 [game4mix:usesResultAsProperty] mixin
-//='{"occurrence":"single","type":"string","cardName":["Game4Quiz","xxxx"]}' || ='{"type":"integer"}'
-//TODO mettre le cards sous forme de tableau!
- - game4:jExpProperty (string,choicelist[jExpProfilePropertiesInitializer='{"cardName":["Game4Quiz","Basic info","Personal info"]}',resourceBundle]) indexed=no
+ - game4:jExpProperty (string, choicelist[jExpProfilePropertiesInitializer='{"cardName":["Game4Quiz","Basic info","Personal info"]}',resourceBundle]) indexed=no
+
