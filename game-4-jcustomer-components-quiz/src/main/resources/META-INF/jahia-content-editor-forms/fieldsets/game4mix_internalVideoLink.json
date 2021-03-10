@@ -1,0 +1,15 @@
+{
+  "name": "game4mix:internalVideoLink",
+  "fields": [
+    {
+      "name": "game4:videoIntPath",
+      "selectorType": "Picker",
+      "selectorOptions": [
+        {
+          "name": "type",
+          "value": "file"
+        }
+      ]
+    }
+  ]
+}

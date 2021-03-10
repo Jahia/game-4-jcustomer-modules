@@ -50,7 +50,7 @@
   <parent>
     <groupId>org.jahia.modules</groupId>
     <artifactId>jahia-modules</artifactId>
-    <version>8.0.0.0</version>
+    <version>8.0.2.0</version>
   </parent>
   <groupId>org.jahia.se.modules</groupId>
   <artifactId>game-4-jcustomer-components-quiz</artifactId>
@@ -63,7 +63,7 @@
 <!--    <developerConnection>scm:dummy:uri</developerConnection>-->
 <!--  </scm>-->
   <properties>
-    <jahia-depends>default,game-4-jcustomer-core</jahia-depends>
+    <jahia-depends>default,game-4-jcustomer-core,widen-picker</jahia-depends>
   </properties>
   <repositories>
     <repository>

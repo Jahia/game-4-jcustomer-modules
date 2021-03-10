@@ -5,6 +5,7 @@ export default function(warmupData,files_endpoint) {
     const videoLink = get(warmupData, "videoLink.value", "");
     const videoIntPath = get(warmupData, "videoIntPath.node.path");
 
+    //TODO test if nodetype is a wdenmix:widenAsset
     if(videoLink)
         video= videoIntPath ?
             `${files_endpoint}${encodeURI(videoIntPath)}`:
