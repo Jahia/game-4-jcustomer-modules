@@ -1,6 +1,6 @@
 import {gql} from 'apollo-boost';
 
-export const GET_QUIZ = gql`
+export const GET_WIDEN_MEDIA = gql`
     query getQuiz($workspace: Workspace!, $id: String!, $language: String!) {
         response: jcr(workspace: $workspace) {
             quiz: nodeById(uuid: $id) {

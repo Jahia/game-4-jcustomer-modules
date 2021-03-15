@@ -1,6 +1,10 @@
 import get from "lodash.get";
 
 export default function(quizData) {
+    const getMediaPath = (mediaNode) => {
+        if()
+
+    }
     return{
         //NOTE be sure string value like "false" or "true" are boolean I use JSON.parse to cast
         id: get(quizData, "id"),
@@ -11,7 +15,7 @@ export default function(quizData) {
         description: get(quizData, "description.value", ""),
         duration: get(quizData, "duration.value", ""),
         //cover: get(quizData, "cover.node.path", ""),
-        media: get(quizData, "media.node", {}),
+        media: getMediaPath(get(quizData, "media.node", {})),
         consents: get(quizData, "consents.nodes", []).map(node =>{
             return {
                 id:get(node,"id"),

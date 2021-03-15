@@ -8,7 +8,7 @@
 [game4mix:usesConsents] mixin
  - game4:consentType (weakreference, choicelist[nodes='$currentSite/consentTypes;wemnt:consentType']) multiple nofulltext
 
-[game4mix:usesNewProfileProperty] > jmix:templateMixin mixin
+[game4mix:usesNewProfileProperty] > jmix:dynamicFieldset mixin
  extends = game4mix:usesResultAsProperty
  - game4:newjExpPropertyName (string) indexed=no
  - game4:newjExpPropertyId (string) hidden indexed=no

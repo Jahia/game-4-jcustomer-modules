@@ -9,6 +9,7 @@ import Consent from "components/Consent";
 import get from "lodash.get";
 
 import {syncConsentStatus} from "misc/tracker";
+import Media from '../Media'
 
 const init = variables =>{
     return {
@@ -105,7 +106,6 @@ function reducer(state, action) {
     }
 }
 
-//TODO create a reducer to simplify the stuff!
 const Quiz = (props) => {
     const { state, dispatch } = React.useContext(StoreContext);
 
@@ -143,12 +143,19 @@ const Quiz = (props) => {
         });
     };
 
+    // {quiz.cover &&
+    // <img className="d-block w-100"
+    //      src={`${files_endpoint}${encodeURI(quiz.cover)}`}
+    //      alt={quiz.title}/>
+    // }
+
     return(
         <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
-            {quiz.cover &&
-                <img className="d-block w-100"
-                     src={`${files_endpoint}${encodeURI(quiz.cover)}`}
-                     alt={quiz.title}/>
+            {quiz.media &&
+                <Media id={quiz.media.id}
+                       type={quiz.media.type.value}
+                       path={quiz.media.path}
+                />
             }
 
             <div className="game4-quiz__caption">

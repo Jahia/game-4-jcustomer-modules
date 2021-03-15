@@ -4,7 +4,9 @@ const score_splitPattern="::";
 const workspace = ["default","live"];
 const cnd_type = {
     QNA:"game4nt:qna",
-    WARMUP:"game4nt:warmup"
+    WARMUP:"game4nt:warmup",
+    WIDEN_IMAGE:"wdennt:image",
+    WIDEN_VIDEO:"wdennt:video"
 }
 const consent_status={
     GRANTED:"GRANTED",
