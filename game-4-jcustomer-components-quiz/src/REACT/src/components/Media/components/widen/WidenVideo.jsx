@@ -4,18 +4,11 @@ import {useQuery} from "@apollo/react-hooks";
 import {GET_WIDEN_MEDIA} from "./WidenMediaGraphQL";
 import get from "lodash.get";
 import MediaMapper from './WidenMediaModel';
-import Image from "components/Media/components/Image";
 import PropTypes from "prop-types";
-import Media from "components/Media/Media";
+import VideoPlayer from "components/VideoPlayer";
 
 
-const WidenImage = ({uuid}) => {
-    const _SIZE_ = '{size}';
-    const _SCALE_ = '{scale}';
-    const _QUALITY_ = '{quality}';
-    const width = '1024';
-    const scale = '1';
-    const quality = '72';
+const WidenVideo = ({uuid, ownerID}) => {
 
     const { state } = React.useContext(StoreContext);
     const { gql_variables} =  state.jContent;
@@ -30,30 +23,28 @@ const WidenImage = ({uuid}) => {
     React.useEffect(() => {
         if(loading === false && data){
             const media = MediaMapper(get(data, "response.media", {}));
-            media.imageURL=media.imageURL
-                .replace(_SIZE_,width)
-                .replace(_SCALE_,scale)
-                .replace(_QUALITY_,quality);
             setMedia(media);
         }
     }, [loading,data]);
 
-    if (loading) return <img src={`https://via.placeholder.com/${width}x768/09f/fff?text=Loading`}/>;
+    if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
     return (
         <>
         {media &&
-            <img className="d-block w-100"
-             src={media.imageURL}
-             alt={media.title}/>
+            <VideoPlayer
+                videoURL={media.videoURL}
+                ownerID={ownerID}
+            />
         }
         </>
     )
 }
 
-WidenImage.propTypes={
-    uuid:PropTypes.string.isRequired
+WidenVideo.propTypes={
+    uuid:PropTypes.string.isRequired,
+    ownerID:PropTypes.string.isRequired,
 }
 
-export default WidenImage;
+export default WidenVideo;

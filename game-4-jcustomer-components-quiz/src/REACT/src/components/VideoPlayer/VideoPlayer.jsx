@@ -6,7 +6,7 @@ import ReactPlayer from "react-player";
 import {syncVideoStatus} from "misc/tracker";
 
 const VideoPlayer = (props)=>{
-    const {warmupID,videoURL} = props;
+    const {ownerID,videoURL} = props;
     const { state } = React.useContext(StoreContext);
     const {quiz} = state;
 
@@ -18,7 +18,7 @@ const VideoPlayer = (props)=>{
                 id:quiz.id,
                 type:quiz.type
             },
-            parent:warmupID,
+            parent:ownerID,
             player,
             status
         })
@@ -59,7 +59,7 @@ const VideoPlayer = (props)=>{
 
 VideoPlayer.propTypes={
     videoURL:PropTypes.string.isRequired,
-    warmupID:PropTypes.string.isRequired
+    ownerID:PropTypes.string.isRequired
 }
 
 export default VideoPlayer;

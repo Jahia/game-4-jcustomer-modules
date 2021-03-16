@@ -50,6 +50,11 @@ const Warmup = (props) => {
             case:"NEXT_SLIDE"
         });
 
+    // <VideoPlayer
+    //     videoURL={warmup.video}
+    //     warmupID={warmup.id}
+    // />
+
     return(
         <>
             <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
@@ -64,10 +69,7 @@ const Warmup = (props) => {
                     <div className="lead" dangerouslySetInnerHTML={{__html:warmup.content}}></div>
                     { warmup.video != null &&
                         <div>
-                            <VideoPlayer
-                                videoURL={warmup.video}
-                                warmupID={warmup.id}
-                            />
+
                         </div>
                     }
                     <Button variant="game4-quiz"

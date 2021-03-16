@@ -155,6 +155,7 @@ const Quiz = (props) => {
                 <Media id={quiz.media.id}
                        type={quiz.media.type.value}
                        path={quiz.media.path}
+                       alt={quiz.title}
                 />
             }
 
