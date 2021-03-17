@@ -1,5 +1,11 @@
 import {gql} from 'apollo-boost';
 
+// cover: property(name:"game4:cover"){
+//     node: refNode {
+//         path
+//     }
+// }
+
 export const GET_QUIZ = gql`
     query getQuiz($workspace: Workspace!, $id: String!, $language: String!) {
         response: jcr(workspace: $workspace) {
@@ -20,11 +26,6 @@ export const GET_QUIZ = gql`
                 }
                 duration: property(name:"game4:duration"){
                     value
-                }
-                cover: property(name:"game4:cover"){
-                    node: refNode {
-                        path
-                    }
                 }
                 media: property(language:$language,name:"wden:mediaNode",){
                     node: refNode {

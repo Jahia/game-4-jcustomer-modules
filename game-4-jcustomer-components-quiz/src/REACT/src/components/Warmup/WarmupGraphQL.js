@@ -1,5 +1,11 @@
 import {gql} from 'apollo-boost';
 
+// cover: property(name:"game4:masterQnaCover"){
+//     node: refNode {
+//         path
+//     }
+// }
+
 export const GET_WARMUP = gql`
     query getWarmup($workspace: Workspace!, $id: String!, $language: String!) {
         response: jcr(workspace: $workspace) {
@@ -23,11 +29,19 @@ export const GET_WARMUP = gql`
                 }
                 videoIntPath: property(language:$language,name:"game4:videoIntPath"){
                     node: refNode {
+                        id: uuid,
+                        type: primaryNodeType{
+                            value:name
+                        },
                         path
                     }
                 }
-                cover: property(name:"game4:masterQnaCover"){
+                media: property(language:$language,name:"wden:mediaNode",){
                     node: refNode {
+                        id: uuid,
+                        type: primaryNodeType{
+                            value:name
+                        },
                         path
                     }
                 }

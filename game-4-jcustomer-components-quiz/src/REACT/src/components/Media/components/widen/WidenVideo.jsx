@@ -32,7 +32,7 @@ const WidenVideo = ({uuid, ownerID}) => {
 
     return (
         <>
-        {media &&
+        {media.videoURL &&
             <VideoPlayer
                 videoURL={media.videoURL}
                 ownerID={ownerID}

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import {StoreContext} from "contexts";
 import {Button} from "react-bootstrap";
+import Media from "components/Media";
 
 const Score = (props) => {
     const { state,dispatch } = React.useContext(StoreContext);
@@ -20,10 +21,12 @@ const Score = (props) => {
     // console.log("Score props.show :",props.show);
     return(
         <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
-            {quiz.cover &&
-                <img className="d-block w-100"
-                     src={`${files_endpoint}${encodeURI(quiz.cover)}`}
-                     alt={quiz.title}/>
+            {quiz.media &&
+            <Media id={quiz.media.id}
+                   type={quiz.media.type.value}
+                   path={quiz.media.path}
+                   alt={quiz.title}
+            />
             }
             <div className="game4-quiz__caption d-none d-md-block">
                 <h2 className="text-uppercase">{quiz.title}<span className="subtitle">{quiz.subtitle}</span></h2>

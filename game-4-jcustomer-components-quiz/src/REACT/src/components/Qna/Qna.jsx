@@ -12,6 +12,7 @@ import Answer from "./Answer";
 
 import QnaMapper from "components/Qna/QnaModel";
 import {syncVisitorData} from "misc/tracker";
+import Media from "components/Media";
 
 const initialQNA = {
     enableSubmit:false,
@@ -149,13 +150,18 @@ const Qna = (props) => {
             })
         }
     }
-
+    // <img className="d-block w-100"
+    //      src={`${files_endpoint}${encodeURI(qna.cover)}`}
+    //      alt={qna.title}/>
     return(
         <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
-            {qna.cover &&
-                <img className="d-block w-100"
-                     src={`${files_endpoint}${encodeURI(qna.cover)}`}
-                     alt={qna.title}/>
+            {qna.media &&
+                <Media id={qna.media.id}
+                       type={qna.media.type.value}
+                       path={qna.media.path}
+                       alt={qna.title}
+                />
+
             }
 
             <div className="game4-quiz__caption d-none d-md-block">

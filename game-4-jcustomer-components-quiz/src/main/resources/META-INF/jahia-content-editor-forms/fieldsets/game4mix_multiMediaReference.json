@@ -1,13 +1,11 @@
 {
-  "name": "game4nt:warmup",
-  "displayName": "Warmup",
+  "name": "game4mix:multiMediaReference",
   "description": "",
   "dynamic": false,
   "fields": [
     {
       "name": "game4:videoLink",
-      "displayName": "Video Content",
-      "selectorType": "ChoiceList",
+      "selectorType": "Choicelist",
       "valueConstraints": [
         {
           "value": {

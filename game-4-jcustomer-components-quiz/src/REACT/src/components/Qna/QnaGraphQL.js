@@ -61,8 +61,12 @@ export const GET_QNA = gql`
                 notUsedForScore: property(name:"game4:notUsedForScore"){
                     value
                 }
-                cover: property(name:"game4:cover"){
+                media: property(language:$language,name:"wden:mediaNode",){
                     node: refNode {
+                        id: uuid,
+                        type: primaryNodeType{
+                            value:name
+                        },
                         path
                     }
                 }

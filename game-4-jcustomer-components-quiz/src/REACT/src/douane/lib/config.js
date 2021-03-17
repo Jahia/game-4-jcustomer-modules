@@ -6,7 +6,9 @@ const cnd_type = {
     QNA:"game4nt:qna",
     WARMUP:"game4nt:warmup",
     WIDEN_IMAGE:"wdennt:image",
-    WIDEN_VIDEO:"wdennt:video"
+    WIDEN_VIDEO:"wdennt:video",
+    EXT_VIDEO:'ext:video',
+    INT_VIDEO:'jnt:file'
 }
 const consent_status={
     GRANTED:"GRANTED",

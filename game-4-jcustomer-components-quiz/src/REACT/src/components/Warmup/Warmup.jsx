@@ -10,11 +10,12 @@ import {GET_WARMUP} from "./WarmupGraphQL";
 import VideoPlayer from "components/VideoPlayer";
 import Qna from "components/Qna";
 import WarmupMapper from "components/Warmup/WarmupModel";
+import Media from "components/Media";
 
 const Warmup = (props) => {
     const { state, dispatch } = React.useContext(StoreContext);
     const { currentSlide,jContent} = state;
-    const { gql_variables,files_endpoint,language_bundle } =  jContent;
+    const { gql_variables,cnd_type,language_bundle } =  jContent;
 
     const variables = Object.assign(gql_variables,{id:props.id})
     // const query = loader("./Warmup.graphql.disabled");
@@ -27,7 +28,7 @@ const Warmup = (props) => {
     React.useEffect(() => {
 
         if(loading === false && data){
-            const warmup = WarmupMapper(get(data, "response.warmup", {}),files_endpoint)
+            const warmup = WarmupMapper(get(data, "response.warmup", {}),cnd_type)
             dispatch({
                 case:"ADD_SLIDES",
                 payload:{
@@ -50,18 +51,15 @@ const Warmup = (props) => {
             case:"NEXT_SLIDE"
         });
 
-    // <VideoPlayer
-    //     videoURL={warmup.video}
-    //     warmupID={warmup.id}
-    // />
-
     return(
         <>
             <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
-                {warmup.cover &&
-                    <img className="d-block w-100"
-                         src={`${files_endpoint}${encodeURI(warmup.cover)}`}
-                         alt={warmup.title}/>
+                {warmup.media &&
+                    <Media id={warmup.media.id}
+                           type={warmup.media.type.value}
+                           path={warmup.media.path}
+                           alt={warmup.title}
+                    />
                 }
 
                 <div className="game4-quiz__caption d-none d-md-block">
@@ -69,7 +67,11 @@ const Warmup = (props) => {
                     <div className="lead" dangerouslySetInnerHTML={{__html:warmup.content}}></div>
                     { warmup.video != null &&
                         <div>
-
+                            <Media id={warmup.video.id || null}
+                                   type={warmup.video.type.value}
+                                   path={warmup.video.path}
+                                   sourceID={warmup.id}
+                            />
                         </div>
                     }
                     <Button variant="game4-quiz"
