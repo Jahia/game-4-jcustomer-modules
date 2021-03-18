@@ -7,7 +7,6 @@ import {useQuery} from "@apollo/react-hooks";
 
 import {StoreContext} from "contexts";
 import {GET_WARMUP} from "./WarmupGraphQL";
-import VideoPlayer from "components/VideoPlayer";
 import Qna from "components/Qna";
 import WarmupMapper from "components/Warmup/WarmupModel";
 import Media from "components/Media";

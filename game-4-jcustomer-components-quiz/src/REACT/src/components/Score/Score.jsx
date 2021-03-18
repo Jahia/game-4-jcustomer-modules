@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { CircularProgressbar } from 'react-circular-progressbar';
 import {StoreContext} from "contexts";
 import {Button} from "react-bootstrap";
@@ -8,7 +8,7 @@ import Media from "components/Media";
 const Score = (props) => {
     const { state,dispatch } = React.useContext(StoreContext);
     const { quiz,currentSlide,score,scoreIndex,jContent } = state;
-    const { files_endpoint,language_bundle } =  jContent;
+    const { language_bundle } =  jContent;
 
     const show = currentSlide === scoreIndex;
 
@@ -43,6 +43,6 @@ const Score = (props) => {
     );
 }
 
-Score.propTypes={}
+// Score.propTypes={}
 
 export default Score;

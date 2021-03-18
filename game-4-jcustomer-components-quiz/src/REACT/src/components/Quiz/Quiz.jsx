@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import {Button} from "react-bootstrap";
 
 import {StoreContext} from "contexts";
@@ -110,7 +110,7 @@ const Quiz = (props) => {
     const { state, dispatch } = React.useContext(StoreContext);
 
     const {quiz,showNext,currentSlide,jContent,cxs} = state;
-    const {files_endpoint,consent_status,scope,gql_variables,language_bundle} = jContent;
+    const {consent_status,scope,gql_variables,language_bundle} = jContent;
 
     const [quizState, quizDispatch] = React.useReducer(
         reducer,
@@ -142,12 +142,6 @@ const Quiz = (props) => {
             case:"NEXT_SLIDE"
         });
     };
-
-    // {quiz.cover &&
-    // <img className="d-block w-100"
-    //      src={`${files_endpoint}${encodeURI(quiz.cover)}`}
-    //      alt={quiz.title}/>
-    // }
 
     return(
         <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
@@ -201,6 +195,6 @@ const Quiz = (props) => {
     );
 }
 
-Quiz.propTypes={}
+// Quiz.propTypes={}
 
 export default Quiz;

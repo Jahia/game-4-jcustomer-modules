@@ -1,12 +1,10 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {StoreContext} from "contexts";
 import {useQuery} from "@apollo/react-hooks";
 import {GET_WIDEN_MEDIA} from "./WidenMediaGraphQL";
 import get from "lodash.get";
 import MediaMapper from './WidenMediaModel';
-import Image from "components/Media/components/Image";
-import PropTypes from "prop-types";
-import Media from "components/Media/Media";
 
 
 const WidenImage = ({uuid}) => {
@@ -38,7 +36,7 @@ const WidenImage = ({uuid}) => {
         }
     }, [loading,data]);
 
-    if (loading) return <img src={`https://via.placeholder.com/${width}x768/09f/fff?text=Loading`}/>;
+    if (loading) return <img src={`https://via.placeholder.com/${width}x768/09f/fff?text=Loading`} alt="loading"/>;
     if (error) return <p>Error :(</p>;
 
     return (

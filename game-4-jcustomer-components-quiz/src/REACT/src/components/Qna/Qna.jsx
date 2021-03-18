@@ -70,7 +70,7 @@ const reducer = (qna, action) => {
 const Qna = (props) => {
     const { state, dispatch } = React.useContext(StoreContext);
     const { currentSlide,jContent,reset } = state;
-    const { gql_variables,files_endpoint,quiz_validMark,language_bundle } =  jContent;
+    const { gql_variables,quiz_validMark,language_bundle } =  jContent;
 
     const variables = Object.assign(gql_variables,{id:props.id})
     const {loading, error, data} = useQuery(GET_QNA, {
