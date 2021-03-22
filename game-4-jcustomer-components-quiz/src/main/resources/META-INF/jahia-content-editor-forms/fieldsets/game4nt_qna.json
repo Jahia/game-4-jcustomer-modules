@@ -1,0 +1,9 @@
+{
+  "name": "game4nt:qna",
+  "fields": [
+    {
+      "name": "game4:answers",
+      "selectorType": "QnAJson"
+    }
+  ]
+}

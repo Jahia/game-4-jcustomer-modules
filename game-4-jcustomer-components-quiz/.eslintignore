@@ -1,0 +1,7 @@
+node
+node_modules
+target
+src/main/resources/javascript
+src/QuizAppREACT
+webpack.config.js
+webpack.shared.js
