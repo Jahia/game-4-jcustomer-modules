@@ -22,9 +22,15 @@ describe('QnAJsonCmp', () => {
     });
 
     it('should have the right value', () => {
+        // Const controlledValue = {
+        //     isAnswer: true,
+        //     label: 'la bonne réponse',
+        //     cdpValue: ''
+        // };
         const cmp = shallow(<QnAJsonCmp {...defaultProps}/>);
         console.log(cmp);
-        expect('[*] la bonne réponse').toBe('[*] la bonne réponse');
+        expect('a').toBe('a');
+        // Expect(cmp.find()).toBe(controlledValue);
         // A expect(cmp.props().value).toBe('[*] la bonne réponse');
     });
 });
