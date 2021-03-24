@@ -1,3 +1,3 @@
-import QnAJsonCmp from './QnAJsonCmp';
+import {QnAJson} from './QnAJsonCmp';
 
-export default QnAJsonCmp;
+export default QnAJson;

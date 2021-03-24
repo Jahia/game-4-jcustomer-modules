@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from '@jahia/test-framework';
 
-import QnAJsonCmp from './QnAJsonCmp';
+import {QnAJson} from './QnAJsonCmp';
 
 describe('QnAJsonCmp', () => {
     let defaultProps;
@@ -27,7 +27,7 @@ describe('QnAJsonCmp', () => {
         //     label: 'la bonne réponse',
         //     cdpValue: ''
         // };
-        const cmp = shallow(<QnAJsonCmp {...defaultProps}/>);
+        const cmp = shallow(<QnAJson {...defaultProps}/>);
         console.log(cmp);
         expect('a').toBe('a');
         // Expect(cmp.find()).toBe(controlledValue);
