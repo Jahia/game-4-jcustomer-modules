@@ -16,9 +16,14 @@ import {Grid, FormControlLabel, Switch, withStyles} from '@material-ui/core';
 const styles = () => ({
     switchLabel: {
         '& >span:last-child': {
-            color: 'black',
-            fontSize: '1rem'
+            color: 'black'
+            // FontSize: '1rem'
         }
+    },
+    container: {
+        // Border: '1px solid rgba(19, 28, 33, 1)',
+        padding: '.5rem',
+        boxShadow: '0px 2px 10px -5px #000000, 2px 5px 15px 5px rgba(0,0,0,0);'
     }
     // Root: {
     //     background: '#fff',
@@ -59,27 +64,21 @@ const formatValue = value => {
         return defaultAnswer;
     }
 
-    // The following is for backward compatibility
-    const validMark = '[*]';
-    const valid = value.indexOf(validMark) === 0;
-    if (valid) {
-        return {
-            ...defaultAnswer,
-            isAnswer: true,
-            label: value.substring(validMark.length + 1)// +1 is for space between mark and label
-        };
+    // Note see I use ajv here to check object format
+    if (typeof value === 'object' && value !== null) {
+        return value;
     }
 
-    console.log('will return default');
-    // Try {
-    //     const formattedValue = JSON.parse(value);
-    //     if (typeof formattedValue === 'object' && formattedValue !== null) {
-    //         return formattedValue;
-    //     }
-    // } catch (e) {
-    //     console.log('value :', value);
-    //     console.error('json parse failed : ', e);
-    // }
+    if (typeof value === 'string') {
+        try {
+            const formattedValue = JSON.parse(value);
+            if (typeof formattedValue === 'object' && formattedValue !== null) {
+                return formattedValue;
+            }
+        } catch (e) {
+            console.warn('value is not an object, maybe the format used before version 1.0.2 ');
+        }
+    }
 
     return {
         ...defaultAnswer,
@@ -87,28 +86,73 @@ const formatValue = value => {
     };
 };
 
+// Const formatValue = value => {
+//     console.log('value :', value);
+//     console.log('typeof value :', typeof value);
+//
+//     if (value === undefined) {
+//         return defaultAnswer;
+//     }
+//
+//     // Note see I use ajv here to check object format
+//     if (typeof value === 'object' && value !== null) {
+//         return value;
+//     }
+//
+//     // The following is for backward compatibility
+//     if (typeof value === 'string') {
+//         const validMark = '[*]';
+//         const valid = value.indexOf(validMark) === 0;
+//         if (valid) {
+//             return {
+//                 ...defaultAnswer,
+//                 isAnswer: true,
+//                 label: value.substring(validMark.length + 1)// +1 is for space between mark and label
+//             };
+//         }
+//
+//         try {
+//             const formattedValue = JSON.parse(value);
+//             if (typeof formattedValue === 'object' && formattedValue !== null) {
+//                 return formattedValue;
+//             }
+//         } catch (e) {
+//             console.warn('value is not an object, maybe a pre-version 1.0.2 format');
+//         }
+//     }
+//
+//     console.log('will return default');
+//
+//     return {
+//         ...defaultAnswer,
+//         label: value
+//     };
+// };
+
 const QnAJsonCmp = ({field, id, value, onChange, classes}) => {
     const maxLength = field.selectorOptions.find(option => option.name === 'maxLength');
-
+    // Note do a convert here, because I need a unique format for the app!
     const controlledValue = formatValue(value);
+    // controlledValue.id=id;
+
     const handleChangeLabel = e => {
-        console.log('handleChangeLabel e :', e);
         controlledValue.label = e?.target?.value;
-        onChange(controlledValue);
+        onChange(JSON.stringify(controlledValue));
     };
 
-    console.log('controlledValue :', controlledValue);
-    console.log('classes :', classes);
-    // Console.log('handleChangeLabel :', handleChangeLabel);
+    const handleChangeCdpValue = e => {
+        controlledValue.cdpValue = e?.target?.value;
+        onChange(JSON.stringify(controlledValue));
+    };
 
-    //
-    // const handleChangeCdpValue = e => {
-    //     controlledValue.cdpValue = e?.target?.value;
-    //     onChange(controlledValue);
-    // };
+    /* eslint no-unused-vars: ["error", {"args": "after-used"}] */
+    const handleChangeIsAnswer = (e, checked) => {
+        controlledValue.isAnswer = checked;
+        onChange(JSON.stringify(controlledValue));
+    };
 
     return (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} className={classes.container}>
             <Grid item xs={12} sm={6}>
                 <FormControlLabel
                     className={classes.switchLabel}
@@ -117,10 +161,12 @@ const QnAJsonCmp = ({field, id, value, onChange, classes}) => {
                             checked={controlledValue.isAnswer === true}
                             name={`isAnswer-${id}`}
                             color="primary"
-                            onChange={(evt, checked) => onChange(checked)}
+                            onChange={handleChangeIsAnswer}
                         />
                     }
-                    label="Primary"/>
+                    label="Expected Answer"
+                    // LabelPlacement="top"
+                />
                 {/* <Toggle id={id} */}
                 {/*        inputProps={{ */}
                 {/*            'aria-labelledby': `${field.name}-label` */}
@@ -140,6 +186,7 @@ const QnAJsonCmp = ({field, id, value, onChange, classes}) => {
                     readOnly={field.readOnly}
                     type="text"
                     placeholder="(optional) User profile value"
+                    onChange={handleChangeCdpValue}
                 />
             </Grid>
             <Grid item xs={12}>

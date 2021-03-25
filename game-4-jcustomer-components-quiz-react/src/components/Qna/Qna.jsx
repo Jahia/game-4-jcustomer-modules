@@ -23,12 +23,13 @@ const reducer = (qna, action) => {
 
     switch (action.case) {
         case "DATA_READY": {
-            const {qnaData,quiz_validMark} = payload;
+            // const {qnaData,quiz_validMark} = payload;
+            const {qnaData} = payload;
             console.debug("[QNA] DATA_READY -> qnaData :",qnaData);
 
             return {
                 ...qna,
-                ...QnaMapper(qnaData,quiz_validMark)
+                ...QnaMapper(qnaData)
             }
         }
         case "TOGGLE_ANSWER": {
@@ -55,11 +56,11 @@ const reducer = (qna, action) => {
             }
         }
         case "RESET":{
-            const {qnaData,quiz_validMark} = payload;
+            const {qnaData} = payload;
             console.debug("[QNA] RESET -> qnaData :",qnaData);
             return{
                 ...initialQNA,
-                ...QnaMapper(qnaData,quiz_validMark)
+                ...QnaMapper(qnaData)
             }
         }
         default:
@@ -70,7 +71,7 @@ const reducer = (qna, action) => {
 const Qna = (props) => {
     const { state, dispatch } = React.useContext(StoreContext);
     const { currentSlide,jContent,reset } = state;
-    const { gql_variables,quiz_validMark,language_bundle } =  jContent;
+    const { gql_variables,language_bundle } =  jContent;
 
     const variables = Object.assign(gql_variables,{id:props.id})
     const {loading, error, data} = useQuery(GET_QNA, {
@@ -88,8 +89,7 @@ const Qna = (props) => {
             qnaDispatch({
                 case:"DATA_READY",
                 payload:{
-                    qnaData,
-                    quiz_validMark
+                    qnaData
                 }
             });
         }
@@ -101,8 +101,7 @@ const Qna = (props) => {
             qnaDispatch({
                 case:"RESET",
                 payload:{
-                    qnaData,
-                    quiz_validMark
+                    qnaData
                 }
             });
         }
@@ -122,24 +121,29 @@ const Qna = (props) => {
                 result:qna.notUsedForScore ?
                         true :
                         qna.answers
-                        .filter(answer => answer.valid)
+                        .filter(answer => answer.isAnswer)
                         .reduce( (test,answer) => test && answer.checked,true)
             }
         });
 
         // console.log("[handleSubmit] qna.jExpField2Map => ",qna.jExpField2Map);
         if(qna.jExpField2Map){
-            //Get response label
+            //Get response cdpValue
             //TODO manage case multiple later
             const values =
                 qna.answers
                 .filter(answer => answer.checked)
                 .reduce(
-                    (label,answer) =>
-                        (answer.label && answer.label.length > 0) ?
-                            answer.label :
-                            null
-                    ,null
+                    (item,answer,index) =>{
+                        if(answer.cdpValue && answer.cdpValue.length > 0) {
+                            if (index === 0) {
+                                item = answer.cdpValue
+                            } else {
+                                item = `${item}, ${answer.cdpValue}`
+                            }
+                        }
+                        return item;
+                    },null
                 );
             // console.debug("[handleSubmit] update : ",qna.jExpField2Map," with values : ",values);
 

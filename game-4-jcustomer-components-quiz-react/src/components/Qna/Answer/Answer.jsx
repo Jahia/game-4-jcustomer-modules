@@ -8,7 +8,7 @@ const Answer = (props) =>{
     const {qna, qnaDispatch,id} = props;
     const [answer] = qna.answers.filter(answer => answer.id === id);
 
-    const isValid = answer.valid || (qna.notUsedForScore ? answer.checked : false);
+    const isValid = answer.isAnswer || (qna.notUsedForScore ? answer.checked : false);
     const handleChange = () =>
         qnaDispatch({
             case:"TOGGLE_ANSWER",

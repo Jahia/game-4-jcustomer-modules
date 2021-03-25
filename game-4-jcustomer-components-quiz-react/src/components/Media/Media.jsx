@@ -10,7 +10,7 @@ const Media = ({id,type,path,sourceID,alt}) => {
     const { state } = React.useContext(StoreContext);
     const {cnd_type,files_endpoint} = state.jContent;
 
-    console.log("Media equals: ",type === cnd_type.WIDEN_IMAGE)
+    // console.log("Media equals: ",type === cnd_type.WIDEN_IMAGE)
     let component;
     switch(type){
         case cnd_type.WIDEN_IMAGE :
@@ -33,7 +33,7 @@ const Media = ({id,type,path,sourceID,alt}) => {
             component = <Image path={path} alt={alt}/>
             break;
     }
-    console.log("Media component: ",component)
+    // console.log("Media component: ",component)
     return(component)
 }
 
