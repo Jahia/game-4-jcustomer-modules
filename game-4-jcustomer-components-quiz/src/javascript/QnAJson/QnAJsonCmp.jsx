@@ -2,7 +2,7 @@ import React from 'react';
 import * as PropTypes from 'prop-types';
 import './QnAJsonCmp.css';
 
-// Import {Input} from '@jahia/design-system-kit';
+import {Input} from '@jahia/design-system-kit';
 
 // Import Checkbox from '@material-ui/core/Checkbox';
 // import FormGroup from '@material-ui/core/FormGroup';
@@ -10,20 +10,39 @@ import './QnAJsonCmp.css';
 // import FormControl from '@material-ui/core/FormControl';
 // import FormLabel from '@material-ui/core/FormLabel';
 // import TextField from '@material-ui/core/TextField';
-import {Checkbox, FormGroup, FormControlLabel, FormControl, FormLabel, TextField, withStyles} from '@material-ui/core';
-
-const styles = theme => ({
-    root: {
-        '& > *': {
-            margin: Number(theme.spacing.unit),
-            width: '25ch'
+// import {Checkbox, FormGroup, FormControlLabel, FormControl, FormLabel, TextField, withStyles} from '@material-ui/core';
+// import {Checkbox, FormGroup, FormControlLabel, FormControl, FormLabel, InputBase, withStyles} from '@material-ui/core';
+import {Grid, FormControlLabel, Switch, withStyles} from '@material-ui/core';
+const styles = () => ({
+    switchLabel: {
+        '& >span:last-child': {
+            color: 'black',
+            fontSize: '1rem'
         }
-    },
-    input: {
-        flex: '100%',
-        borderBottom: `1px solid ${theme.palette.primary.main}`,
-        height: '50px'
     }
+    // Root: {
+    //     background: '#fff',
+    //     display: 'flex',
+    //     boxShadow: 'none',
+    //     zIndex: 3,
+    //     margin: '0 auto',
+    // },
+    // input: {
+    //     flex: '100%',
+    //     borderBottom: `1px solid ${theme.palette.primary.main}`,
+    //     height: '50px'
+    // },
+    // inputCdp: {
+    //     flex: '50%',
+    //     borderBottom: `1px solid ${theme.palette.primary.main}`,
+    //     height: '50px'
+    // }
+    // Root: {
+    //     '& > *': {
+    //         margin: Number(theme.spacing.unit),
+    //         width: '25ch'
+    //     }
+    // }
 });
 
 const defaultAnswer = {
@@ -73,9 +92,15 @@ const QnAJsonCmp = ({field, id, value, onChange, classes}) => {
 
     const controlledValue = formatValue(value);
     const handleChangeLabel = e => {
+        console.log('handleChangeLabel e :', e);
         controlledValue.label = e?.target?.value;
         onChange(controlledValue);
     };
+
+    console.log('controlledValue :', controlledValue);
+    console.log('classes :', classes);
+    // Console.log('handleChangeLabel :', handleChangeLabel);
+
     //
     // const handleChangeCdpValue = e => {
     //     controlledValue.cdpValue = e?.target?.value;
@@ -83,20 +108,105 @@ const QnAJsonCmp = ({field, id, value, onChange, classes}) => {
     // };
 
     return (
-        <FormControl className={classes.root} component="fieldset">
-            <FormLabel component="legend">Answer 1</FormLabel>
-            <FormGroup row aria-label="position">
+        <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
                 <FormControlLabel
-                    value="start"
-                    control={<Checkbox color="primary"/>}
-                    label="is Answer"
-                    labelPlacement="start"
+                    className={classes.switchLabel}
+                    control={
+                        <Switch
+                            checked={controlledValue.isAnswer === true}
+                            name={`isAnswer-${id}`}
+                            color="primary"
+                            onChange={(evt, checked) => onChange(checked)}
+                        />
+                    }
+                    label="Primary"/>
+                {/* <Toggle id={id} */}
+                {/*        inputProps={{ */}
+                {/*            'aria-labelledby': `${field.name}-label` */}
+                {/*        }} */}
+                {/*        checked={controlledValue.isAnswer === true} */}
+                {/*        readOnly={field.readOnly} */}
+                {/*        label="et voilà" */}
+                {/*        onChange={(evt, checked) => onChange(checked)} */}
+                {/* /> */}
+            </Grid>
+            <Grid item xs={12} sm={6}>
+                <Input
+                    fullWidth
+                    id={`cdp-${id}`}
+                    name={`cdp-${id}`}
+                    value={controlledValue.cdpValue}
+                    readOnly={field.readOnly}
+                    type="text"
+                    placeholder="(optional) User profile value"
                 />
-                <TextField id={`cdp-${id}`} label="CDP value to store" maxLength={maxLength} onChange={handleChangeLabel}/>
-                <TextField id={id} label="Answer"/>
-            </FormGroup>
-        </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+                <Input
+                    fullWidth
+                    id={id}
+                    name={id}
+                    inputProps={{
+                        'aria-labelledby': `${field.name}-label`,
+                        'aria-required': field.mandatory,
+                        maxlength: maxLength && maxLength.value
+                    }}
+                    value={controlledValue.label}
+                    readOnly={field.readOnly}
+                    type="text"
+                    placeholder="Answer"
+                    onChange={handleChangeLabel}
+                />
+            </Grid>
+        </Grid>
     );
+
+    // Return (
+    //     <FormControl className={classes.root} component="fieldset">
+    //         <FormLabel component="legend">Answer 1</FormLabel>
+    //         <FormGroup row aria-label="position">
+    //             <FormControlLabel
+    //                 value="start"
+    //                 control={<Checkbox color="primary"/>}
+    //                 label="is Answer"
+    //                 labelPlacement="start"
+    //             />
+    //             <InputBase
+    //                 placeholder="CDP value to store (optional)"
+    //                 // Variant="outlined"
+    //                 id={`cdp-${id}`}
+    //                 value={controlledValue.cdpValue}
+    //                 className={classes.input}
+    //             />
+    //             <InputBase
+    //                 placeholder="Answer"
+    //                 // Variant="outlined"
+    //                 id={id}
+    //                 value={controlledValue.label}
+    //                 className={classes.input}
+    //                 maxLength={maxLength}
+    //                 onChange={handleChangeLabel}
+    //             />
+    //         </FormGroup>
+    //     </FormControl>
+    // );
+
+    // Return (
+    //     <FormControl className={classes.root} component="fieldset">
+    //         <FormLabel component="legend">Answer 1</FormLabel>
+    //         <FormGroup row aria-label="position">
+    //             <FormControlLabel
+    //                 value="start"
+    //                 control={<Checkbox color="primary"/>}
+    //                 label="is Answer"
+    //                 labelPlacement="start"
+    //             />
+    //             <TextField id={`cdp-${id}`} label="CDP value to store" maxLength={maxLength} onChange={handleChangeLabel}/>
+    //             <TextField id={id} label="Answer" value={controlledValue.label}/>
+    //         </FormGroup>
+    //     </FormControl>
+    // );
 
     // Return (
     //     <fieldset name="toto">
