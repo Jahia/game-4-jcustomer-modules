@@ -2,7 +2,7 @@ import React from 'react';
 import * as PropTypes from 'prop-types';
 import './QnAJsonCmp.css';
 
-import {Input} from '@jahia/design-system-kit';
+import {Input, Toggle} from '@jahia/design-system-kit';
 
 // Import Checkbox from '@material-ui/core/Checkbox';
 // import FormGroup from '@material-ui/core/FormGroup';
@@ -12,7 +12,7 @@ import {Input} from '@jahia/design-system-kit';
 // import TextField from '@material-ui/core/TextField';
 // import {Checkbox, FormGroup, FormControlLabel, FormControl, FormLabel, TextField, withStyles} from '@material-ui/core';
 // import {Checkbox, FormGroup, FormControlLabel, FormControl, FormLabel, InputBase, withStyles} from '@material-ui/core';
-import {Grid, FormControlLabel, Switch, withStyles} from '@material-ui/core';
+import {Grid, FormControlLabel, withStyles} from '@material-ui/core';
 const styles = () => ({
     switchLabel: {
         '& >span:last-child': {
@@ -24,6 +24,9 @@ const styles = () => ({
         // Border: '1px solid rgba(19, 28, 33, 1)',
         padding: '.5rem',
         boxShadow: '0px 2px 10px -5px #000000, 2px 5px 15px 5px rgba(0,0,0,0);'
+    },
+    toggle: {
+        margin: 0
     }
     // Root: {
     //     background: '#fff',
@@ -133,7 +136,7 @@ const QnAJsonCmp = ({field, id, value, onChange, classes}) => {
     const maxLength = field.selectorOptions.find(option => option.name === 'maxLength');
     // Note do a convert here, because I need a unique format for the app!
     const controlledValue = formatValue(value);
-    // controlledValue.id=id;
+    // ControlledValue.id=id;
 
     const handleChangeLabel = e => {
         controlledValue.label = e?.target?.value;
@@ -157,25 +160,25 @@ const QnAJsonCmp = ({field, id, value, onChange, classes}) => {
                 <FormControlLabel
                     className={classes.switchLabel}
                     control={
-                        <Switch
-                            checked={controlledValue.isAnswer === true}
+                        <Toggle
+                            id={`isAnswer-${id}`}
                             name={`isAnswer-${id}`}
-                            color="primary"
+                            className={classes.toggle}
+                            checked={controlledValue.isAnswer === true}
+                            readOnly={field.readOnly}
                             onChange={handleChangeIsAnswer}
                         />
+                        // <Switch
+                        //     checked={controlledValue.isAnswer === true}
+                        //     name={`isAnswer-${id}`}
+                        //     color="primary"
+                        //     onChange={handleChangeIsAnswer}
+                        // />
                     }
                     label="Expected Answer"
                     // LabelPlacement="top"
                 />
-                {/* <Toggle id={id} */}
-                {/*        inputProps={{ */}
-                {/*            'aria-labelledby': `${field.name}-label` */}
-                {/*        }} */}
-                {/*        checked={controlledValue.isAnswer === true} */}
-                {/*        readOnly={field.readOnly} */}
-                {/*        label="et voilà" */}
-                {/*        onChange={(evt, checked) => onChange(checked)} */}
-                {/* /> */}
+
             </Grid>
             <Grid item xs={12} sm={6}>
                 <Input
