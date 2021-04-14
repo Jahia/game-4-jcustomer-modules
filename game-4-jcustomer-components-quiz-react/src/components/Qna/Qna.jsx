@@ -150,7 +150,11 @@ const Qna = (props) => {
                     (item,answer,index) =>{
                         if(answer.cdpValue && answer.cdpValue.length > 0) {
                             if (index === 0) {
-                                item = answer.cdpValue
+                                //workaround
+                                let cdpValue = answer.cdpValue;
+                                if(cdpValue==='true') cdpValue=true;
+                                if(cdpValue==='false') cdpValue=false;
+                                item = cdpValue
                             } else {
                                 item = `${item}, ${answer.cdpValue}`
                             }

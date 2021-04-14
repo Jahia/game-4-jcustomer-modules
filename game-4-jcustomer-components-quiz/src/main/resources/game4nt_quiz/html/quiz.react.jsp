@@ -14,7 +14,7 @@
 <template:addResources type="css" resources="webapp/2.f524894f.chunk.css" />
 <template:addResources type="css" resources="webapp/main.d86f8f56.chunk.css" />
 <template:addResources type="javascript" resources="webapp/2.19b736fc.chunk.js" />
-<template:addResources type="javascript" resources="webapp/main.5847895d.chunk.js" />
+<template:addResources type="javascript" resources="webapp/main.c7b5cbd7.chunk.js" />
 
 
 <%--<c:set var="_path_" value="${currentNode.path}"/>--%>
