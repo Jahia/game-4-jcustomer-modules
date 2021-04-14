@@ -11,10 +11,10 @@
 <%@ taglib prefix="s" uri="http://www.jahia.org/tags/search" %>
 
 <%--Add files used by the webapp--%>
-<template:addResources type="css" resources="REACTEmbeddedBuild/2.f524894f.chunk.css" />
-<template:addResources type="css" resources="REACTEmbeddedBuild/main.77fd84b9.chunk.css" />
-<template:addResources type="javascript" resources="REACTEmbeddedBuild/2.ce498631.chunk.js" />
-<template:addResources type="javascript" resources="REACTEmbeddedBuild/main.a3e7e162.chunk.js" />
+<template:addResources type="css" resources="webapp/2.f524894f.chunk.css" />
+<template:addResources type="css" resources="webapp/main.d86f8f56.chunk.css" />
+<template:addResources type="javascript" resources="webapp/2.19b736fc.chunk.js" />
+<template:addResources type="javascript" resources="webapp/main.5847895d.chunk.js" />
 
 
 <%--<c:set var="_path_" value="${currentNode.path}"/>--%>

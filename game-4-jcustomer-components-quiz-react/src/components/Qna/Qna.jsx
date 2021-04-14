@@ -114,22 +114,35 @@ const Qna = (props) => {
     const show = currentSlide === props.id;
 
     const handleSubmit = () => {
-
-        dispatch({
-            case:"SHOW_RESULT",
-            payload:{
-                result:qna.notUsedForScore ?
-                        true :
-                        qna.answers
-                        .filter(answer => answer.isAnswer)
-                        .reduce( (test,answer) => test && answer.checked,true)
-            }
-        });
+        if(qna.notUsedForScore){
+            dispatch({
+                case:"NEXT_SLIDE"
+            });
+        }else{
+            dispatch({
+                case:"SHOW_RESULT",
+                payload:{
+                    result: qna.answers
+                            .filter(answer => answer.isAnswer)
+                            .reduce( (test,answer) => test && answer.checked,true)
+                }
+            });
+        }
+        // dispatch({
+        //     case:"SHOW_RESULT",
+        //     payload:{
+        //         result:qna.notUsedForScore ?
+        //                 true :
+        //                 qna.answers
+        //                 .filter(answer => answer.isAnswer)
+        //                 .reduce( (test,answer) => test && answer.checked,true)
+        //     }
+        // });
 
         // console.log("[handleSubmit] qna.jExpField2Map => ",qna.jExpField2Map);
         if(qna.jExpField2Map){
             //Get response cdpValue
-            //TODO manage case multiple later
+            //Note case multiple is manage by comma separated case
             const values =
                 qna.answers
                 .filter(answer => answer.checked)
@@ -162,6 +175,7 @@ const Qna = (props) => {
             {qna.media &&
                 <Media id={qna.media.id}
                        type={qna.media.type.value}
+                       mixins={qna.media.mixins.map(mixin=>mixin.value)}
                        path={qna.media.path}
                        alt={qna.title}
                 />

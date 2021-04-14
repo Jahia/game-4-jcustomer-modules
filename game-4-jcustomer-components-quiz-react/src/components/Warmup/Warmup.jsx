@@ -56,6 +56,7 @@ const Warmup = (props) => {
                 {warmup.media &&
                     <Media id={warmup.media.id}
                            type={warmup.media.type.value}
+                           mixins={warmup.media.mixins.map(mixin=>mixin.value)}
                            path={warmup.media.path}
                            alt={warmup.title}
                     />

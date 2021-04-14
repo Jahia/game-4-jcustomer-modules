@@ -29,19 +29,22 @@ export const GET_WARMUP = gql`
                 }
                 videoIntPath: property(language:$language,name:"game4:videoIntPath"){
                     node: refNode {
-                        id: uuid,
+                        id: uuid
                         type: primaryNodeType{
                             value:name
-                        },
+                        }
                         path
                     }
                 }
                 media: property(language:$language,name:"wden:mediaNode",){
                     node: refNode {
-                        id: uuid,
+                        id: uuid
                         type: primaryNodeType{
                             value:name
-                        },
+                        }
+                        mixins: mixinTypes{
+                            value:name
+                        }
                         path
                     }
                 }

@@ -6,7 +6,7 @@ import Video from './components/Video';
 import WidenImage from './components/widen/WidenImage';
 import WidenVideo from './components/widen/WidenVideo';
 
-const Media = ({id,type,path,sourceID,alt}) => {
+const Media = ({id,type,mixins,path,sourceID,alt}) => {
     const { state } = React.useContext(StoreContext);
     const {cnd_type,files_endpoint} = state.jContent;
 
@@ -25,8 +25,12 @@ const Media = ({id,type,path,sourceID,alt}) => {
             component = <Video url={path} ownerID={sourceID} />
             break;
             
-        case cnd_type.INT_VIDEO:
-            component = <Video url={files_endpoint+encodeURI(path)} ownerID={sourceID} />
+        case cnd_type.JNT_FILE:
+            if(mixins.includes(cnd_type.IMAGE)){
+                component = <Image path={path} alt={alt}/>
+            }else{
+                component = <Video url={files_endpoint+encodeURI(path)} ownerID={sourceID} />
+            }
             break;
             
         default:
@@ -40,6 +44,7 @@ const Media = ({id,type,path,sourceID,alt}) => {
 Media.propTypes={
     id:PropTypes.string,
     type:PropTypes.string.isRequired,
+    mixins:PropTypes.array.isRequired,
     path:PropTypes.string,
     sourceID:PropTypes.string,
     alt:PropTypes.string

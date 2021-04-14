@@ -29,10 +29,13 @@ export const GET_QUIZ = gql`
                 }
                 media: property(language:$language,name:"wden:mediaNode",){
                     node: refNode {
-                        id: uuid,
+                        id: uuid
                         type: primaryNodeType{
                             value:name
-                        },
+                        }
+                        mixins: mixinTypes{
+                            value:name
+                        }
                         path
                     }
                 }
