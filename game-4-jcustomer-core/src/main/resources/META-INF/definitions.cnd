@@ -14,5 +14,5 @@
  - game4:newjExpPropertyId (string) hidden indexed=no
 
 [game4mix:usesResultAsProperty] mixin
- - game4:jExpProperty (string, choicelist[jExpProfilePropertiesInitializer='{"cardName":["Game4Quiz","Basic info","Personal info"]}',resourceBundle]) indexed=no
+ - game4:jExpProperty (string, choicelist[jExpProfilePropertiesInitializer,resourceBundle]) indexed=no
 

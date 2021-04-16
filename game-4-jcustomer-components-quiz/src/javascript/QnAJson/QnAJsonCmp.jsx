@@ -53,17 +53,18 @@ const styles = () => ({
     // }
 });
 
-const defaultAnswer = {
-    isAnswer: false,
-    label: '',
-    cdpValue: ''
-};
-
 const formatValue = value => {
-    console.log('value :', value);
-    console.log('typeof value :', typeof value);
+    const defaultAnswer = {
+        isAnswer: false,
+        label: '',
+        cdpValue: ''
+    };
+    // Console.log('value :', value);
+    // console.log('typeof value :', typeof value);
 
     if (value === undefined) {
+        // Console.log('value is undefined, return default:', defaultAnswer);
+        // Return {...defaultAnswer} ;
         return defaultAnswer;
     }
 
@@ -88,49 +89,6 @@ const formatValue = value => {
         label: value
     };
 };
-
-// Const formatValue = value => {
-//     console.log('value :', value);
-//     console.log('typeof value :', typeof value);
-//
-//     if (value === undefined) {
-//         return defaultAnswer;
-//     }
-//
-//     // Note see I use ajv here to check object format
-//     if (typeof value === 'object' && value !== null) {
-//         return value;
-//     }
-//
-//     // The following is for backward compatibility
-//     if (typeof value === 'string') {
-//         const validMark = '[*]';
-//         const valid = value.indexOf(validMark) === 0;
-//         if (valid) {
-//             return {
-//                 ...defaultAnswer,
-//                 isAnswer: true,
-//                 label: value.substring(validMark.length + 1)// +1 is for space between mark and label
-//             };
-//         }
-//
-//         try {
-//             const formattedValue = JSON.parse(value);
-//             if (typeof formattedValue === 'object' && formattedValue !== null) {
-//                 return formattedValue;
-//             }
-//         } catch (e) {
-//             console.warn('value is not an object, maybe a pre-version 1.0.2 format');
-//         }
-//     }
-//
-//     console.log('will return default');
-//
-//     return {
-//         ...defaultAnswer,
-//         label: value
-//     };
-// };
 
 const QnAJsonCmp = ({field, id, value, onChange, classes}) => {
     const maxLength = field.selectorOptions.find(option => option.name === 'maxLength');

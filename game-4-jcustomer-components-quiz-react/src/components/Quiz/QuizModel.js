@@ -18,6 +18,10 @@ export default function(quizData) {
                 actived:JSON.parse(get(node,"actived.value"))
             }
         }),
+        personalizedResult :{
+            id:get(quizData, "personalizedResult.node.id", null),
+            type:get(quizData, "personalizedResult.node.type.value", null)
+        },
         childNodes : get(quizData,"children.nodes",[]).map(node =>{
             return {
                 id: get(node, "id"),

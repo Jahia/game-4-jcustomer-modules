@@ -15,7 +15,7 @@ import { faClock,faCheckCircle} from '@fortawesome/free-regular-svg-icons';
 
 //todo voir si je peux le desactiver dynamiquement
 //todo comment bootstrap to build to jahia view
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import 'components/App.scss';
 import 'react-circular-progressbar/dist/styles.css';
 

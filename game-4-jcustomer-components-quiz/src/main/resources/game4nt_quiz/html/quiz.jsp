@@ -13,8 +13,19 @@
 <c:set var="title" value="${fn:escapeXml(currentNode.displayableName)}"/>
 <c:set var="description" value="${currentNode.properties['game4:description'].string}"/>
 
-<c:set value="${currentNode.properties['game4:cover'].node}" var="coverNode"/>
-<c:url var="imageURL" value="${coverNode.url}"/>
+<c:set var="imageNode" value="${currentNode.properties['wden:mediaNode'].node}"/>
+<c:choose>
+    <c:when test="${!empty imageNode && jcr:isNodeType(imageNode, 'wdenmix:widenAsset')}">
+        <c:set var="imageURL" value="${imageNode.properties['wden:templatedUrl'].string}"/>
+        <c:set var="imageURL" value="${fn:replace(imageURL, '{scale}', '1')}"/>
+        <c:set var="imageURL" value="${fn:replace(imageURL, '{quality}', '72')}"/>
+        <c:set var="imageURL" value="${fn:replace(imageURL, '{size}', '768')}"/>
+        <c:url var="imageURL" value="${imageURL}"/>
+    </c:when>
+    <c:otherwise>
+        <c:url var="imageURL" value="${imageNode.url}"/>
+    </c:otherwise>
+</c:choose>
 
 <c:url var="quiz" value="${currentNode.url}"/>
 

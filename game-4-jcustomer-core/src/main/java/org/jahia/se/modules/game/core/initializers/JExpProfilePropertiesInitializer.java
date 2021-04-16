@@ -15,6 +15,7 @@ import org.jahia.services.content.nodetypes.initializers.ModuleChoiceListInitial
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.osgi.service.component.annotations.Activate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,20 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
 //    private String key;
     private String key="jExpProfilePropertiesInitializer";
     private ContextServerService contextServerService;
+    private List<String> cardNames;
+    private String occurrence;
+    private String type;
+
+    @Activate
+    private void onActivate(Map<String,?> config){
+        final String configCardNames = (String) config.get("cardNames");
+        this.occurrence = (String) config.get("occurrence");
+        if(this.occurrence==null || this.occurrence.isEmpty()){
+            this.occurrence = "single";
+        }
+        this.type= (String) config.get("type");
+        this.cardNames = Arrays.asList(configCardNames.split(","));
+    }
 
     @Reference(service=ContextServerService.class)
     public void setContextServerService(ContextServerService contextServerService) {
@@ -64,24 +79,20 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
         List<ChoiceListValue> choiceListValues = new ArrayList<>();
 
         try {
-            logger.info("param : "+param);
-
-            JSONObject params= new JSONObject();
-            if(!param.isEmpty())
-                params = new JSONObject(param);
-
-            final String occurrence = params.optString("occurrence","single");
-            final String type = params.optString("type");
-            final JSONArray jsonArrayCardName = params.optJSONArray("cardName");
-            final ArrayList<String> cardName = new ArrayList<String>();
-            if(jsonArrayCardName != null){
-                int len = jsonArrayCardName.length();
-                for (int i=0;i<len;i++){
-                    cardName.add(jsonArrayCardName.get(i).toString());
-                }
-            }
-
-            logger.info("occurrence : "+occurrence+" & type :"+type+" & cardName :"+cardName);
+//            JSONObject params= new JSONObject();
+//            if(!param.isEmpty())
+//                params = new JSONObject(param);
+//
+//            final String occurrence = params.optString("occurrence","single");
+//            final String type = params.optString("type");
+//            final JSONArray jsonArrayCardName = params.optJSONArray("cardName");
+//            final ArrayList<String> cardName = new ArrayList<String>();
+//            if(jsonArrayCardName != null){
+//                int len = jsonArrayCardName.length();
+//                for (int i=0;i<len;i++){
+//                    cardName.add(jsonArrayCardName.get(i).toString());
+//                }
+//            }
 
             JCRNodeWrapper node = (JCRNodeWrapper)
                     ((context.get("contextParent") != null)
@@ -107,19 +118,17 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
 
                 JSONObject responseBody = new JSONObject(future.get().getResponseBody());
                 JSONArray profileProperties = responseBody.getJSONArray("profiles");
-                logger.info("responseBody : "+responseBody.toString());
-                logger.info("profileProperties : "+profileProperties.toString());
 
                 for (int i = 0; i < profileProperties.length(); i++) {
                     JSONObject property = profileProperties.getJSONObject(i);
                     String propertyCardName = getCardName(property);
 
-                    boolean occurenceMatch = occurrence.equals("single")?
+                    boolean occurenceMatch = "single".equals(occurrence)?
                             !property.optBoolean("multivalued") : property.optBoolean("multivalued");
-                    boolean typeMatch = type.isEmpty()? true : property.optString("type").equals(type);
+                    boolean typeMatch = type==null || type.isEmpty()? true : property.optString("type").equals(type);
                     //cardNameMatch remove property not associated to a card like *first visit* / *last visit*
-                    boolean cardNameMatch = cardName.isEmpty()?
-                            !propertyCardName.isEmpty(): cardName.contains(propertyCardName);
+                    boolean cardNameMatch = cardNames.isEmpty()?
+                            !propertyCardName.isEmpty(): cardNames.contains(propertyCardName);
 
                     logger.debug("property.optBoolean(\"multivalued\") : "+property.optBoolean("multivalued"));
                     logger.debug("property.optString(\"type\") : "+property.optString("type"));
@@ -128,21 +137,6 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
 
                     if (occurenceMatch && typeMatch && cardNameMatch) {
                         JSONObject metadata = property.getJSONObject("metadata");
-//                        JSONArray systemTags = metadata.optJSONArray("systemTags");
-//
-//                        logger.debug("systemTags : "+systemTags.toString());
-//                        logger.debug("cardDataTag : "+systemTags.toString().contains("cardDataTag/"));
-//
-//                        Pattern cardPattern = Pattern.compile("\"cardDataTag/(\\w+)/(\\d{1,2})/(.*?)\"");
-//                        Matcher matcher = cardPattern.matcher(systemTags.toString());
-//                        //String cardId = matcher.group(1);
-//                        //String cardIndex = matcher.group(2);
-//                        //String cardName = matcher.group(3);
-//
-//                        String cardName = "";
-//                        if (matcher.find())
-//                            cardName = " ( "+matcher.group(3)+" )";
-//                        logger.debug("cardName : "+cardName);
 
                         String itemId = property.optString("itemId");
                         String displayName = metadata.optString("name",itemId)+" ( "+propertyCardName+" )";

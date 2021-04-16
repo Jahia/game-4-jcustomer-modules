@@ -47,6 +47,14 @@ export const GET_QUIZ = gql`
                         }
                     }
                 }
+                personalizedResult: property(name:"game4:personalizedResultContent"){
+                    node: refNode {
+                        id: uuid
+                        type: primaryNodeType{
+                            value:name
+                        }
+                    }
+                }
                 children{
                     nodes {
                         id: uuid
