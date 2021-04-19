@@ -185,7 +185,7 @@ const App = (props)=> {
                             />
                         )}
                     </ol>
-
+                    {quiz &&
                     <div className="game4-quiz__inner">
                         <Quiz
                             key={quiz.id}
@@ -193,9 +193,9 @@ const App = (props)=> {
                         {quiz.childNodes.map( (node,i) => {
                             if(node.type === jContent.cnd_type.QNA)
                                 return <Qna
-                                        key={node.id}
-                                        id={node.id}
-                                    />
+                                    key={node.id}
+                                    id={node.id}
+                                />
 
                             if(node.type === jContent.cnd_type.WARMUP)
                                 return <Warmup
@@ -203,10 +203,11 @@ const App = (props)=> {
                                     id={node.id}
                                 />
                             return <p className="text-danger">node type {node.type} is not supported</p>
-                            })
+                        })
                         }
                         <Score/>
                     </div>
+                    }
                 </div>
             </Row>
         </Container>

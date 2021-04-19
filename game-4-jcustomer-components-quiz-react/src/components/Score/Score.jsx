@@ -1,13 +1,13 @@
 import React from 'react';
-// import PropTypes from "prop-types";
-import { CircularProgressbar } from 'react-circular-progressbar';
 import {StoreContext} from "contexts";
 import {Button} from "react-bootstrap";
 import Media from "components/Media";
+import Personalized from "components/Score/personalized/Personalized";
+import Percentage from "components/Score/percentage/Percentage";
 
 const Score = (props) => {
     const { state,dispatch } = React.useContext(StoreContext);
-    const { quiz,currentSlide,score,scoreIndex,jContent } = state;
+    const { quiz,currentSlide,score,scoreIndex,jContent,cxs } = state;
     const { language_bundle } =  jContent;
 
     const show = currentSlide === scoreIndex;
@@ -17,8 +17,20 @@ const Score = (props) => {
             case:"RESET"
         });
     }
-
-    // console.log("Score props.show :",props.show);
+    const displayResult = () => {
+        if(quiz.personalizedResult.id){
+            if(cxs)
+                return <Personalized id={quiz.personalizedResult.id} cxs={cxs}/>
+            return <p>cxs is loading...</p>
+        }
+        return <Percentage score={score}/>
+    }
+    // {quiz.personalizedResult.id && <Personalized id={quiz.personalizedResult.id}/>}
+    // {!quiz.personalizedResult.id && <Percentage score={score}/>}
+    // <div className="game4-quiz__score-result col-6 offset-3 col-md-4 offset-md-4 mb-5">
+    //     <CircularProgressbar value={score} text={`${score}%`}/>
+    // </div>
+    // console.log("[Score] props.show :",props.show);
     return(
         <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
             {quiz.media &&
@@ -31,10 +43,7 @@ const Score = (props) => {
             }
             <div className="game4-quiz__caption d-none d-md-block">
                 <h2 className="text-uppercase">{quiz.title}<span className="subtitle">{quiz.subtitle}</span></h2>
-                <div className="game4-quiz__score-result col-6 offset-3 col-md-4 offset-md-4 mb-5">
-                    <CircularProgressbar value={score} text={`${score}%`}/>
-                </div>
-
+                {displayResult()}
                 <Button variant="game4-quiz"
                         onClick={onClick}>
                     {language_bundle && language_bundle.btnReset}
@@ -44,6 +53,6 @@ const Score = (props) => {
     );
 }
 
-// Score.propTypes={}
+// Personalized.propTypes={}
 
 export default Score;

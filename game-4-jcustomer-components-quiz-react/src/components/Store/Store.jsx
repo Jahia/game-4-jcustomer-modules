@@ -8,7 +8,7 @@ import QuizMapper from "components/Quiz/QuizModel";
 const init = jContent => {
     return {
         jContent,
-        quiz:{consents:[],childNodes:[]},
+        quiz: null,//{consents:[],childNodes:[]},
         resultSet:[],//array of boolean, order is the same a slideSet
         currentResult:false,//previously result
         slideSet:[],//previously slideIndex
