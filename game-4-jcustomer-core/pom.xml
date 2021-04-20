@@ -82,19 +82,19 @@
       <name>Jahia Public Repository</name>
       <url>https://devtools.jahia.com/nexus/content/groups/public</url>
     </repository>
-<!--    <repository>-->
-<!--      <releases>-->
-<!--        <enabled>true</enabled>-->
-<!--        <updatePolicy>never</updatePolicy>-->
-<!--      </releases>-->
-<!--      <snapshots>-->
-<!--        <enabled>true</enabled>-->
-<!--      </snapshots>-->
-<!--      <id>jahia-marketing-factory</id>-->
-<!--      <name>Jahia jExp Repository</name>-->
-<!--&lt;!&ndash;      <url>https://devtools.jahia.com/nexus/content/groups/marketing-factory-group/</url>&ndash;&gt;-->
-<!--      <url>https://devtools.jahia.com/nexus/content/repositories/marketing-factory-releases</url>-->
-<!--    </repository>-->
+    <repository>
+      <releases>
+        <enabled>true</enabled>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>jahia-marketing-factory</id>
+      <name>Jahia jExp Repository</name>
+<!--      <url>https://devtools.jahia.com/nexus/content/groups/marketing-factory-group/</url>-->
+      <url>https://devtools.jahia.com/nexus/content/repositories/marketing-factory-releases</url>
+    </repository>
   </repositories>
   <build>
     <plugins>
