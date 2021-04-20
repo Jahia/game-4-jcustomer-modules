@@ -48,11 +48,11 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.jahia.modules</groupId>
-    <artifactId>jahia-modules</artifactId>
-    <version>8.0.2.0</version>
+    <groupId>org.jahia.se.modules</groupId>
+    <artifactId>game-4-jcustomer</artifactId>
+    <version>1.0.2-SNAPSHOT</version>
   </parent>
-  <groupId>org.jahia.se.modules</groupId>
+<!--  <groupId>org.jahia.se.modules</groupId>-->
   <artifactId>game-4-jcustomer-core</artifactId>
   <version>1.0.2-SNAPSHOT</version>
   <packaging>bundle</packaging>
@@ -82,18 +82,19 @@
       <name>Jahia Public Repository</name>
       <url>https://devtools.jahia.com/nexus/content/groups/public</url>
     </repository>
-    <repository>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>never</updatePolicy>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>jahia-marketing-factory</id>
-      <name>Jahia jExp Repository</name>
-      <url>https://devtools.jahia.com/nexus/content/groups/marketing-factory-group/</url>
-    </repository>
+<!--    <repository>-->
+<!--      <releases>-->
+<!--        <enabled>true</enabled>-->
+<!--        <updatePolicy>never</updatePolicy>-->
+<!--      </releases>-->
+<!--      <snapshots>-->
+<!--        <enabled>true</enabled>-->
+<!--      </snapshots>-->
+<!--      <id>jahia-marketing-factory</id>-->
+<!--      <name>Jahia jExp Repository</name>-->
+<!--&lt;!&ndash;      <url>https://devtools.jahia.com/nexus/content/groups/marketing-factory-group/</url>&ndash;&gt;-->
+<!--      <url>https://devtools.jahia.com/nexus/content/repositories/marketing-factory-releases</url>-->
+<!--    </repository>-->
   </repositories>
   <build>
     <plugins>

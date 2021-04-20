@@ -92,11 +92,14 @@ const reducer = (state, action) => {
             if(currentIndex  < state.max )
                 nextSlide = state.slideSet[nextIndex];
 
+            const showScore = currentIndex === state.max-1;
+
             return {
                 ...state,
                 currentSlide:nextSlide,
                 showNext: showNext({...state,slide:nextSlide}),
                 showResult:false,
+                showScore,
                 reset:false
             };
         }
@@ -155,6 +158,7 @@ const reducer = (state, action) => {
                 ...state,
                 currentSlide,
                 resultSet:[],
+                showScore:false,
                 currentResult:false,
                 reset:true
             }

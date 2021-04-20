@@ -1,7 +1,5 @@
 <game4mix = 'http://modules.se.jahia.org/game-4-jcustomer/mix/1.0'>
 <jmix = 'http://www.jahia.org/jahia/mix/1.0'>
-<wemnt = 'http://www.jahia.org/jahia/wem/nt/1.0'>
-<game4 = 'http://modules.se.jahia.org/game-4-jcustomer/1.0'>
 
 [game4mix:components] > jmix:droppableContent mixin
 
@@ -17,3 +15,4 @@
 
 [game4mix:usesResultAsProperty] mixin
  - game4:jExpProperty (string, choicelist[jExpProfilePropertiesInitializer,resourceBundle]) indexed=no
+

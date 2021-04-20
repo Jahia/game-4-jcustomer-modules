@@ -30,7 +30,7 @@ const Score = (props) => {
     // <div className="game4-quiz__score-result col-6 offset-3 col-md-4 offset-md-4 mb-5">
     //     <CircularProgressbar value={score} text={`${score}%`}/>
     // </div>
-    // console.log("[Score] props.show :",props.show);
+    console.log("[Score] quiz.personalizedResult.id: ",quiz.personalizedResult.id);
     return(
         <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
             {quiz.media &&

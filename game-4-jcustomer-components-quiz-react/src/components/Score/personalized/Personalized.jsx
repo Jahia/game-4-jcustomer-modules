@@ -17,7 +17,8 @@ const Personalized = ({id,cxs}) => {
             profileId:cxs.profileId,
             sessionId:cxs.sessionId,
             id
-        })
+        }),
+        fetchPolicy: "no-cache"
     });
 
     React.useEffect(() => {

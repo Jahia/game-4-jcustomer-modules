@@ -15,7 +15,7 @@ import { faClock,faCheckCircle} from '@fortawesome/free-regular-svg-icons';
 
 //todo voir si je peux le desactiver dynamiquement
 //todo comment bootstrap to build to jahia view
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import 'components/App.scss';
 import 'react-circular-progressbar/dist/styles.css';
 
@@ -146,6 +146,12 @@ const App = (props)=> {
             case:"SHOW_SCORE"
         });
 
+    const displayScore=()=>{
+        console.log("[displayScore] showScore: ",showScore);
+        if(showScore)
+            return <Score/>
+    }
+
     return (
         <Container>
             <Row>
@@ -205,7 +211,7 @@ const App = (props)=> {
                             return <p className="text-danger">node type {node.type} is not supported</p>
                         })
                         }
-                        <Score/>
+                        {displayScore()}
                     </div>
                     }
                 </div>
