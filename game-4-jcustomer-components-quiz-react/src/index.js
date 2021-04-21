@@ -12,8 +12,10 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import {contextValidator} from "douane";
 
 import {Store} from "components/Store";
+import { ThemeProvider } from '@material-ui/core/styles';
+import theme from 'components/theme';
 
-import 'index.css';
+// import 'index.css';
 
 const render=(target,context)=>{
   try{
@@ -32,7 +34,9 @@ const render=(target,context)=>{
     ReactDOM.render(
       <Store jContent={context}>
         <ApolloProvider client={client}>
-          <App />
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
         </ApolloProvider>
       </Store>,
       document.getElementById(target)

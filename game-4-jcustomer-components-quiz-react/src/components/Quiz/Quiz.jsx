@@ -1,6 +1,8 @@
 import React from 'react';
 // import PropTypes from "prop-types";
-import {Button} from "react-bootstrap";
+// import {Button} from "react-bootstrap";
+import {Button,Typography} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
 
 import {StoreContext} from "contexts";
 
@@ -11,12 +13,25 @@ import get from "lodash.get";
 import {syncConsentStatus} from "misc/tracker";
 import Media from '../Media'
 
+const useStyles = makeStyles(theme => ({
+    textUppercase: {
+        textTransform: "uppercase"
+    },
+    subtitle: {
+        // fontSize: "65%",
+        borderLeft: `${theme.spacing(1)}px solid ${theme.palette.primary.main}`,
+        paddingLeft: "1rem",
+        marginLeft: "1rem"
+    }
+}));
+
 const init = variables =>{
     return {
         ...variables,
         consents:[]//list of consent
     }
 }
+
 
 const computeEnableStartBtn = (state) => {
     const {showNext,workspace,consents} = state;
@@ -107,6 +122,7 @@ function reducer(state, action) {
 }
 
 const Quiz = (props) => {
+    const classes = useStyles(props);
     const { state, dispatch } = React.useContext(StoreContext);
 
     const {quiz,showNext,currentSlide,jContent,cxs} = state;
@@ -143,6 +159,16 @@ const Quiz = (props) => {
         });
     };
 
+    // <h2 className="text-uppercase">{quiz.title}
+    //     <span className="subtitle">{quiz.subtitle}</span>
+    // </h2>
+
+    // <Button variant="game4-quiz"
+    //         onClick={onClick}
+    //         disabled={!quizState.enableStartBtn}>
+    //     {language_bundle && language_bundle.btnStart}
+    // </Button>
+
     return(
         <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
             {quiz.media &&
@@ -155,9 +181,16 @@ const Quiz = (props) => {
             }
 
             <div className="game4-quiz__caption">
-                <h2 className="text-uppercase">{quiz.title}
-                    <span className="subtitle">{quiz.subtitle}</span>
-                </h2>
+                <Typography className={classes.textUppercase}
+                            variant="h3">
+                    {quiz.title}
+                    <Typography className={classes.subtitle}
+                                color="primary"
+                                variant="subtitle1"
+                                component="span">
+                        {quiz.subtitle}
+                    </Typography>
+                </Typography>
 
                 <div className={"duration"}>
                     <FontAwesomeIcon icon={['far','clock']} />
@@ -166,8 +199,7 @@ const Quiz = (props) => {
 
                 <div className="lead" dangerouslySetInnerHTML={{__html:quiz.description}}></div>
 
-                <Button variant="game4-quiz"
-                        onClick={onClick}
+                <Button onClick={onClick}
                         disabled={!quizState.enableStartBtn}>
                     {language_bundle && language_bundle.btnStart}
                 </Button>

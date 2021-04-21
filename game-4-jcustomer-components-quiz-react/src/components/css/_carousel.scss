@@ -13,7 +13,8 @@
 
 .game4-quiz {
   position: relative;
-  font-family: "JetBrainsMono";
+  //font-family: "JetBrainsMono";
+  font-family: Lato;
 }
 
 .game4-quiz.pointer-event {
@@ -276,16 +277,16 @@
     top: 7rem;
   }
 
-  h2{
-    color: $game4-quiz__caption-color;
-    font-family: inherit;
-    .subtitle{
-      font-size: 65%;
-      border-left: $game4-quiz__caption-pipe solid $primary-color;
-      padding-left: 1rem;
-      margin-left: 1rem;
-    }
-  }
+  //h2{
+  //  color: $game4-quiz__caption-color;
+  //  font-family: inherit;
+  //  .subtitle{
+  //    font-size: 65%;
+  //    border-left: $game4-quiz__caption-pipe solid $primary-color;
+  //    padding-left: 1rem;
+  //    margin-left: 1rem;
+  //  }
+  //}
 
   .duration{
     font-size: 1.2rem;

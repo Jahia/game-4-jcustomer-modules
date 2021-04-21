@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jahia.se.jcustomer</groupId>
     <artifactId>game-4-jcustomer-plugin</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.3-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>Game for jCustomer Plugin</name>
     <description>This is the custom module (Game for jCustomer Plugin) for running on a jCustomer server.</description>

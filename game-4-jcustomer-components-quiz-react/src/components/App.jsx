@@ -1,7 +1,8 @@
 import React from 'react'; //useEffect,useContext
 import PropTypes from "prop-types";
 
-import {Button, Container, Row} from 'react-bootstrap';
+// import {Button, Container, Row} from 'react-bootstrap';
+import {Grid,Button} from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 
 import get from "lodash.get";
@@ -153,34 +154,34 @@ const App = (props)=> {
     }
 
     return (
-        <Container>
-            <Row>
+        <Grid container spacing={3}>
+            <Grid item xs>
                 <div className={`game4-quiz slide ${showResult?"show-result":""}`}>
                     {jContent.language_bundle &&
-                        <div className="game4-quiz__header">
+                    <div className="game4-quiz__header">
 
                                 <span className="game4-quiz__header-result">
                                     {currentResult &&
-                                        jContent.language_bundle.correctAnswer}
+                                    jContent.language_bundle.correctAnswer}
                                     {!currentResult &&
-                                        jContent.language_bundle.wrongAnswer}
+                                    jContent.language_bundle.wrongAnswer}
                                 </span>
-                                {!showScore &&
-                                    <Button variant="game4-quiz-header"
-                                        onClick={handleNextSlide}
-                                        disabled={!showNext}>
-                                        {jContent.language_bundle.btnNextQuestion}
-                                    </Button>
-                                }
-                                {showScore &&
-                                    <Button variant="game4-quiz-header"
-                                        onClick={handleShowScore}
-                                        disabled={!showNext}>
-                                        {jContent.language_bundle.btnShowResults}
-                                    </Button>
-                                }
+                        {!showScore &&
+                        <Button variant="game4-quiz-header"
+                                onClick={handleNextSlide}
+                                disabled={!showNext}>
+                            {jContent.language_bundle.btnNextQuestion}
+                        </Button>
+                        }
+                        {showScore &&
+                        <Button variant="game4-quiz-header"
+                                onClick={handleShowScore}
+                                disabled={!showNext}>
+                            {jContent.language_bundle.btnShowResults}
+                        </Button>
+                        }
 
-                        </div>
+                    </div>
                     }
                     <ol className="game4-quiz__indicators">
                         {slideSet.map( itemId =>
@@ -215,9 +216,76 @@ const App = (props)=> {
                     </div>
                     }
                 </div>
-            </Row>
-        </Container>
+            </Grid>
+        </Grid>
     );
+    {/*return (*/}
+    {/*    */}
+    {/*    <Container>*/}
+    {/*        <Row>*/}
+    {/*            <div className={`game4-quiz slide ${showResult?"show-result":""}`}>*/}
+    {/*                {jContent.language_bundle &&*/}
+    {/*                    <div className="game4-quiz__header">*/}
+
+    {/*                            <span className="game4-quiz__header-result">*/}
+    {/*                                {currentResult &&*/}
+    {/*                                    jContent.language_bundle.correctAnswer}*/}
+    {/*                                {!currentResult &&*/}
+    {/*                                    jContent.language_bundle.wrongAnswer}*/}
+    {/*                            </span>*/}
+    {/*                            {!showScore &&*/}
+    {/*                                <Button variant="game4-quiz-header"*/}
+    {/*                                    onClick={handleNextSlide}*/}
+    {/*                                    disabled={!showNext}>*/}
+    {/*                                    {jContent.language_bundle.btnNextQuestion}*/}
+    {/*                                </Button>*/}
+    {/*                            }*/}
+    {/*                            {showScore &&*/}
+    {/*                                <Button variant="game4-quiz-header"*/}
+    {/*                                    onClick={handleShowScore}*/}
+    {/*                                    disabled={!showNext}>*/}
+    {/*                                    {jContent.language_bundle.btnShowResults}*/}
+    {/*                                </Button>*/}
+    {/*                            }*/}
+
+    {/*                    </div>*/}
+    {/*                }*/}
+    {/*                <ol className="game4-quiz__indicators">*/}
+    {/*                    {slideSet.map( itemId =>*/}
+    {/*                        <Indicator*/}
+    {/*                            key={itemId}*/}
+    {/*                            id={itemId}*/}
+    {/*                            enabled={jContent.allow_indicator_browsing}*/}
+    {/*                        />*/}
+    {/*                    )}*/}
+    {/*                </ol>*/}
+    {/*                {quiz &&*/}
+    {/*                <div className="game4-quiz__inner">*/}
+    {/*                    <Quiz*/}
+    {/*                        key={quiz.id}*/}
+    {/*                    />*/}
+    {/*                    {quiz.childNodes.map( (node,i) => {*/}
+    {/*                        if(node.type === jContent.cnd_type.QNA)*/}
+    {/*                            return <Qna*/}
+    {/*                                key={node.id}*/}
+    {/*                                id={node.id}*/}
+    {/*                            />*/}
+
+    {/*                        if(node.type === jContent.cnd_type.WARMUP)*/}
+    {/*                            return <Warmup*/}
+    {/*                                key={node.id}*/}
+    {/*                                id={node.id}*/}
+    {/*                            />*/}
+    {/*                        return <p className="text-danger">node type {node.type} is not supported</p>*/}
+    {/*                    })*/}
+    {/*                    }*/}
+    {/*                    {displayScore()}*/}
+    {/*                </div>*/}
+    {/*                }*/}
+    {/*            </div>*/}
+    {/*        </Row>*/}
+    {/*    </Container>*/}
+    {/*);*/}
 };
 
 App.propTypes={}
