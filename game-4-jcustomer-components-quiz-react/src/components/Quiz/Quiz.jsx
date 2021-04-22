@@ -2,6 +2,7 @@ import React from 'react';
 // import PropTypes from "prop-types";
 // import {Button} from "react-bootstrap";
 import {Button,Typography} from "@material-ui/core";
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import {makeStyles} from "@material-ui/core/styles";
 
 import {StoreContext} from "contexts";
@@ -22,6 +23,34 @@ const useStyles = makeStyles(theme => ({
         borderLeft: `${theme.spacing(1)}px solid ${theme.palette.primary.main}`,
         paddingLeft: "1rem",
         marginLeft: "1rem"
+    },
+    duration:{
+        display: 'flex',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        '& svg': {
+            marginRight: '3px',
+        }
+    },
+    consent:{
+        position: 'absolute',
+        bottom: '.5rem',
+        '--percentage':`calc(100% - ${theme.geometry.caption.width})`,
+        right: 'calc(var(--percentage) / 2)',
+        left: 'calc(var(--percentage) / 2)',
+        zIndex: 10,
+        "& ul":{
+            listStyle: 'none',
+            padding:0,
+        },
+        "& li":{
+            marginBottom: '.5rem'
+        }
+    },
+    consentTitle:{
+        textTransform:'capitalize',
+        textDecoration:'underline'
     }
 }));
 
@@ -159,25 +188,18 @@ const Quiz = (props) => {
         });
     };
 
-    // <h2 className="text-uppercase">{quiz.title}
-    //     <span className="subtitle">{quiz.subtitle}</span>
-    // </h2>
 
-    // <Button variant="game4-quiz"
-    //         onClick={onClick}
-    //         disabled={!quizState.enableStartBtn}>
-    //     {language_bundle && language_bundle.btnStart}
-    // </Button>
+    // className={classes.duration}
 
     return(
         <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
             {quiz.media &&
-                <Media id={quiz.media.id}
-                       type={quiz.media.type.value}
-                       mixins={quiz.media.mixins.map(mixin=>mixin.value)}
-                       path={quiz.media.path}
-                       alt={quiz.title}
-                />
+            <Media id={quiz.media.id}
+                   type={quiz.media.type.value}
+                   mixins={quiz.media.mixins.map(mixin=>mixin.value)}
+                   path={quiz.media.path}
+                   alt={quiz.title}
+            />
             }
 
             <div className="game4-quiz__caption">
@@ -192,10 +214,14 @@ const Quiz = (props) => {
                     </Typography>
                 </Typography>
 
-                <div className={"duration"}>
-                    <FontAwesomeIcon icon={['far','clock']} />
+                <Typography component="div"
+                            className={classes.duration}>
+                    <AccessTimeIcon />
                     {quiz.duration}
-                </div>
+                </Typography>
+
+                <Typography component="div"
+                            dangerouslySetInnerHTML={{__html:quiz.description}}/>
 
                 <div className="lead" dangerouslySetInnerHTML={{__html:quiz.description}}></div>
 
@@ -206,8 +232,11 @@ const Quiz = (props) => {
             </div>
             {
                 quiz.consents.length > 0 && cxs &&
-                <div className="game4-quiz__consent">
-                    <h5>{language_bundle && language_bundle.consentTitle}</h5>
+                <div className={classes.consent}>
+                    <Typography className={classes.consentTitle}
+                                variant="h5">
+                        {language_bundle && language_bundle.consentTitle}
+                    </Typography>
                     <ul>
                         {
                             quiz.consents.map( consent =>{
@@ -226,6 +255,58 @@ const Quiz = (props) => {
             }
         </div>
     );
+
+
+    // return(
+    //     <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
+    //         {quiz.media &&
+    //             <Media id={quiz.media.id}
+    //                    type={quiz.media.type.value}
+    //                    mixins={quiz.media.mixins.map(mixin=>mixin.value)}
+    //                    path={quiz.media.path}
+    //                    alt={quiz.title}
+    //             />
+    //         }
+    //
+    //         <div className="game4-quiz__caption">
+    // <h2 className="text-uppercase">{quiz.title}
+    //     <span className="subtitle">{quiz.subtitle}</span>
+    // </h2>
+    //
+    //             <div className={"duration"}>
+    //                 <FontAwesomeIcon icon={['far','clock']} />
+    //                 {quiz.duration}
+    //             </div>
+    //
+    //             <div className="lead" dangerouslySetInnerHTML={{__html:quiz.description}}></div>
+    //                 <Button variant="game4-quiz"
+    //                         onClick={onClick}
+    //                         disabled={!quizState.enableStartBtn}>
+    //                     {language_bundle && language_bundle.btnStart}
+    //                 </Button>
+    //         </div>
+    //         {
+    //             quiz.consents.length > 0 && cxs &&
+    //             <div className="game4-quiz__consent">
+    //                 <h5>{language_bundle && language_bundle.consentTitle}</h5>
+    //                 <ul>
+    //                     {
+    //                         quiz.consents.map( consent =>{
+    //                             if(consent.actived)
+    //                                 return <Consent
+    //                                     key={consent.id}
+    //                                     id={consent.id}
+    //                                     quizState={quizState}
+    //                                     quizDispatch={quizDispatch}
+    //                                 />
+    //                             return <></>
+    //                         })
+    //                     }
+    //                 </ul>
+    //             </div>
+    //         }
+    //     </div>
+    // );
 }
 
 // Quiz.propTypes={}

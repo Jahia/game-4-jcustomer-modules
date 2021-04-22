@@ -11,57 +11,57 @@
 // 5. .game4-quiz__item-next.game4-quiz__item-left and .game4-quiz__item-prev.game4-quiz__item-right
 //    is the upcoming slide in transition.
 
-.game4-quiz {
-  position: relative;
-  //font-family: "JetBrainsMono";
-  font-family: Lato;
-}
+//.game4-quiz {
+//  position: relative;
+//  //font-family: "JetBrainsMono";
+//  font-family: Lato;
+//}
 
 .game4-quiz.pointer-event {
   touch-action: pan-y;
 }
-.game4-quiz__header{
-  display: none;
-  position: absolute;
-  top: 0;
-  left:0;
-  right: 0;
-  height: 0;
-  z-index: 1;
-  padding-top: 2.25rem;
-  padding-bottom: 1rem;
-  padding-right: (100% - $game4-quiz__caption-width) / 2;
-  padding-left: (100% - $game4-quiz__caption-width) / 2;
-  .show-result &{
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    height: 6.5rem;
-    background-color: $light-grey;
-    transition: height .3s cubic-bezier(.23,1,.32,1);
-    //@include transition($game4-quiz__transition);
-  }
+//.game4-quiz__header{
+//  display: none;
+//  position: absolute;
+//  top: 0;
+//  left:0;
+//  right: 0;
+//  height: 0;
+//  z-index: 1;
+//  padding-top: 2.25rem;
+//  padding-bottom: 1rem;
+//  padding-right: (100% - $game4-quiz__caption-width) / 2;
+//  padding-left: (100% - $game4-quiz__caption-width) / 2;
+//  .show-result &{
+//    display: flex;
+//    align-items: baseline;
+//    justify-content: space-between;
+//    height: 6.5rem;
+//    background-color: $light-grey;
+//    transition: height .3s cubic-bezier(.23,1,.32,1);
+//    //@include transition($game4-quiz__transition);
+//  }
+//
+//  &-result{
+//    text-transform: capitalize;
+//    font-size: 1.75rem;
+//    font-weight: 700;
+//    //.show-result &{
+//    //  display: block;
+//    //}
+//  }
+//  &-btn{
+//
+//  }
+//}
 
-  &-result{
-    text-transform: capitalize;
-    font-size: 1.75rem;
-    font-weight: 700;
-    //.show-result &{
-    //  display: block;
-    //}
-  }
-  &-btn{
 
-  }
-}
-
-
-.game4-quiz__inner {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  @include clearfix();
-}
+//.game4-quiz__inner {
+//  position: relative;
+//  width: 100%;
+//  overflow: hidden;
+//  @include clearfix();
+//}
 
 
 .game4-quiz__item {
@@ -198,62 +198,62 @@
 // Add an ordered list with the following class and add a list item for each
 // slide your carousel holds.
 
-.game4-quiz__indicators {
-  position: absolute;
-  right: 0;
-  //RVD >>
-  // bottom: 0;
-  top:0;
-
-  left: 0;
-  z-index: 15;
-  display: flex;
-  justify-content: center;
-  padding-left: 0; // override <ol> default
-  // Use the .game4-quiz__control's width as margin so we don't overlay those
-  //margin-right: $game4-quiz__control-width;
-  //margin-left: $game4-quiz__control-width;
-  list-style: none;
-  //RVD >>
-  padding: 1rem $game4-quiz__control-width 0;
-  //margin-top: 1rem;
-  //margin-bottom: 0;
-
-  .show-result & {
-    background-color: $light-grey;
-  }
-
-
-  li {
-    box-sizing: content-box;
-    flex: 0 1 auto;
-    width: $game4-quiz__indicator-width;
-    height: $game4-quiz__indicator-height;
-    margin-right: $game4-quiz__indicator-spacer;
-    margin-left: $game4-quiz__indicator-spacer;
-    text-indent: -999px;
-
-    background-color: $game4-quiz__indicator-active-bg;
-    background-clip: padding-box;
-    // Use transparent borders to increase the hit area by 10px on top and bottom.
-    border-top: $game4-quiz__indicator-hit-area-height solid transparent;
-    border-bottom: $game4-quiz__indicator-hit-area-height solid transparent;
-    opacity: .5;
-    @include transition($game4-quiz__indicator-transition);
-
-    .show-result & {
-      background-color:$game4-quiz__indicator-result-bg;
-    }
-
-    &.clickable{
-      cursor: pointer;
-    }
-
-    &.active {
-      opacity: 1;
-    }
-  }
-}
+//.game4-quiz__indicators {
+//  position: absolute;
+//  right: 0;
+//  //RVD >>
+//  // bottom: 0;
+//  top:0;
+//
+//  left: 0;
+//  z-index: 15;
+//  display: flex;
+//  justify-content: center;
+//  padding-left: 0; // override <ol> default
+//  // Use the .game4-quiz__control's width as margin so we don't overlay those
+//  //margin-right: $game4-quiz__control-width;
+//  //margin-left: $game4-quiz__control-width;
+//  list-style: none;
+//  //RVD >>
+//  padding: 1rem $game4-quiz__control-width 0;
+//  //margin-top: 1rem;
+//  //margin-bottom: 0;
+//
+//  .show-result & {
+//    background-color: $light-grey;
+//  }
+//
+//
+//  li {
+//    box-sizing: content-box;
+//    flex: 0 1 auto;
+//    width: $game4-quiz__indicator-width;
+//    height: $game4-quiz__indicator-height;
+//    margin-right: $game4-quiz__indicator-spacer;
+//    margin-left: $game4-quiz__indicator-spacer;
+//    text-indent: -999px;
+//
+//    background-color: $game4-quiz__indicator-active-bg;
+//    background-clip: padding-box;
+//    // Use transparent borders to increase the hit area by 10px on top and bottom.
+//    border-top: $game4-quiz__indicator-hit-area-height solid transparent;
+//    border-bottom: $game4-quiz__indicator-hit-area-height solid transparent;
+//    opacity: .5;
+//    @include transition($game4-quiz__indicator-transition);
+//
+//    .show-result & {
+//      background-color:$game4-quiz__indicator-result-bg;
+//    }
+//
+//    &.clickable{
+//      cursor: pointer;
+//    }
+//
+//    &.active {
+//      opacity: 1;
+//    }
+//  }
+//}
 
 
 // Optional captions
@@ -288,14 +288,14 @@
   //  }
   //}
 
-  .duration{
-    font-size: 1.2rem;
-    margin: 2rem auto;
-
-    svg{
-      margin-right: .5rem;
-    }
-  }
+  //.duration{
+  //  font-size: 1.2rem;
+  //  margin: 2rem auto;
+  //
+  //  svg{
+  //    margin-right: .5rem;
+  //  }
+  //}
 
   fieldset{
     text-align: left;
@@ -318,27 +318,27 @@
 }
 
 .game4-quiz__consent{
-  position: absolute;
-  bottom: .5rem;
-  right: (100% - $game4-quiz__caption-width) / 2;
-  left: (100% - $game4-quiz__caption-width) / 2;
-  z-index: 10;
-  color: $game4-quiz__caption-color;
+  //position: absolute;
+  //bottom: .5rem;
+  //right: (100% - $game4-quiz__caption-width) / 2;
+  //left: (100% - $game4-quiz__caption-width) / 2;
+  //z-index: 10;
+  //color: $game4-quiz__caption-color;
 
-  h5{
-    text-transform: capitalize;
-    text-decoration: underline;
-    color: $game4-quiz__caption-color;
-    font-family: inherit;
-  }
-  ul{
-    list-style: none;
-    padding:0;
-  }
-
-  li{
-    margin-bottom: .5rem;
-  }
+  //h5{
+  //  text-transform: capitalize;
+  //  text-decoration: underline;
+  //  color: $game4-quiz__caption-color;
+  //  font-family: inherit;
+  //}
+  //ul{
+  //  list-style: none;
+  //  padding:0;
+  //}
+  //
+  //li{
+  //  margin-bottom: .5rem;
+  //}
 
   .consent-granted{
     margin:0;

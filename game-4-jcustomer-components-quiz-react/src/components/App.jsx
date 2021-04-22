@@ -2,7 +2,7 @@ import React from 'react'; //useEffect,useContext
 import PropTypes from "prop-types";
 
 // import {Button, Container, Row} from 'react-bootstrap';
-import {Grid,Button} from '@material-ui/core';
+import {Grid, Button, Typography} from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 
 import get from "lodash.get";
@@ -22,11 +22,13 @@ import 'react-circular-progressbar/dist/styles.css';
 
 import {GET_QUIZ} from "components/Quiz/QuizGraphQL.js";
 import Quiz from "components/Quiz"
+import Indicator from "components/Quiz/Indicator"
 import Qna from "components/Qna";
 import Warmup from "components/Warmup";
 import Score from "components/Score";
 import {syncTracker} from "misc/tracker";
-
+import {makeStyles} from "@material-ui/core/styles";
+import classnames from 'clsx';
 
 library.add(
     fab,
@@ -40,33 +42,62 @@ library.add(
     faBan
 );
 
-const Indicator = (props) =>{
-    const { state, dispatch } = React.useContext(StoreContext);
-    const {currentSlide} = state;
-    const {id,enabled} = props;
-
-    const active = currentSlide === id;
-    const handleCLick = () =>{
-        if(enabled)
-            dispatch({
-                case:"SHOW_SLIDE",
-                payload:{
-                    slide:id
-                }
-            });
-    };
-
-    return(
-        <li className={`${active ? 'active':''} ${enabled ? 'clickable':''}`}
-            onClick={handleCLick}>
-        </li>
-    )
-}
-
-Indicator.propTypes={
-    id:PropTypes.string.isRequired,
-    enabled:PropTypes.bool.isRequired
-}
+const useStyles = makeStyles(theme => ({
+    main: {
+        position: "relative",
+    },
+    header:{
+        display: 'none',
+        position: 'absolute',
+        top: 0, right: 0, left:0,
+        height: 0,
+        zIndex: 1,
+        paddingTop: '3.25rem',
+        paddingBottom: '1rem',
+        '--percentage':`calc(100% - ${theme.geometry.caption.width})`,
+        paddingRight: 'calc(var(--percentage) / 2)',
+        paddingLeft: 'calc(var(--percentage) / 2)',
+        ".showResult &":{
+            display: 'flex',
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
+            height: '5.5rem',
+            backgroundColor: theme.palette.grey['300'],
+            transition:theme.transitions.create(['height'],{
+                duration: theme.transitions.duration.standard,
+                easing: theme.transitions.easing.header,
+            })
+        }
+    },
+    headerResult:{
+        textTransform: 'capitalize',
+        // fontSize: '1.75rem',
+        fontWeight: theme.typography.fontWeightBold,
+    },
+    headerIndicators: {
+        position: 'absolute',
+        display: 'flex',
+        justifyContent: 'center',
+        top: 0, right: 0, left: 0,
+        zIndex: 15,
+        listStyle: 'none',
+        padding: `1rem ${theme.geometry.control.width} 0`,
+        '.showResult &':{
+            backgroundColor: theme.palette.grey['300'],
+        }
+    },
+    inner:{
+        position: 'relative',
+        width: '100%',
+        overflow: 'hidden',
+        // @include clearfix()
+        "&::after": {
+            display: 'block',
+            clear: 'both',
+            content: "",
+        }
+    }
+}));
 
 const initLanguageBundle = quizData => {
     const keys = [
@@ -89,6 +120,7 @@ const initLanguageBundle = quizData => {
 
 //NOPE ! TODO jCustomer/context.json -> context. jContext.value = {context,jCustomer}
 const App = (props)=> {
+    const classes = useStyles(props);
 
     const { state, dispatch } = React.useContext(StoreContext);
     const {
@@ -148,42 +180,57 @@ const App = (props)=> {
         });
 
     const displayScore=()=>{
-        console.log("[displayScore] showScore: ",showScore);
+        // console.log("[displayScore] showScore: ",showScore);
         if(showScore)
             return <Score/>
     }
+    const getHeaderResultLabel=()=>{
+        if(currentResult)
+            return jContent.language_bundle.correctAnswer;
+        return jContent.language_bundle.wrongAnswer;
+    }
 
+    // {currentResult &&
+    // jContent.language_bundle.correctAnswer}
+    // {!currentResult &&
+    // jContent.language_bundle.wrongAnswer}
+
+    const getHeaderBtnNext=()=>{
+        if(showScore)
+            return  <Button onClick={handleShowScore}
+                           disabled={!showNext}>
+                        {jContent.language_bundle.btnShowResults}
+                    </Button>
+        return  <Button onClick={handleNextSlide}
+                       disabled={!showNext}>
+                    {jContent.language_bundle.btnNextQuestion}
+                </Button>
+    }
+    // {!showScore &&
+    //
+    // }
+    // {showScore &&
+    //
+    // }
+    // <Button variant="game4-quiz-header"
     return (
         <Grid container spacing={3}>
             <Grid item xs>
-                <div className={`game4-quiz slide ${showResult?"show-result":""}`}>
+                <div className={classnames(
+                    classes.main,
+                    (showResult?'showResult':'')
+                )}>
                     {jContent.language_bundle &&
-                    <div className="game4-quiz__header">
+                    <div className={classes.header}>
+                        <Typography className={classes.headerResult}
+                                    variant="h4">
+                            {getHeaderResultLabel()}
+                        </Typography>
 
-                                <span className="game4-quiz__header-result">
-                                    {currentResult &&
-                                    jContent.language_bundle.correctAnswer}
-                                    {!currentResult &&
-                                    jContent.language_bundle.wrongAnswer}
-                                </span>
-                        {!showScore &&
-                        <Button variant="game4-quiz-header"
-                                onClick={handleNextSlide}
-                                disabled={!showNext}>
-                            {jContent.language_bundle.btnNextQuestion}
-                        </Button>
-                        }
-                        {showScore &&
-                        <Button variant="game4-quiz-header"
-                                onClick={handleShowScore}
-                                disabled={!showNext}>
-                            {jContent.language_bundle.btnShowResults}
-                        </Button>
-                        }
-
+                        {getHeaderBtnNext()}
                     </div>
                     }
-                    <ol className="game4-quiz__indicators">
+                    <ol className={classes.headerIndicators}>
                         {slideSet.map( itemId =>
                             <Indicator
                                 key={itemId}
@@ -193,7 +240,7 @@ const App = (props)=> {
                         )}
                     </ol>
                     {quiz &&
-                    <div className="game4-quiz__inner">
+                    <div className={classes.inner}>
                         <Quiz
                             key={quiz.id}
                         />
@@ -209,7 +256,11 @@ const App = (props)=> {
                                     key={node.id}
                                     id={node.id}
                                 />
-                            return <p className="text-danger">node type {node.type} is not supported</p>
+                            return <Typography color="error"
+                                               component="p">
+                                node type {node.type} is not supported
+                            </Typography>
+
                         })
                         }
                         {displayScore()}
