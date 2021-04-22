@@ -340,34 +340,34 @@
   //  margin-bottom: .5rem;
   //}
 
-  .consent-granted{
-    margin:0;
-
-    svg{
-      color: $game4-quiz__checkbox-primary-color;
-      margin-right: .5rem;
-
-      &.consent-denied{
-        cursor: pointer;
-        color: $game4-quiz__checkbox-consent-denied-color;
-        width: .6rem;
-        margin-left: .25rem;
-      }
-    }
-    i{
-      display: block;
-      font-size: .75rem;
-    }
-  }
-
-  .consent-to-grant{
-    .custom-control{
-      &-label{
-        cursor: pointer;
-      }
-    }
-    i{
-      font-size: .75rem;
-    }
-  }
+  //.consent-granted{
+  //  margin:0;
+  //
+  //  svg{
+  //    color: $game4-quiz__checkbox-primary-color;
+  //    margin-right: .5rem;
+  //
+  //    &.consent-denied{
+  //      cursor: pointer;
+  //      color: $game4-quiz__checkbox-consent-denied-color;
+  //      width: .6rem;
+  //      margin-left: .25rem;
+  //    }
+  //  }
+  //  i{
+  //    display: block;
+  //    font-size: .75rem;
+  //  }
+  //}
+  //
+  //.consent-to-grant{
+  //  .custom-control{
+  //    &-label{
+  //      cursor: pointer;
+  //    }
+  //  }
+  //  i{
+  //    font-size: .75rem;
+  //  }
+  //}
 }
