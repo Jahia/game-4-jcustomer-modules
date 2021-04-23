@@ -6,15 +6,44 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import {makeStyles} from "@material-ui/core/styles";
 
 import {StoreContext} from "contexts";
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Consent from "components/Consent";
 import get from "lodash.get";
 
 import {syncConsentStatus} from "misc/tracker";
 import Media from '../Media'
+import classnames from "clsx";
 
 const useStyles = makeStyles(theme => ({
+    item:{
+        position: 'relative',
+        display: 'none',
+        float: 'left',
+        width: '100%',
+        marginRight: '-100%',
+        backfaceVisibility: 'hidden',
+        transition:theme.transitions.create(['transform'],{
+            duration: theme.transitions.duration.long,
+            easing: theme.transitions.easing.easeInOut,
+        }),
+        "& img":{
+            minHeight: theme.geometry.item.minHeight,
+            objectFit: 'cover',
+        },
+        "&.active":{
+            display:'block'
+        }
+    },
+    showOverlay:{
+        "&::before":{
+            position:'absolute',
+            top:0, right:0, bottom:0, left:0,
+            content:'""',
+            backgroundColor: theme.palette.background.overlay,
+            // TODO works see better choice
+            boxShadow: theme.palette.shadows.overlay,
+
+        }
+    },
     textUppercase: {
         textTransform: "uppercase"
     },
@@ -31,6 +60,24 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         '& svg': {
             marginRight: '3px',
+        }
+    },
+    caption:{
+        position: 'absolute',
+        top: '4rem',
+        '--percentage':`calc(100% - ${theme.geometry.caption.width})`,
+        right: 'calc(var(--percentage) / 2)',
+        left: 'calc(var(--percentage) / 2)',
+        zIndex: 10,
+        // color: theme.palette.common.white,
+        textAlign: 'center',
+        transition:theme.transitions.create(['top'],{
+            duration: theme.transitions.duration.standard,
+            easing: theme.transitions.easing.header,
+        }),
+
+        ".showResult &": {
+            top: '7rem',
         }
     },
     consent:{
@@ -190,9 +237,13 @@ const Quiz = (props) => {
 
 
     // className={classes.duration}
-
+    // {`game4-quiz__item show-overlay ${show ? 'active':''} `}
     return(
-        <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
+        <div className={classnames(
+            classes.item,
+            classes.showOverlay,
+            (show ? 'active':'')
+        )}>
             {quiz.media &&
             <Media id={quiz.media.id}
                    type={quiz.media.type.value}
@@ -202,7 +253,7 @@ const Quiz = (props) => {
             />
             }
 
-            <div className="game4-quiz__caption">
+            <div className={classes.caption}>
                 <Typography className={classes.textUppercase}
                             variant="h3">
                     {quiz.title}
@@ -223,7 +274,7 @@ const Quiz = (props) => {
                 <Typography component="div"
                             dangerouslySetInnerHTML={{__html:quiz.description}}/>
 
-                <div className="lead" dangerouslySetInnerHTML={{__html:quiz.description}}></div>
+                {/*<div className="lead" dangerouslySetInnerHTML={{__html:quiz.description}}></div>*/}
 
                 <Button onClick={onClick}
                         disabled={!quizState.enableStartBtn}>

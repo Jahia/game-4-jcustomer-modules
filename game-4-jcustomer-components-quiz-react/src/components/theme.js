@@ -6,6 +6,9 @@ import React from "react";
 
 const theme = createMuiTheme({
     geometry:{
+        item:{
+            minHeight:"70vh",
+        },
         control:{
             width:"5%"
         },
@@ -17,7 +20,6 @@ const theme = createMuiTheme({
             height:"3px",
             hitAreaHeight:"10px",
             spacer:"3px",
-
         }
     },
     palette: {
@@ -35,6 +37,10 @@ const theme = createMuiTheme({
         //     primary:"rgba(255, 255, 255, 0.87)"
         // },
         background:{
+            overlay: "rgba(0,0,0,.75)",
+        },
+        shadows:{
+            overlay:"inset 1140px 0 570px -570px rgba(0,0,0,.5)",
         }
     },
     typography:{
@@ -58,7 +64,7 @@ const theme = createMuiTheme({
             header:"cubic-bezier(.23,1,.32,1)"
         },
         duration:{
-            indicator:600
+            long:600
         }
     },
     spacing: 4,
