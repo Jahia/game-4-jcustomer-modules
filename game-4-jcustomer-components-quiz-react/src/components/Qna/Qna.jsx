@@ -13,6 +13,8 @@ import Answer from "./Answer";
 import QnaMapper from "components/Qna/QnaModel";
 import {syncVisitorData} from "misc/tracker";
 import Media from "components/Media";
+import cssSharedClasses from "components/cssSharedClasses";
+import classnames from "clsx";
 
 const initialQNA = {
     enableSubmit:false,
@@ -69,6 +71,8 @@ const reducer = (qna, action) => {
 }
 
 const Qna = (props) => {
+    // const classes = useStyles(props);
+    const sharedClasses = cssSharedClasses(props);
     const { state, dispatch } = React.useContext(StoreContext);
     const { currentSlide,jContent,reset } = state;
     const { gql_variables,language_bundle } =  jContent;
@@ -175,7 +179,11 @@ const Qna = (props) => {
     //      src={`${files_endpoint}${encodeURI(qna.cover)}`}
     //      alt={qna.title}/>
     return(
-        <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
+        <div className={classnames(
+            sharedClasses.item,
+            sharedClasses.showOverlay,
+            (show ? 'active':'')
+        )}>
             {qna.media &&
                 <Media id={qna.media.id}
                        type={qna.media.type.value}
