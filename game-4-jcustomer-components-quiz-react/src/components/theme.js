@@ -17,6 +17,9 @@ const theme = createMuiTheme({
             height:"3px",
             hitAreaHeight:"10px",
             spacer:"3px",
+        },
+        checkedAnswer:{
+            borderRadius:"10px"
         }
     },
     palette: {
@@ -35,6 +38,7 @@ const theme = createMuiTheme({
         // },
         background:{
             overlay: "rgba(0,0,0,.75)",
+            checkedAnswer: "rgba(255,255,255,1)",
         },
         shadows:{
             overlay:"inset 1140px 0 570px -570px rgba(0,0,0,.5)",
@@ -70,6 +74,11 @@ const theme = createMuiTheme({
             root:{
                 color:"rgba(255, 255, 255, 0.87)"
             }
+        },
+        MuiRadio:{
+            root:{
+                color:"rgba(255, 255, 255, 0.87)"
+            }
         }
         // MuiCssBaseline: {
         //     '@global': {
@@ -84,6 +93,10 @@ const theme = createMuiTheme({
             variant:"contained"
         },
         MuiCheckbox:{
+            disableRipple:true,
+            color:"primary",
+        },
+        MuiRadio:{
             disableRipple:true,
             color:"primary",
         }

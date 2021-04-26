@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {Button} from "react-bootstrap";
 
 import {useQuery} from "@apollo/react-hooks";
 import get from "lodash.get";
@@ -15,6 +14,33 @@ import {syncVisitorData} from "misc/tracker";
 import Media from "components/Media";
 import cssSharedClasses from "components/cssSharedClasses";
 import classnames from "clsx";
+import {FormGroup, Typography,Button} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+
+
+const useStyles = makeStyles(theme => ({
+    formGroup: {
+        textAlign:'left',
+        "& > div::before":{
+            flexBasis:'100%',
+            content:'""',
+            height: '2px',
+            marginLeft : '50px',
+            borderTop: '2px solid rgba(255,255,255,.2)',
+        },
+        "&  > div:first-child::before":{
+            borderTop: 'none',
+        },
+        "&  > div:last-child::after":{
+            flexBasis:'100%',
+            content:'""',
+            height: '2px',
+            marginLeft : '50px',
+            borderBottom: '2px solid rgba(255,255,255,.2)',
+        }
+    },
+}));
+
 
 const initialQNA = {
     enableSubmit:false,
@@ -71,7 +97,7 @@ const reducer = (qna, action) => {
 }
 
 const Qna = (props) => {
-    // const classes = useStyles(props);
+    const classes = useStyles(props);
     const sharedClasses = cssSharedClasses(props);
     const { state, dispatch } = React.useContext(StoreContext);
     const { currentSlide,jContent,reset } = state;
@@ -176,6 +202,17 @@ const Qna = (props) => {
         }
     }
 
+    const getAnswers = () => {
+        if(qna.answers)
+            return qna.answers.map( answer =>
+                <Answer
+                    key={answer.id}
+                    id={answer.id}
+                    qna={qna}
+                    qnaDispatch={qnaDispatch}
+                />);
+    }
+
     return(
         <div className={classnames(
             sharedClasses.item,
@@ -193,31 +230,29 @@ const Qna = (props) => {
             }
 
             <div className={sharedClasses.caption}>
-                <fieldset>
-                    <legend>{qna.question}
-                        <i>{qna.help}</i>
-                    </legend>
-                    {qna.answers &&
-                        <ol className="game4-quiz__answer-list">
-                            {qna.answers.map( answer =>
-                                <Answer
-                                    key={answer.id}
-                                    id={answer.id}
-                                    qna={qna}
-                                    qnaDispatch={qnaDispatch}
-                                />)
-                            }
-                        </ol>
-                    }
-                </fieldset>
+                <Typography className=""
+                            variant="h4">
+                    {qna.question}
+                    <Typography className=""
+                                color="primary"
+                                variant="subtitle1"
+                                component="i">
+                        {qna.help}
+                    </Typography>
+                </Typography>
 
+                {/*<ol className="game4-quiz__answer-list">*/}
+                <FormGroup className={classes.formGroup}
+                           style={{}}
+                           aria-label="answer">
+                    {getAnswers()}
+                </FormGroup>
+                {/*</ol>*/}
 
-                <Button variant="game4-quiz"
-                        onClick={handleSubmit}
+                <Button onClick={handleSubmit}
                         disabled={!qna.enableSubmit}>
                     {language_bundle && language_bundle.btnSubmit}
                 </Button>
-
             </div>
         </div>
     );

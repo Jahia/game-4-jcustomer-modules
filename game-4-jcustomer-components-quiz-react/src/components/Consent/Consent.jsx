@@ -101,7 +101,7 @@ const Consent = (props)=> {
     return(
         <li>
             {!consent.granted &&
-            <div className="consent-to-grant">
+            <div>
                 <FormGroup aria-label="position" row>
                     <FormControlLabel
                         value={consent.checked}

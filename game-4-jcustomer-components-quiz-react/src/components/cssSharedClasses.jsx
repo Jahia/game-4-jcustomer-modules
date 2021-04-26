@@ -47,6 +47,9 @@ export default makeStyles((theme)=> ({
 
         ".showResult &": {
             top: '7rem',
+            "& button":{
+                display:'none',
+            }
         }
     },
 }));
