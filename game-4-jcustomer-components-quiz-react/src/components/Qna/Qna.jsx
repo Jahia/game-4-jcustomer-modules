@@ -211,6 +211,7 @@ const Qna = (props) => {
                     }
                 </fieldset>
 
+
                 <Button variant="game4-quiz"
                         onClick={handleSubmit}
                         disabled={!qna.enableSubmit}>
