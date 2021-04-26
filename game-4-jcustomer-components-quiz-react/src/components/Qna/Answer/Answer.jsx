@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types";
 import {Form} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {Checkbox, FormControlLabel, FormGroup} from "@material-ui/core";
 
 
 const Answer = (props) =>{
@@ -16,6 +17,16 @@ const Answer = (props) =>{
                 answer
             }
         });
+
+    // <FormGroup aria-label="position" row>
+    //     <FormControlLabel
+    //         value={consent.checked}
+    //         control={<Checkbox id={consent.id} />}
+    //         label={consent.title}
+    //         labelPlacement="end"
+    //         onChange={handleChange}
+    //     />
+    // </FormGroup>
 
     return(
         <li className={answer.checked?"checked":""}>

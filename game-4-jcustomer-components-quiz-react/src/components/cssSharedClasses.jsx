@@ -31,4 +31,22 @@ export default makeStyles((theme)=> ({
 
         }
     },
+    caption:{
+        position: 'absolute',
+        top: '4rem',
+        '--percentage':`calc(100% - ${theme.geometry.caption.width})`,
+        right: 'calc(var(--percentage) / 2)',
+        left: 'calc(var(--percentage) / 2)',
+        zIndex: 10,
+        // color: theme.palette.common.white,
+        textAlign: 'center',
+        transition:theme.transitions.create(['top'],{
+            duration: theme.transitions.duration.standard,
+            easing: theme.transitions.easing.header,
+        }),
+
+        ".showResult &": {
+            top: '7rem',
+        }
+    },
 }));

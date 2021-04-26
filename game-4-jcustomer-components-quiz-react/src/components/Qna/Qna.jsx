@@ -175,9 +175,7 @@ const Qna = (props) => {
             })
         }
     }
-    // <img className="d-block w-100"
-    //      src={`${files_endpoint}${encodeURI(qna.cover)}`}
-    //      alt={qna.title}/>
+
     return(
         <div className={classnames(
             sharedClasses.item,
@@ -194,7 +192,7 @@ const Qna = (props) => {
 
             }
 
-            <div className="game4-quiz__caption d-none d-md-block">
+            <div className={sharedClasses.caption}>
                 <fieldset>
                     <legend>{qna.question}
                         <i>{qna.help}</i>
@@ -222,6 +220,51 @@ const Qna = (props) => {
             </div>
         </div>
     );
+
+    // return(
+    //     <div className={classnames(
+    //         sharedClasses.item,
+    //         sharedClasses.showOverlay,
+    //         (show ? 'active':'')
+    //     )}>
+    //         {qna.media &&
+    //         <Media id={qna.media.id}
+    //                type={qna.media.type.value}
+    //                mixins={qna.media.mixins.map(mixin=>mixin.value)}
+    //                path={qna.media.path}
+    //                alt={qna.title}
+    //         />
+    //
+    //         }
+    //
+    //         <div className="game4-quiz__caption d-none d-md-block">
+    //             <fieldset>
+    //                 <legend>{qna.question}
+    //                     <i>{qna.help}</i>
+    //                 </legend>
+    //                 {qna.answers &&
+    //                 <ol className="game4-quiz__answer-list">
+    //                     {qna.answers.map( answer =>
+    //                         <Answer
+    //                             key={answer.id}
+    //                             id={answer.id}
+    //                             qna={qna}
+    //                             qnaDispatch={qnaDispatch}
+    //                         />)
+    //                     }
+    //                 </ol>
+    //                 }
+    //             </fieldset>
+    //
+    //             <Button variant="game4-quiz"
+    //                     onClick={handleSubmit}
+    //                     disabled={!qna.enableSubmit}>
+    //                 {language_bundle && language_bundle.btnSubmit}
+    //             </Button>
+    //
+    //         </div>
+    //     </div>
+    // );
 }
 
 Qna.propTypes={
