@@ -11,7 +11,30 @@
 <%@ taglib prefix="s" uri="http://www.jahia.org/tags/search" %>
 
 <style>
+    .half .text, .half .image {
+        width: 50%; }
+    @media (max-width: 991.98px) {
+        .half .text, .half .image {
+            width: 100%; } }
 
+    .half .text {
+        padding: 7%; }
+
+    .half .image {
+        background-size: cover;
+        background-position: center center; }
+    @media (max-width: 991.98px) {
+        .half .image {
+            height: 350px; } }
+    .half .image div {
+        width: 100%;
+        height: 100%;
+    }
+
+    .half .image .image-display {
+        background-size: cover;
+        background-position: center center;
+    }
 </style>
 
 <c:set var="title" value="${fn:escapeXml(currentNode.displayableName)}"/>

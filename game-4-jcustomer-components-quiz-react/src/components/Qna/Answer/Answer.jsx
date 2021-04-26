@@ -32,10 +32,10 @@ const Answer = (props) =>{
         <li className={answer.checked?"checked":""}>
             <div className={`result ${isValid?"valid":""}`}>
                 {isValid &&
-                    <FontAwesomeIcon icon={['fas','check']}/>
+                <FontAwesomeIcon icon={['fas','check']}/>
                 }
                 {!isValid &&
-                    <FontAwesomeIcon icon={['fas','times']}/>
+                <FontAwesomeIcon icon={['fas','times']}/>
                 }
             </div>
             <Form.Check
@@ -49,6 +49,28 @@ const Answer = (props) =>{
             />
         </li>
     );
+
+    // return(
+    //     <li className={answer.checked?"checked":""}>
+    //         <div className={`result ${isValid?"valid":""}`}>
+    //             {isValid &&
+    //                 <FontAwesomeIcon icon={['fas','check']}/>
+    //             }
+    //             {!isValid &&
+    //                 <FontAwesomeIcon icon={['fas','times']}/>
+    //             }
+    //         </div>
+    //         <Form.Check
+    //             custom
+    //             type={qna.inputType}
+    //             name={qna.id}
+    //             id={answer.id}
+    //             label={answer.label}
+    //             onChange={handleChange}
+    //             checked={answer.checked}
+    //         />
+    //     </li>
+    // );
 };
 
 Answer.propTypes={
