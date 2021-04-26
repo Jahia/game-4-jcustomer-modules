@@ -10,6 +10,10 @@
 <%@ taglib prefix="utility" uri="http://www.jahia.org/tags/utilityLib" %>
 <%@ taglib prefix="s" uri="http://www.jahia.org/tags/search" %>
 
+<style>
+
+</style>
+
 <c:set var="title" value="${fn:escapeXml(currentNode.displayableName)}"/>
 <c:set var="description" value="${currentNode.properties['game4:description'].string}"/>
 
