@@ -1,11 +1,15 @@
 import React from 'react';
 import {StoreContext} from "contexts";
-import {Button} from "react-bootstrap";
+
 import Media from "components/Media";
 import Personalized from "components/Score/personalized/Personalized";
 import Percentage from "components/Score/percentage/Percentage";
+import cssSharedClasses from "components/cssSharedClasses";
+import classnames from "clsx";
+import {Typography,Button} from "@material-ui/core";
 
 const Score = (props) => {
+    const sharedClasses = cssSharedClasses(props);
     const { state,dispatch } = React.useContext(StoreContext);
     const { quiz,currentSlide,score,scoreIndex,jContent,cxs } = state;
     const { language_bundle } =  jContent;
@@ -31,8 +35,13 @@ const Score = (props) => {
     //     <CircularProgressbar value={score} text={`${score}%`}/>
     // </div>
     console.log("[Score] quiz.personalizedResult.id: ",quiz.personalizedResult.id);
+
     return(
-        <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
+        <div className={classnames(
+            sharedClasses.item,
+            sharedClasses.showOverlay,
+            (show ? 'active':'')
+        )}>
             {quiz.media &&
             <Media id={quiz.media.id}
                    type={quiz.media.type.value}
@@ -41,16 +50,47 @@ const Score = (props) => {
                    alt={quiz.title}
             />
             }
-            <div className="game4-quiz__caption d-none d-md-block">
-                <h2 className="text-uppercase">{quiz.title}<span className="subtitle">{quiz.subtitle}</span></h2>
+            <div className={sharedClasses.caption}>
+                <Typography className={sharedClasses.textUppercase}
+                            variant="h3">
+                    {quiz.title}
+                    <Typography className={sharedClasses.subtitle}
+                                color="primary"
+                                variant="subtitle1"
+                                component="span">
+                        {quiz.subtitle}
+                    </Typography>
+                </Typography>
+
                 {displayResult()}
-                <Button variant="game4-quiz"
-                        onClick={onClick}>
+
+                <Button onClick={onClick}>
                     {language_bundle && language_bundle.btnReset}
                 </Button>
             </div>
         </div>
     );
+
+    // return(
+    //     <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
+    //         {quiz.media &&
+    //         <Media id={quiz.media.id}
+    //                type={quiz.media.type.value}
+    //                mixins={quiz.media.mixins.map(mixin=>mixin.value)}
+    //                path={quiz.media.path}
+    //                alt={quiz.title}
+    //         />
+    //         }
+    //         <div className="game4-quiz__caption d-none d-md-block">
+    //             <h2 className="text-uppercase">{quiz.title}<span className="subtitle">{quiz.subtitle}</span></h2>
+    //             {displayResult()}
+    //             <Button variant="game4-quiz"
+    //                     onClick={onClick}>
+    //                 {language_bundle && language_bundle.btnReset}
+    //             </Button>
+    //         </div>
+    //     </div>
+    // );
 }
 
 // Personalized.propTypes={}

@@ -1,6 +1,15 @@
 import {makeStyles} from "@material-ui/core/styles";
 
 export default makeStyles((theme)=> ({
+    textUppercase: {
+        textTransform: "uppercase"
+    },
+    subtitle: {
+        // fontSize: "65%",
+        borderLeft: `${theme.spacing(1)}px solid ${theme.palette.primary.main}`,
+        paddingLeft: "1rem",
+        marginLeft: "1rem"
+    },
     item:{
         position: 'relative',
         display: 'none',

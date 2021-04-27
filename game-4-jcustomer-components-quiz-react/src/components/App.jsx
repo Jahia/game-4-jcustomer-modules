@@ -47,45 +47,52 @@ const useStyles = makeStyles(theme => ({
         position: "relative",
     },
     header:{
-        display: 'none',
         position: 'absolute',
-        top: 0, right: 0, left:0,
-        height: 0,
-        zIndex: 1,
-        paddingTop: '3.25rem',
-        paddingBottom: '1rem',
-        '--percentage':`calc(100% - ${theme.geometry.caption.width})`,
-        paddingRight: 'calc(var(--percentage) / 2)',
-        paddingLeft: 'calc(var(--percentage) / 2)',
-        ".showResult &":{
-            display: 'flex',
-            alignItems: 'baseline',
-            justifyContent: 'space-between',
-            height: '5.5rem',
-            backgroundColor: theme.palette.grey['300'],
-            transition:theme.transitions.create(['height'],{
-                duration: theme.transitions.duration.standard,
-                easing: theme.transitions.easing.header,
-            })
-        }
-    },
-    headerResult:{
-        textTransform: 'capitalize',
-        // fontSize: '1.75rem',
-        fontWeight: theme.typography.fontWeightBold,
-    },
-    headerIndicators: {
-        position: 'absolute',
+        top: 0, right: 0, left: 0,
+        zIndex: 2,
         display: 'flex',
         justifyContent: 'center',
-        top: 0, right: 0, left: 0,
-        zIndex: 15,
-        listStyle: 'none',
-        padding: `1rem ${theme.geometry.control.width} 0`,
+        padding: `${theme.spacing(3)}px ${theme.geometry.control.width} 0`,
+        flexWrap:'wrap',
         '.showResult &':{
             backgroundColor: theme.palette.grey['300'],
         }
     },
+    headerIndicators: {
+        flexBasis:'100%',
+        display: 'flex',
+        justifyContent: 'center',
+        zIndex:1,
+        listStyle: 'none',
+        marginTop:0,
+        marginBottom: `${theme.spacing(3)}px`,
+        '.showResult &':{
+            marginBottom:0,
+        }
+    },
+    headerResult:{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: 0,
+        width:'100%',
+        overflow:"hidden",
+        transition:theme.transitions.create(['height'],{
+            duration: theme.transitions.duration.standard,
+            easing: theme.transitions.easing.header,
+        }),
+        ".showResult &":{
+            height: 'auto',
+            marginBottom: `${theme.spacing(6)}px`
+
+        }
+    },
+    headerText:{
+        textTransform: 'capitalize',
+        fontWeight: theme.typography.fontWeightBold,
+        color: theme.palette.grey[700],
+    },
+
     inner:{
         position: 'relative',
         width: '100%',
@@ -222,25 +229,28 @@ const App = (props)=> {
                     classes.main,
                     (showResult?'showResult':'')
                 )}>
-                    {jContent.language_bundle &&
                     <div className={classes.header}>
-                        <Typography className={classes.headerResult}
-                                    variant="h4">
-                            {getHeaderResultLabel()}
-                        </Typography>
+                        <ol className={classes.headerIndicators}>
+                            {slideSet.map( itemId =>
+                                <Indicator
+                                    key={itemId}
+                                    id={itemId}
+                                    enabled={jContent.allow_indicator_browsing}
+                                />
+                            )}
+                        </ol>
+                        {jContent.language_bundle &&
+                        <div className={classes.headerResult}>
+                            <Typography className={classes.headerText}
+                                        variant="h4">
+                                {getHeaderResultLabel()}
+                            </Typography>
 
-                        {getHeaderBtnNext()}
+                            {getHeaderBtnNext()}
+                        </div>
+                        }
                     </div>
-                    }
-                    <ol className={classes.headerIndicators}>
-                        {slideSet.map( itemId =>
-                            <Indicator
-                                key={itemId}
-                                id={itemId}
-                                enabled={jContent.allow_indicator_browsing}
-                            />
-                        )}
-                    </ol>
+
                     {quiz &&
                     <div className={classes.inner}>
                         <Quiz

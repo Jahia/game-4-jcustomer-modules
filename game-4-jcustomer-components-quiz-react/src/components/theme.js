@@ -33,9 +33,10 @@ const theme = createMuiTheme({
             main: "#e57834",
             dark: "#bd5715"
         },
-        // text:{
-        //     primary:"rgba(255, 255, 255, 0.87)"
-        // },
+        text:{
+            primary:"rgba(255, 255, 255, 0.87)",
+            secondary:"rgba(0, 0, 0, 0.87)"
+        },
         background:{
             overlay: "rgba(0,0,0,.75)",
             checkedAnswer: "rgba(255,255,255,1)",
@@ -79,10 +80,24 @@ const theme = createMuiTheme({
             root:{
                 color:"rgba(255, 255, 255, 0.87)"
             }
-        }
+        },
+        MuiButton:{
+            contained:{
+                "&$disabled": {
+                    color: "rgba(255, 255, 255, 0.26)",
+                    backgroundColor: "rgba(255, 255, 255, 0.12)"
+                }
+            }
+
+        },
         // MuiCssBaseline: {
         //     '@global': {
-        //         '@font-face': ['Lato'],
+        //         // '@font-face': ['Lato'],
+        //         '.Mui-disabled': {
+        //             color: "rgba(255, 255, 255, 0.26)",
+        //             backgroundColor: "rgba(255, 255, 255, 0.12)"
+        //         }
+        //
         //     },
         // },
     },
@@ -90,8 +105,9 @@ const theme = createMuiTheme({
         MuiButton:{
             disableRipple:true,
             color:"primary",
-            variant:"contained"
+            variant:"contained",
         },
+
         MuiCheckbox:{
             disableRipple:true,
             color:"primary",

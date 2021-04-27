@@ -19,6 +19,11 @@ import {makeStyles} from "@material-ui/core/styles";
 
 
 const useStyles = makeStyles(theme => ({
+    questionGroup:{
+        textAlign:'left',
+        marginTop: `${theme.spacing(3)}px`,
+        marginBottom: `${theme.spacing(8)}px`,
+    },
     formGroup: {
         textAlign:'left',
         "& > div::before":{
@@ -37,7 +42,8 @@ const useStyles = makeStyles(theme => ({
             height: '2px',
             marginLeft : '50px',
             borderBottom: '2px solid rgba(255,255,255,.2)',
-        }
+        },
+        marginBottom:`${theme.spacing(8)}px`
     },
 }));
 
@@ -230,7 +236,7 @@ const Qna = (props) => {
             }
 
             <div className={sharedClasses.caption}>
-                <Typography className=""
+                <Typography className={classes.questionGroup}
                             variant="h4">
                     {qna.question}
                     <Typography className=""

@@ -15,15 +15,6 @@ import classnames from "clsx";
 import cssSharedClasses from "components/cssSharedClasses";
 
 const useStyles = makeStyles(theme => ({
-    textUppercase: {
-        textTransform: "uppercase"
-    },
-    subtitle: {
-        // fontSize: "65%",
-        borderLeft: `${theme.spacing(1)}px solid ${theme.palette.primary.main}`,
-        paddingLeft: "1rem",
-        marginLeft: "1rem"
-    },
     duration:{
         display: 'flex',
         alignItems: 'center',
@@ -208,10 +199,10 @@ const Quiz = (props) => {
             }
 
             <div className={sharedClasses.caption}>
-                <Typography className={classes.textUppercase}
+                <Typography className={sharedClasses.textUppercase}
                             variant="h3">
                     {quiz.title}
-                    <Typography className={classes.subtitle}
+                    <Typography className={sharedClasses.subtitle}
                                 color="primary"
                                 variant="subtitle1"
                                 component="span">
