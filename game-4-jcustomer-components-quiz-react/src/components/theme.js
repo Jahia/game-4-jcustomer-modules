@@ -69,7 +69,7 @@ const theme = createMuiTheme({
             long:600
         }
     },
-    spacing: 4,
+    spacing: 8,
     overrides: {
         MuiCheckbox:{
             root:{

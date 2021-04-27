@@ -5,10 +5,18 @@ export default makeStyles((theme)=> ({
         textTransform: "uppercase"
     },
     subtitle: {
-        // fontSize: "65%",
-        borderLeft: `${theme.spacing(1)}px solid ${theme.palette.primary.main}`,
-        paddingLeft: "1rem",
-        marginLeft: "1rem"
+        "&::before":{
+            backgroundColor:theme.palette.primary.main,
+            display: 'block',
+            width:`${theme.spacing(3)}px`,
+            height: `${theme.spacing(.25)}px`,
+            content:'""',
+            margin: "auto",
+            marginTop: `${theme.spacing(.75)}px`,
+        },
+        // borderLeft: `${theme.spacing(1)}px solid ${theme.palette.primary.main}`,
+        // paddingLeft: "1rem",
+        // marginLeft: "1rem"
     },
     item:{
         position: 'relative',

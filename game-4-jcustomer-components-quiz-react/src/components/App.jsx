@@ -9,11 +9,6 @@ import get from "lodash.get";
 
 import {StoreContext} from "contexts";
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fab } from '@fortawesome/free-brands-svg-icons';
-import { faHandPointLeft,faCheckDouble,faCheck,faTimesCircle,faTimes,faBan } from '@fortawesome/free-solid-svg-icons';
-import { faClock,faCheckCircle} from '@fortawesome/free-regular-svg-icons';
-
 //todo voir si je peux le desactiver dynamiquement
 //todo comment bootstrap to build to jahia view
 //import 'bootstrap/dist/css/bootstrap.min.css';
@@ -30,18 +25,6 @@ import {syncTracker} from "misc/tracker";
 import {makeStyles} from "@material-ui/core/styles";
 import classnames from 'clsx';
 
-library.add(
-    fab,
-    faClock,
-    faHandPointLeft,
-    faCheckCircle,
-    faCheckDouble,
-    faCheck,
-    faTimesCircle,
-    faTimes,
-    faBan
-);
-
 const useStyles = makeStyles(theme => ({
     main: {
         position: "relative",
@@ -52,7 +35,7 @@ const useStyles = makeStyles(theme => ({
         zIndex: 2,
         display: 'flex',
         justifyContent: 'center',
-        padding: `${theme.spacing(3)}px ${theme.geometry.control.width} 0`,
+        padding: `${theme.spacing(2)}px ${theme.geometry.control.width} 0`,
         flexWrap:'wrap',
         '.showResult &':{
             backgroundColor: theme.palette.grey['300'],
@@ -65,7 +48,7 @@ const useStyles = makeStyles(theme => ({
         zIndex:1,
         listStyle: 'none',
         marginTop:0,
-        marginBottom: `${theme.spacing(3)}px`,
+        marginBottom: `${theme.spacing(2)}px`,
         '.showResult &':{
             marginBottom:0,
         }
@@ -83,7 +66,7 @@ const useStyles = makeStyles(theme => ({
         }),
         ".showResult &":{
             height: 'auto',
-            marginBottom: `${theme.spacing(6)}px`
+            marginBottom: `${theme.spacing(3)}px`
 
         }
     },

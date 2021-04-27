@@ -10,7 +10,7 @@ import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
     result:{
-        marginTop: `${theme.spacing(8)}px`,
+        marginTop: `${theme.spacing(4)}px`,
     }
 }));
 

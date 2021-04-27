@@ -21,8 +21,8 @@ import {makeStyles} from "@material-ui/core/styles";
 const useStyles = makeStyles(theme => ({
     questionGroup:{
         textAlign:'left',
-        marginTop: `${theme.spacing(3)}px`,
-        marginBottom: `${theme.spacing(8)}px`,
+        marginTop: `${theme.spacing(2)}px`,
+        marginBottom: `${theme.spacing(4)}px`,
     },
     formGroup: {
         textAlign:'left',
@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
             marginLeft : '50px',
             borderBottom: '2px solid rgba(255,255,255,.2)',
         },
-        marginBottom:`${theme.spacing(8)}px`
+        marginBottom:`${theme.spacing(4)}px`
     },
 }));
 
