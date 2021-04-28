@@ -6,7 +6,7 @@ import {makeStyles} from "@material-ui/core/styles";
 const useStyles = makeStyles(theme => ({
     result:{
         marginTop: `${theme.spacing(4)}px`,
-        maxWidth: '500px',
+        maxWidth: '300px',
         margin: '32px auto',
         "& .CircularProgressbar":{
             "& .CircularProgressbar":{

@@ -54,12 +54,11 @@ const Score = (props) => {
                 <Typography className={sharedClasses.textUppercase}
                             variant="h3">
                     {quiz.title}
-                    <Typography className={sharedClasses.subtitle}
-                                color="primary"
-                                variant="subtitle1"
-                                component="span">
-                        {quiz.subtitle}
-                    </Typography>
+                </Typography>
+                <Typography className={sharedClasses.subtitle}
+                            color="primary"
+                            variant="h4">
+                    {quiz.subtitle}
                 </Typography>
 
                 {displayResult()}

@@ -1,16 +1,18 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import React from "react";
-
+//TODO faire une fonction qui prend un params theme et
+// qui retourne le theme pour pouvoir dynamiquement charger le theme depuis jahia
 const theme = createMuiTheme({
     geometry:{
         item:{
             minHeight:"70vh",
         },
-        control:{
-            width:"5%"
-        },
+        // control:{
+        //     width:"30px",
+        // },
         caption:{
-            width:"90%",
+            padding:"60px",
+            width:"calc(100% - 120px)",//"90%",
         },
         indicator:{
             width:"30px",
@@ -55,6 +57,9 @@ const theme = createMuiTheme({
         },
         h4:{
             fontWeight: 300
+        },
+        body1:{
+            fontSize:"1.1rem",
         }
     },
     // shape:{
@@ -89,6 +94,13 @@ const theme = createMuiTheme({
                 }
             }
 
+        },
+        MuiTypography:{
+            body1:{
+                "& a":{
+                    color:"#007cb0",
+                }
+            }
         },
         // MuiCssBaseline: {
         //     '@global': {

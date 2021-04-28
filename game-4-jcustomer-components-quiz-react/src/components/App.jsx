@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
         zIndex: 2,
         display: 'flex',
         justifyContent: 'center',
-        padding: `${theme.spacing(2)}px ${theme.geometry.control.width} 0`,
+        padding: `${theme.spacing(2)}px ${theme.geometry.caption.padding} 0`,
         flexWrap:'wrap',
         '.showResult &':{
             backgroundColor: theme.palette.grey['300'],
