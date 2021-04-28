@@ -9,16 +9,18 @@
 <%@ taglib prefix="query" uri="http://www.jahia.org/tags/queryLib" %>
 <%@ taglib prefix="utility" uri="http://www.jahia.org/tags/utilityLib" %>
 <%@ taglib prefix="s" uri="http://www.jahia.org/tags/search" %>
+<jsp:useBean id="random" class="java.util.Random" scope="application" />
 
 <%--Add files used by the webapp--%>
 <template:addResources type="css" resources="webapp/2.6c0f60ba.chunk.css" />
-<template:addResources type="css" resources="webapp/main.3443d2d0.chunk.css" />
+<template:addResources type="css" resources="webapp/main.3443d2d0.chunk.css" media="screen"/>
 <template:addResources type="javascript" resources="webapp/2.0dc63d7f.chunk.js" />
 <template:addResources type="javascript" resources="webapp/main.56779b40.chunk.js" />
 
 
 <%--<c:set var="_path_" value="${currentNode.path}"/>--%>
 <c:set var="_uuid_" value="${currentNode.identifier}"/>
+<c:set var="_uuid2_" value="${currentNode.parent.identifier}"/>
 <c:set var="language" value="${currentResource.locale.language}"/>
 <%--<c:set var="mode" value="${renderContext.mode}"/>--%>
 <c:set var="workspace" value="${renderContext.workspace}"/>
@@ -34,7 +36,12 @@
 <%--<utility:logger level="INFO" value="**** SERVEUR : ${url.server}******"/>--%>
 <%--<utility:logger level="INFO" value="**** workspace : ${workspace}******"/>--%>
 
-<c:set var="targetId" value="REACT_Quiz_${fn:replace(currentNode.identifier,'-','_')}"/>
+<%--<c:set var="targetId" value="REACT_Quiz_${fn:replace(currentNode.identifier,'-','_')}"/>--%>
+<%--<c:set var="targetId" value="REACT_Quiz_${fn:replace(_uuid2_,'-','_')}"/>--%>
+<c:set var="targetId" value="REACT_Quiz_${fn:replace(random.nextInt(),'-','_')}"/>
+<%--<c:set var="targetId" value="REACT_Quiz_${random.nextInt(100000)}"/>--%>
+
+
 <div id="${targetId}"></div>
 
 <script>
