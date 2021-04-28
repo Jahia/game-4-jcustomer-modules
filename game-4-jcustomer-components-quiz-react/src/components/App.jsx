@@ -1,7 +1,6 @@
 import React from 'react'; //useEffect,useContext
 import PropTypes from "prop-types";
 
-// import {Button, Container, Row} from 'react-bootstrap';
 import {Grid, Button, Typography} from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 
@@ -9,10 +8,6 @@ import get from "lodash.get";
 
 import {StoreContext} from "contexts";
 
-//todo voir si je peux le desactiver dynamiquement
-//todo comment bootstrap to build to jahia view
-//import 'bootstrap/dist/css/bootstrap.min.css';
-import 'components/App.scss';
 import 'react-circular-progressbar/dist/styles.css';
 
 import {GET_QUIZ} from "components/Quiz/QuizGraphQL.js";

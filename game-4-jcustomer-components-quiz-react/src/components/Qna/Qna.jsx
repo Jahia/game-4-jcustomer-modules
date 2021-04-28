@@ -24,6 +24,9 @@ const useStyles = makeStyles(theme => ({
         marginTop: `${theme.spacing(2)}px`,
         marginBottom: `${theme.spacing(4)}px`,
     },
+    question:{
+        marginBottom: `${theme.spacing(1)}px`,
+    },
     formGroup: {
         textAlign:'left',
         "& > div::before":{
@@ -236,16 +239,16 @@ const Qna = (props) => {
             }
 
             <div className={sharedClasses.caption}>
-                <Typography className={classes.questionGroup}
-                            variant="h4">
-                    {qna.question}
-                    <Typography className=""
-                                color="primary"
-                                variant="subtitle1"
-                                component="i">
+                <div className={classes.questionGroup}>
+                    <Typography  className={classes.question}
+                                 variant="h4">
+                        {qna.question}
+                    </Typography>
+                    <Typography variant="h5">
                         {qna.help}
                     </Typography>
-                </Typography>
+                </div>
+
 
                 {/*<ol className="game4-quiz__answer-list">*/}
                 <FormGroup className={classes.formGroup}

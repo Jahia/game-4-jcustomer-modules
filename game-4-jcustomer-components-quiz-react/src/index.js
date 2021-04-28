@@ -15,7 +15,7 @@ import {Store} from "components/Store";
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from 'components/theme';
 
-// import 'index.css';
+import 'index.css';
 
 const render=(target,context)=>{
   try{

@@ -1,6 +1,6 @@
 import React from 'react';
 // import PropTypes from "prop-types";
-// import {Button} from "react-bootstrap";
+
 import {Button,Typography} from "@material-ui/core";
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import {makeStyles} from "@material-ui/core/styles";
@@ -13,6 +13,7 @@ import {syncConsentStatus} from "misc/tracker";
 import Media from '../Media'
 import classnames from "clsx";
 import cssSharedClasses from "components/cssSharedClasses";
+import DOMPurify from "dompurify";
 
 const useStyles = makeStyles(theme => ({
     duration:{
@@ -22,7 +23,14 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         '& svg': {
             marginRight: '3px',
-        }
+        },
+        marginTop:`${theme.spacing(3)}px`,
+    },
+    description:{
+        // textAlign: 'left',
+        maxWidth:'500px',
+        margin:`${theme.spacing(4)}px auto`,
+
     },
     consent:{
         position: 'absolute',
@@ -202,7 +210,6 @@ const Quiz = (props) => {
                 <Typography className={sharedClasses.textUppercase}
                             variant="h3">
                     {quiz.title}
-
                 </Typography>
                 <Typography className={sharedClasses.subtitle}
                             color="primary"
@@ -217,9 +224,8 @@ const Quiz = (props) => {
                 </Typography>
 
                 <Typography component="div"
-                            dangerouslySetInnerHTML={{__html:quiz.description}}/>
-
-                {/*<div className="lead" dangerouslySetInnerHTML={{__html:quiz.description}}></div>*/}
+                            className={classes.description}
+                            dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(quiz.description, { ADD_ATTR: ['target'] })}}/>
 
                 <Button onClick={onClick}
                         disabled={!quizState.enableStartBtn}>

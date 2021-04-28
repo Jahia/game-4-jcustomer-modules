@@ -5,14 +5,16 @@ export default makeStyles((theme)=> ({
         textTransform: "uppercase"
     },
     subtitle: {
+        //, &::after
         "&::before":{
             backgroundColor:theme.palette.primary.main,
+            // background:`linear-gradient(90deg, ${theme.palette.text.primary} 0%, ${theme.palette.primary.main} 100%)`,
             display: 'block',
             width:`${theme.spacing(3)}px`,
             height: `${theme.spacing(.25)}px`,
             content:'""',
             margin: "auto",
-            marginTop: `${theme.spacing(.75)}px`,
+            marginTop: `${theme.spacing(1)}px`,
         },
         // borderLeft: `${theme.spacing(1)}px solid ${theme.palette.primary.main}`,
         // paddingLeft: "1rem",

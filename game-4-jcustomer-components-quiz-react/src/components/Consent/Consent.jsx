@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {Form} from "react-bootstrap";
 
 import {useQuery} from "@apollo/react-hooks";
 import {GET_CONSENT} from "components/Consent/ConsentGraphQL";
 import get from "lodash.get";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 import {syncConsentStatus} from "misc/tracker";
 import {StoreContext} from "contexts";
