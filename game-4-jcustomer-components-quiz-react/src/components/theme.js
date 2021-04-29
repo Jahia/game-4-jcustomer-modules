@@ -4,15 +4,18 @@ import React from "react";
 // qui retourne le theme pour pouvoir dynamiquement charger le theme depuis jahia
 const theme = createMuiTheme({
     geometry:{
-        item:{
-            minHeight:"70vh",
+        header:{
+          result:{
+              height:"45px",
+          }
         },
-        // control:{
-        //     width:"30px",
-        // },
+        item:{
+            minHeight:"700px",
+        },
         caption:{
+            // minHeight:"700px",
             padding:"60px",
-            width:"calc(100% - 120px)",//"90%",
+            width:"calc(100% - 120px)",
         },
         indicator:{
             width:"30px",

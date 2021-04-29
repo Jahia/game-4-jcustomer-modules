@@ -14,6 +14,7 @@ import Media from '../Media'
 import classnames from "clsx";
 import cssSharedClasses from "components/cssSharedClasses";
 import DOMPurify from "dompurify";
+import Header from "components/Header/Header";
 
 const useStyles = makeStyles(theme => ({
     duration:{
@@ -33,11 +34,15 @@ const useStyles = makeStyles(theme => ({
 
     },
     consent:{
-        position: 'absolute',
-        bottom: '.5rem',
-        '--percentage':`calc(100% - ${theme.geometry.caption.width})`,
-        right: 'calc(var(--percentage) / 2)',
-        left: 'calc(var(--percentage) / 2)',
+        // position: 'absolute',
+        // bottom: '.5rem',
+        // '--percentage':`calc(100% - ${theme.geometry.caption.width})`,
+        // right: 'calc(var(--percentage) / 2)',
+        // left: 'calc(var(--percentage) / 2)',
+        // paddingRight:theme.geometry.caption.padding,
+        // paddingLeft:theme.geometry.caption.padding,
+        paddingRight:`${theme.spacing(4)}px`,
+        paddingLeft:`${theme.spacing(4)}px`,
         zIndex: 10,
         "& ul":{
             listStyle: 'none',
@@ -187,16 +192,13 @@ const Quiz = (props) => {
             case:"NEXT_SLIDE"
         });
     };
-
-
-    // className={classes.duration}
-    // {`game4-quiz__item show-overlay ${show ? 'active':''} `}
     return(
         <div className={classnames(
             sharedClasses.item,
             sharedClasses.showOverlay,
             (show ? 'active':'')
         )}>
+            <Header/>
             {quiz.media &&
             <Media id={quiz.media.id}
                    type={quiz.media.type.value}
@@ -205,6 +207,7 @@ const Quiz = (props) => {
                    alt={quiz.title}
             />
             }
+
 
             <div className={sharedClasses.caption}>
                 <Typography className={sharedClasses.textUppercase}
@@ -260,37 +263,53 @@ const Quiz = (props) => {
 
 
     // return(
-    //     <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
+    //     <div className={classnames(
+    //         sharedClasses.item,
+    //         sharedClasses.showOverlay,
+    //         (show ? 'active':'')
+    //     )}>
     //         {quiz.media &&
-    //             <Media id={quiz.media.id}
-    //                    type={quiz.media.type.value}
-    //                    mixins={quiz.media.mixins.map(mixin=>mixin.value)}
-    //                    path={quiz.media.path}
-    //                    alt={quiz.title}
-    //             />
+    //         <Media id={quiz.media.id}
+    //                type={quiz.media.type.value}
+    //                mixins={quiz.media.mixins.map(mixin=>mixin.value)}
+    //                path={quiz.media.path}
+    //                alt={quiz.title}
+    //         />
     //         }
     //
-    //         <div className="game4-quiz__caption">
-    // <h2 className="text-uppercase">{quiz.title}
-    //     <span className="subtitle">{quiz.subtitle}</span>
-    // </h2>
+    //         <div className={sharedClasses.caption}>
+    //             <Typography className={sharedClasses.textUppercase}
+    //                         variant="h3">
+    //                 {quiz.title}
+    //             </Typography>
+    //             <Typography className={sharedClasses.subtitle}
+    //                         color="primary"
+    //                         variant="h4">
+    //                 {quiz.subtitle}
+    //             </Typography>
     //
-    //             <div className={"duration"}>
-    //                 <FontAwesomeIcon icon={['far','clock']} />
+    //             <Typography component="div"
+    //                         className={classes.duration}>
+    //                 <AccessTimeIcon />
     //                 {quiz.duration}
-    //             </div>
+    //             </Typography>
     //
-    //             <div className="lead" dangerouslySetInnerHTML={{__html:quiz.description}}></div>
-    //                 <Button variant="game4-quiz"
-    //                         onClick={onClick}
-    //                         disabled={!quizState.enableStartBtn}>
-    //                     {language_bundle && language_bundle.btnStart}
-    //                 </Button>
+    //             <Typography component="div"
+    //                         className={classes.description}
+    //                         dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(quiz.description, { ADD_ATTR: ['target'] })}}/>
+    //
+    //             <Button onClick={onClick}
+    //                     disabled={!quizState.enableStartBtn}>
+    //                 {language_bundle && language_bundle.btnStart}
+    //             </Button>
     //         </div>
     //         {
     //             quiz.consents.length > 0 && cxs &&
-    //             <div className="game4-quiz__consent">
-    //                 <h5>{language_bundle && language_bundle.consentTitle}</h5>
+    //             <div className={classes.consent}>
+    //                 <Typography className={classes.consentTitle}
+    //                             variant="h5">
+    //                     {language_bundle && language_bundle.consentTitle}
+    //                 </Typography>
     //                 <ul>
     //                     {
     //                         quiz.consents.map( consent =>{
@@ -309,6 +328,7 @@ const Quiz = (props) => {
     //         }
     //     </div>
     // );
+
 }
 
 // Quiz.propTypes={}

@@ -8,7 +8,6 @@ export default makeStyles((theme)=> ({
         //, &::after
         "&::before":{
             backgroundColor:theme.palette.primary.main,
-            // background:`linear-gradient(90deg, ${theme.palette.text.primary} 0%, ${theme.palette.primary.main} 100%)`,
             display: 'block',
             width:`${theme.spacing(3)}px`,
             height: `${theme.spacing(.25)}px`,
@@ -16,27 +15,31 @@ export default makeStyles((theme)=> ({
             margin: "auto",
             marginTop: `${theme.spacing(1)}px`,
         },
-        // borderLeft: `${theme.spacing(1)}px solid ${theme.palette.primary.main}`,
-        // paddingLeft: "1rem",
-        // marginLeft: "1rem"
     },
     item:{
-        position: 'relative',
+        // position: 'relative',
         display: 'none',
-        float: 'left',
+        minHeight:theme.geometry.item.minHeight,//'700px',
+        // float: 'left',
         width: '100%',
-        marginRight: '-100%',
+        // marginRight: '-100%',
         backfaceVisibility: 'hidden',
-        transition:theme.transitions.create(['transform'],{
-            duration: theme.transitions.duration.long,
-            easing: theme.transitions.easing.easeInOut,
-        }),
+        // transition:theme.transitions.create(['transform'],{
+        //     duration: theme.transitions.duration.long,
+        //     easing: theme.transitions.easing.easeInOut,
+        // }),
         "& img":{
-            minHeight: theme.geometry.item.minHeight,
             objectFit: 'cover',
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            zIndex: -1,
         },
         "&.active":{
-            display:'block'
+            // display:'block'
+            display:'flex',
+            flexWrap:'wrap',
+            flexDirection:'column',
         }
     },
     showOverlay:{
@@ -51,23 +54,22 @@ export default makeStyles((theme)=> ({
         }
     },
     caption:{
-        position: 'absolute',
-        top: '4rem',
-        // '--percentage':`calc(100% - ${theme.geometry.caption.width})`,
-        // right: 'calc(var(--percentage) / 2)',
-        // left: 'calc(var(--percentage) / 2)',
-        right:theme.geometry.caption.padding,
-        left:theme.geometry.caption.padding,
+        // flexBasis:'100%',
+        flexGrow:2,
+        // position: 'absolute',
+        // paddingTop: `${theme.spacing(.5)}px`,
+        paddingRight:theme.geometry.caption.padding,
+        paddingLeft:theme.geometry.caption.padding,
+        paddingBottom:theme.geometry.caption.padding,
         zIndex: 10,
-        // color: theme.palette.common.white,
         textAlign: 'center',
-        transition:theme.transitions.create(['top'],{
-            duration: theme.transitions.duration.standard,
-            easing: theme.transitions.easing.header,
-        }),
+        // transition:theme.transitions.create(['paddingTop'],{
+        //     duration: theme.transitions.duration.standard,
+        //     easing: theme.transitions.easing.header,
+        // }),
 
         ".showResult &": {
-            top: '7rem',
+            // paddingTop: `${theme.spacing(.75)}px`,
             "& button":{
                 display:'none',
             }

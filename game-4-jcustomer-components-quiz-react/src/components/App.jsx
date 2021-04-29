@@ -11,8 +11,8 @@ import {StoreContext} from "contexts";
 import 'react-circular-progressbar/dist/styles.css';
 
 import {GET_QUIZ} from "components/Quiz/QuizGraphQL.js";
+import Header from "components/Header/Header"
 import Quiz from "components/Quiz"
-import Indicator from "components/Quiz/Indicator"
 import Qna from "components/Qna";
 import Warmup from "components/Warmup";
 import Score from "components/Score";
@@ -23,58 +23,13 @@ import classnames from 'clsx';
 const useStyles = makeStyles(theme => ({
     main: {
         position: "relative",
+        // display:'flex',
+        // flexWrap:'wrap',
     },
-    header:{
-        position: 'absolute',
-        top: 0, right: 0, left: 0,
-        zIndex: 2,
-        display: 'flex',
-        justifyContent: 'center',
-        padding: `${theme.spacing(2)}px ${theme.geometry.caption.padding} 0`,
-        flexWrap:'wrap',
-        '.showResult &':{
-            backgroundColor: theme.palette.grey['300'],
-        }
-    },
-    headerIndicators: {
-        flexBasis:'100%',
-        display: 'flex',
-        justifyContent: 'center',
-        zIndex:1,
-        listStyle: 'none',
-        marginTop:0,
-        marginBottom: `${theme.spacing(2)}px`,
-        '.showResult &':{
-            marginBottom:0,
-        }
-    },
-    headerResult:{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        height: 0,
-        width:'100%',
-        overflow:"hidden",
-        transition:theme.transitions.create(['height'],{
-            duration: theme.transitions.duration.standard,
-            easing: theme.transitions.easing.header,
-        }),
-        ".showResult &":{
-            height: 'auto',
-            marginBottom: `${theme.spacing(3)}px`
-
-        }
-    },
-    headerText:{
-        textTransform: 'capitalize',
-        fontWeight: theme.typography.fontWeightBold,
-        color: theme.palette.grey[700],
-    },
-
     inner:{
-        position: 'relative',
+        // position: 'relative',
         width: '100%',
-        overflow: 'hidden',
+        // overflow: 'hidden',
         // @include clearfix()
         "&::after": {
             display: 'block',
@@ -113,10 +68,7 @@ const App = (props)=> {
     const {
         jContent,
         quiz,
-        slideSet,
-        currentResult,
         showResult,
-        showNext,
         showScore
     } = state;
 
@@ -156,81 +108,25 @@ const App = (props)=> {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
-    const handleNextSlide = () =>
-        dispatch({
-            case:"NEXT_SLIDE"
-        });
 
-    const handleShowScore = () =>
-        dispatch({
-            case:"SHOW_SCORE"
-        });
 
     const displayScore=()=>{
         // console.log("[displayScore] showScore: ",showScore);
         if(showScore)
             return <Score/>
     }
-    const getHeaderResultLabel=()=>{
-        if(currentResult)
-            return jContent.language_bundle.correctAnswer;
-        return jContent.language_bundle.wrongAnswer;
-    }
 
-    // {currentResult &&
-    // jContent.language_bundle.correctAnswer}
-    // {!currentResult &&
-    // jContent.language_bundle.wrongAnswer}
-
-    const getHeaderBtnNext=()=>{
-        if(showScore)
-            return  <Button onClick={handleShowScore}
-                           disabled={!showNext}>
-                        {jContent.language_bundle.btnShowResults}
-                    </Button>
-        return  <Button onClick={handleNextSlide}
-                       disabled={!showNext}>
-                    {jContent.language_bundle.btnNextQuestion}
-                </Button>
-    }
-    // {!showScore &&
-    //
-    // }
-    // {showScore &&
-    //
-    // }
-    // <Button variant="game4-quiz-header"
     return (
         <Grid container spacing={3}>
-            <Grid item xs>
+            <Grid item xs style={{margin:'auto'}}>
                 <div className={classnames(
                     classes.main,
                     (showResult?'showResult':'')
                 )}>
-                    <div className={classes.header}>
-                        <ol className={classes.headerIndicators}>
-                            {slideSet.map( itemId =>
-                                <Indicator
-                                    key={itemId}
-                                    id={itemId}
-                                    enabled={jContent.allow_indicator_browsing}
-                                />
-                            )}
-                        </ol>
-                        {jContent.language_bundle &&
-                        <div className={classes.headerResult}>
-                            <Typography className={classes.headerText}
-                                        variant="h4">
-                                {getHeaderResultLabel()}
-                            </Typography>
-
-                            {getHeaderBtnNext()}
-                        </div>
-                        }
-                    </div>
 
                     {quiz &&
-                    <div className={classes.inner}>
+                        <>
+                    {/*<div className={classes.inner}>*/}
                         <Quiz
                             key={quiz.id}
                         />
@@ -254,79 +150,13 @@ const App = (props)=> {
                         })
                         }
                         {displayScore()}
-                    </div>
+                    {/*</div>*/}
+                        </>
                     }
                 </div>
             </Grid>
         </Grid>
     );
-    {/*return (*/}
-    {/*    */}
-    {/*    <Container>*/}
-    {/*        <Row>*/}
-    {/*            <div className={`game4-quiz slide ${showResult?"show-result":""}`}>*/}
-    {/*                {jContent.language_bundle &&*/}
-    {/*                    <div className="game4-quiz__header">*/}
-
-    {/*                            <span className="game4-quiz__header-result">*/}
-    {/*                                {currentResult &&*/}
-    {/*                                    jContent.language_bundle.correctAnswer}*/}
-    {/*                                {!currentResult &&*/}
-    {/*                                    jContent.language_bundle.wrongAnswer}*/}
-    {/*                            </span>*/}
-    {/*                            {!showScore &&*/}
-    {/*                                <Button variant="game4-quiz-header"*/}
-    {/*                                    onClick={handleNextSlide}*/}
-    {/*                                    disabled={!showNext}>*/}
-    {/*                                    {jContent.language_bundle.btnNextQuestion}*/}
-    {/*                                </Button>*/}
-    {/*                            }*/}
-    {/*                            {showScore &&*/}
-    {/*                                <Button variant="game4-quiz-header"*/}
-    {/*                                    onClick={handleShowScore}*/}
-    {/*                                    disabled={!showNext}>*/}
-    {/*                                    {jContent.language_bundle.btnShowResults}*/}
-    {/*                                </Button>*/}
-    {/*                            }*/}
-
-    {/*                    </div>*/}
-    {/*                }*/}
-    {/*                <ol className="game4-quiz__indicators">*/}
-    {/*                    {slideSet.map( itemId =>*/}
-    {/*                        <Indicator*/}
-    {/*                            key={itemId}*/}
-    {/*                            id={itemId}*/}
-    {/*                            enabled={jContent.allow_indicator_browsing}*/}
-    {/*                        />*/}
-    {/*                    )}*/}
-    {/*                </ol>*/}
-    {/*                {quiz &&*/}
-    {/*                <div className="game4-quiz__inner">*/}
-    {/*                    <Quiz*/}
-    {/*                        key={quiz.id}*/}
-    {/*                    />*/}
-    {/*                    {quiz.childNodes.map( (node,i) => {*/}
-    {/*                        if(node.type === jContent.cnd_type.QNA)*/}
-    {/*                            return <Qna*/}
-    {/*                                key={node.id}*/}
-    {/*                                id={node.id}*/}
-    {/*                            />*/}
-
-    {/*                        if(node.type === jContent.cnd_type.WARMUP)*/}
-    {/*                            return <Warmup*/}
-    {/*                                key={node.id}*/}
-    {/*                                id={node.id}*/}
-    {/*                            />*/}
-    {/*                        return <p className="text-danger">node type {node.type} is not supported</p>*/}
-    {/*                    })*/}
-    {/*                    }*/}
-    {/*                    {displayScore()}*/}
-    {/*                </div>*/}
-    {/*                }*/}
-    {/*            </div>*/}
-    {/*        </Row>*/}
-    {/*    </Container>*/}
-    {/*);*/}
 };
 
 App.propTypes={}

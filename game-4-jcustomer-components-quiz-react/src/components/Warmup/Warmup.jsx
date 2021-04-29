@@ -14,6 +14,7 @@ import cssSharedClasses from "components/cssSharedClasses";
 import {makeStyles} from "@material-ui/core/styles";
 import {Typography, Button} from "@material-ui/core";
 import DOMPurify from "dompurify";
+import Header from "components/Header/Header";
 
 const useStyles = makeStyles(theme => ({
     contentGroup:{
@@ -72,6 +73,7 @@ const Warmup = (props) => {
                 sharedClasses.showOverlay,
                 (show ? 'active':'')
             )}>
+                <Header/>
                 {warmup.media &&
                     <Media id={warmup.media.id}
                            type={warmup.media.type.value}

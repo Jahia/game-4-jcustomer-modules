@@ -16,6 +16,7 @@ import cssSharedClasses from "components/cssSharedClasses";
 import classnames from "clsx";
 import {FormGroup, Typography,Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+import Header from "components/Header/Header";
 
 
 const useStyles = makeStyles(theme => ({
@@ -228,6 +229,8 @@ const Qna = (props) => {
             sharedClasses.showOverlay,
             (show ? 'active':'')
         )}>
+            <Header/>
+
             {qna.media &&
                 <Media id={qna.media.id}
                        type={qna.media.type.value}
@@ -235,9 +238,7 @@ const Qna = (props) => {
                        path={qna.media.path}
                        alt={qna.title}
                 />
-
             }
-
             <div className={sharedClasses.caption}>
                 <div className={classes.questionGroup}>
                     <Typography  className={classes.question}

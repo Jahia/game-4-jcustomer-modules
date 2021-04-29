@@ -7,6 +7,7 @@ import Percentage from "components/Score/percentage/Percentage";
 import cssSharedClasses from "components/cssSharedClasses";
 import classnames from "clsx";
 import {Typography,Button} from "@material-ui/core";
+import Header from "components/Header/Header";
 
 const Score = (props) => {
     const sharedClasses = cssSharedClasses(props);
@@ -42,6 +43,7 @@ const Score = (props) => {
             sharedClasses.showOverlay,
             (show ? 'active':'')
         )}>
+            <Header/>
             {quiz.media &&
             <Media id={quiz.media.id}
                    type={quiz.media.type.value}
