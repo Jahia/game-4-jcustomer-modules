@@ -7,24 +7,6 @@
                              j:title="Game for jCustomer Core Module"
                              jcr:mixinTypes="jmix:hasExternalProviderExtension"
                              jcr:primaryType="jnt:module">
-         <sources jcr:mixinTypes="jmix:hasExternalProviderExtension jmix:sourceControl"
-                  jcr:primaryType="jnt:moduleVersionFolder"
-                  j:staticMountPointProviderKey="module-game-4-jcustomer-core-1.0.2-SNAPSHOT">
-            <src jcr:mixinTypes="jmix:hasExternalProviderExtension jmix:sourceControl"
-                 jcr:primaryType="jnt:folder">
-               <main jcr:mixinTypes="jmix:hasExternalProviderExtension jmix:sourceControl"
-                     jcr:primaryType="jnt:folder">
-                  <resources jcr:mixinTypes="jmix:hasExternalProviderExtension jmix:sourceControl"
-                             jcr:primaryType="jnt:folder">
-                     <META-INF jcr:mixinTypes="jmix:hasExternalProviderExtension jmix:sourceControl"
-                               jcr:primaryType="jnt:metaInfFolder">
-                        <definitions.cnd jcr:mixinTypes="jmix:sourceControl"
-                                         jcr:primaryType="jnt:definitionFile"/>
-                     </META-INF>
-                  </resources>
-               </main>
-            </src>
-         </sources>
          <portlets jcr:primaryType="jnt:portletFolder"/>
          <files jcr:primaryType="jnt:folder"/>
          <contents jcr:primaryType="jnt:contentFolder"/>

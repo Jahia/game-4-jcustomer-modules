@@ -33,8 +33,8 @@ const useStyles = makeStyles(theme => ({
     },
     checkGroup:{
         position:"relative",
-        height:'1.5rem',
-        padding:'.15rem .25rem .15rem .15rem',
+        height: '28px',//'1.5rem',
+        padding: '2px 4px 2px 2px',//'.15rem .25rem .15rem .15rem',
         marginLeft:"-32px",
         opacity: 0,
         // transform: none,
@@ -52,11 +52,11 @@ const useStyles = makeStyles(theme => ({
             width: 0,
             height: 0,
             borderStyle: 'solid',
-            borderWidth: '.9rem 0 .9rem 1.15rem',
+            borderWidth: '14px 0 14px 18px',//'.9rem 0 .9rem 1.15rem',
             position: 'absolute',
             top: 0,
             // right:'-1.1rem',
-            left:'1.9rem',
+            left:'30px',//'1.9rem',
             borderColor:  `transparent transparent transparent ${theme.palette.grey[300]}`
         },
         "&.valid":{
@@ -66,8 +66,13 @@ const useStyles = makeStyles(theme => ({
                borderColor:  `transparent transparent transparent ${theme.palette.primary.main}`
             }
         },
+        "& svg":{
+            verticalAlign:'unset',
+            overflow:'unset'
+        }
     },
     labelGroup:{
+        margin:'unset',
         marginLeft:"12px"
     }
 }));

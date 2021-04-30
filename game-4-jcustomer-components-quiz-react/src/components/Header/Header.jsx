@@ -6,24 +6,21 @@ import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
     header:{
-        // position: 'absolute',
-        // top: 0, right: 0, left: 0,
         zIndex: 2,
         display: 'flex',
-        // flexBasis: '100%',
+        flexDirection:'column',
         justifyContent: 'center',
-        padding: `${theme.spacing(2)}px ${theme.geometry.caption.padding} 0`,
-        flexWrap:'wrap',
+        padding: `${theme.spacing(2)}px ${theme.geometry.caption.padding}`,
         '.showResult &':{
             backgroundColor: theme.palette.grey['300'],
         }
     },
     headerIndicators: {
-        // flexBasis:'100%',
         display: 'flex',
         justifyContent: 'center',
         zIndex:1,
         listStyle: 'none',
+        padding:0,
         marginTop:0,
         marginBottom: `${theme.spacing(2)}px`,
         '.showResult &':{
@@ -43,7 +40,7 @@ const useStyles = makeStyles(theme => ({
         }),
         ".showResult &":{
             height: theme.geometry.header.result.height,//'45px',//'auto',
-            marginBottom: `${theme.spacing(3)}px`
+            marginBottom: `${theme.spacing(1)}px`
 
         }
     },

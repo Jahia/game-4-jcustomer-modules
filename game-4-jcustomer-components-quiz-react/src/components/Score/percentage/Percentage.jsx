@@ -12,6 +12,7 @@ const useStyles = makeStyles(theme => ({
             "& .CircularProgressbar":{
                 "&-text":{
                     fill: theme.palette.primary.main,
+                    fontFamily: theme.typography.fontFamily,
                 },
                 "&-trail": {
                     stroke: theme.palette.grey[300],

@@ -14,13 +14,12 @@
 <%--Add files used by the webapp--%>
 <template:addResources type="css" resources="webapp/2.6c0f60ba.chunk.css" />
 <template:addResources type="css" resources="webapp/main.3443d2d0.chunk.css" media="screen"/>
-<template:addResources type="javascript" resources="webapp/2.0dc63d7f.chunk.js" />
-<template:addResources type="javascript" resources="webapp/main.56779b40.chunk.js" />
+<template:addResources type="javascript" resources="webapp/2.6932389d.chunk.js" />
+<template:addResources type="javascript" resources="webapp/main.d6e3fd34.chunk.js" />
 
 
 <%--<c:set var="_path_" value="${currentNode.path}"/>--%>
 <c:set var="_uuid_" value="${currentNode.identifier}"/>
-<c:set var="_uuid2_" value="${currentNode.parent.identifier}"/>
 <c:set var="language" value="${currentResource.locale.language}"/>
 <%--<c:set var="mode" value="${renderContext.mode}"/>--%>
 <c:set var="workspace" value="${renderContext.workspace}"/>
@@ -28,16 +27,13 @@
 <c:set var="site" value="${renderContext.site.siteKey}"/>
 <c:set var="host" value="${url.server}"/>
 
-
-<c:set var="host" value="${url.server}"/>
+<%--<c:set var="theme" value="${currentNode.properties['game4:webappTheme'].string}"/>--%>
 <%--<c:set var="token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vamFoaWEuY29tIiwic3ViIjoiYXBpIHZlcmlmaWNhdGlvbiIsImlzcyI6ImR4Iiwic2NvcGVzIjpbImVsMiJdLCJpYXQiOjE1ODg3ODEwODMsImp0aSI6IjAwNzUzZjAwLThlYjgtNGFkMS1hMzk5LTMzMGU0N2MxZDIwZCJ9.4iQMBy_olTt-w5VuDXTocCN6IGdwEnWm71xU7dQ3MN8"/>--%>
 
 <%--<utility:logger level="INFO" value="**** MA REQUEST : ${renderContext.request.requestURL}******"/>--%>
 <%--<utility:logger level="INFO" value="**** SERVEUR : ${url.server}******"/>--%>
 <%--<utility:logger level="INFO" value="**** workspace : ${workspace}******"/>--%>
 
-<%--<c:set var="targetId" value="REACT_Quiz_${fn:replace(currentNode.identifier,'-','_')}"/>--%>
-<%--<c:set var="targetId" value="REACT_Quiz_${fn:replace(_uuid2_,'-','_')}"/>--%>
 <c:set var="targetId" value="REACT_Quiz_${fn:replace(random.nextInt(),'-','_')}"/>
 <%--<c:set var="targetId" value="REACT_Quiz_${random.nextInt(100000)}"/>--%>
 
@@ -60,7 +56,7 @@
             id:"${_uuid_}",
             language: "${language}",
         },
-        cdp_endpoint:window.digitalData?window.digitalData.contextServerPublicUrl:undefined//digitalData is set in live mode only
+        cdp_endpoint:window.digitalData?window.digitalData.contextServerPublicUrl:undefined,//digitalData is set in live mode only
     };
 
     window.addEventListener("DOMContentLoaded", (event) => {

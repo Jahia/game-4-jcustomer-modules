@@ -92,7 +92,7 @@ const reducer = (state, action) => {
             if(currentIndex  < state.max )
                 nextSlide = state.slideSet[nextIndex];
 
-            const showScore = currentIndex === state.max-1;
+            const showScore = nextIndex === state.max-1;
 
             return {
                 ...state,
@@ -100,7 +100,30 @@ const reducer = (state, action) => {
                 showNext: showNext({...state,slide:nextSlide}),
                 showResult:false,
                 showScore,
+                // score,
                 reset:false
+            };
+        }
+        case "SHOW_SCORE": {
+            console.debug("[STORE] SHOW_SCORE");
+            const [slide] = state.slideSet.slice(-1);
+
+            const goodAnswers = state.resultSet.filter(result => result).length;
+            const answers = state.resultSet.length;
+            const score = Math.floor((goodAnswers/answers)*100);
+
+            syncQuizScore({
+                quizKey:state.quiz.key,
+                split:state.jContent.score_splitPattern,
+                quizScore:score
+            });
+
+            return {
+                ...state,
+                currentSlide: slide,
+                showNext: showNext({...state, slide}),
+                showResult:false,
+                score
             };
         }
         case "SHOW_SLIDE": {
@@ -124,28 +147,6 @@ const reducer = (state, action) => {
                 resultSet: [...state.resultSet, currentResult],
                 currentResult,
                 showResult: true
-            };
-        }
-        case "SHOW_SCORE": {
-            console.debug("[STORE] SHOW_SCORE");
-            const [slide] = state.slideSet.slice(-1);
-
-            const goodAnswers = state.resultSet.filter(result => result).length;
-            const answers = state.resultSet.length;
-            const score = Math.floor((goodAnswers/answers)*100);
-
-            syncQuizScore({
-                quizKey:state.quiz.key,
-                split:state.jContent.score_splitPattern,
-                quizScore:score
-            });
-
-            return {
-                ...state,
-                currentSlide: slide,
-                showNext: showNext({...state, slide}),
-                showResult:false,
-                score
             };
         }
         case "RESET": {

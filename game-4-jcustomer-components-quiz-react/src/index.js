@@ -30,13 +30,14 @@ const render=(target,context)=>{
       headers
     })
 
-    // console.log("lesson : ",src.data.jcr.lesson);
+    // console.log("context.theme : ",context.theme);
+    // console.log("typeof context.theme : ",typeof context.theme);
     ReactDOM.render(
       <Store jContent={context}>
         <ApolloProvider client={client}>
-          <ThemeProvider theme={theme}>
+          {/*<ThemeProvider theme={theme(context.theme)}>*/}
             <App />
-          </ThemeProvider>
+          {/*</ThemeProvider>*/}
         </ApolloProvider>
       </Store>,
       document.getElementById(target)
@@ -44,7 +45,7 @@ const render=(target,context)=>{
 
   }catch(e){
     console.error("error : ",e);
-    //TODO create a generic error handler
+    //Note: create a generic error handler
     ReactDOM.render(
       <AjvError
         item={e.item}

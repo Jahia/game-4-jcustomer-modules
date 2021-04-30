@@ -17,15 +17,21 @@ export default makeStyles((theme)=> ({
         },
     },
     item:{
-        // position: 'relative',
+        //TODO manage transition
+
+        // position: 'absolute',
+        // right:'-105%',
+        // transform: 'translateX(-100%)',
+        // visibility:'hidden',
+        // opacity:0,
         display: 'none',
         minHeight:theme.geometry.item.minHeight,//'700px',
         // float: 'left',
         width: '100%',
         // marginRight: '-100%',
         backfaceVisibility: 'hidden',
-        // transition:theme.transitions.create(['transform'],{
-        //     duration: theme.transitions.duration.long,
+        // transition:theme.transitions.create(['opacity','visibility'],{
+        //     // duration: theme.transitions.duration.long,
         //     easing: theme.transitions.easing.easeInOut,
         // }),
         "& img":{
@@ -37,6 +43,10 @@ export default makeStyles((theme)=> ({
         },
         "&.active":{
             // display:'block'
+            // right:0,
+            // visibility:'visible',
+            // opacity:1,
+            // transform: 'translateX(0%)',
             display:'flex',
             flexWrap:'wrap',
             flexDirection:'column',
@@ -54,22 +64,14 @@ export default makeStyles((theme)=> ({
         }
     },
     caption:{
-        // flexBasis:'100%',
         flexGrow:2,
-        // position: 'absolute',
-        // paddingTop: `${theme.spacing(.5)}px`,
         paddingRight:theme.geometry.caption.padding,
         paddingLeft:theme.geometry.caption.padding,
         paddingBottom:theme.geometry.caption.padding,
         zIndex: 10,
         textAlign: 'center',
-        // transition:theme.transitions.create(['paddingTop'],{
-        //     duration: theme.transitions.duration.standard,
-        //     easing: theme.transitions.easing.header,
-        // }),
 
         ".showResult &": {
-            // paddingTop: `${theme.spacing(.75)}px`,
             "& button":{
                 display:'none',
             }

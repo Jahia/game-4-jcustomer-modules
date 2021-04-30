@@ -110,7 +110,7 @@ const Qna = (props) => {
     const classes = useStyles(props);
     const sharedClasses = cssSharedClasses(props);
     const { state, dispatch } = React.useContext(StoreContext);
-    const { currentSlide,jContent,reset } = state;
+    const { currentSlide,jContent,reset,showScore } = state;
     const { gql_variables,language_bundle } =  jContent;
 
     const variables = Object.assign(gql_variables,{id:props.id})
@@ -155,9 +155,15 @@ const Qna = (props) => {
 
     const handleSubmit = () => {
         if(qna.notUsedForScore){
-            dispatch({
-                case:"NEXT_SLIDE"
-            });
+            if(showScore){
+                dispatch({
+                    case:"SHOW_SCORE"
+                });
+            }else{
+                dispatch({
+                    case:"NEXT_SLIDE"
+                });
+            }
         }else{
             dispatch({
                 case:"SHOW_RESULT",

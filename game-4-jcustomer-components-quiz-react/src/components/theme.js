@@ -1,8 +1,8 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import React from "react";
-//TODO faire une fonction qui prend un params theme et
-// qui retourne le theme pour pouvoir dynamiquement charger le theme depuis jahia
-const theme = createMuiTheme({
+import _merge from "lodash.merge";
+
+const defaultTheme = {
     geometry:{
         header:{
           result:{
@@ -132,6 +132,11 @@ const theme = createMuiTheme({
             color:"primary",
         }
     }
-});
+};
 
-export default theme;
+const getTheme = (userTheme) =>{
+    const theme = createMuiTheme( _merge(defaultTheme,userTheme))
+    return theme;
+}
+
+export default getTheme;

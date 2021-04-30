@@ -60,7 +60,10 @@ export default{
                 type:"string",
                 format:"uri",
                 default:process.env.REACT_APP_JCUSTOMER_ENDPOINT //could be null in case of edit!
-            }//,
+            },
+            // theme:{
+            //     type:"object",
+            // },
             // language_bundle:{
             //     type:"object",
             //     properties:{

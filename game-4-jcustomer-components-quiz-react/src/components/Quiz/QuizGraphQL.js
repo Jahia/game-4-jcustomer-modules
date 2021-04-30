@@ -27,6 +27,9 @@ export const GET_QUIZ = gql`
                 duration: property(name:"game4:duration"){
                     value
                 }
+                userTheme: property(name:"game4:webappTheme"){
+                    value
+                }
                 media: property(language:$language,name:"wden:mediaNode",){
                     node: refNode {
                         id: uuid

@@ -11,7 +11,7 @@ import {StoreContext} from "contexts";
 import 'react-circular-progressbar/dist/styles.css';
 
 import {GET_QUIZ} from "components/Quiz/QuizGraphQL.js";
-import Header from "components/Header/Header"
+
 import Quiz from "components/Quiz"
 import Qna from "components/Qna";
 import Warmup from "components/Warmup";
@@ -20,23 +20,27 @@ import {syncTracker} from "misc/tracker";
 import {makeStyles} from "@material-ui/core/styles";
 import classnames from 'clsx';
 
+import { ThemeProvider } from '@material-ui/core/styles';
+import theme from 'components/theme';
+
 const useStyles = makeStyles(theme => ({
     main: {
         position: "relative",
-        // display:'flex',
-        // flexWrap:'wrap',
-    },
-    inner:{
-        // position: 'relative',
-        width: '100%',
-        // overflow: 'hidden',
-        // @include clearfix()
-        "&::after": {
-            display: 'block',
-            clear: 'both',
-            content: "",
+        "& *, &::after, &::before":{
+            boxSizing:"border-box",
         }
-    }
+    },
+    // inner:{
+    //     // position: 'relative',
+    //     width: '100%',
+    //     // overflow: 'hidden',
+    //     // @include clearfix()
+    //     "&::after": {
+    //         display: 'block',
+    //         clear: 'both',
+    //         content: "",
+    //     }
+    // }
 }));
 
 
@@ -117,6 +121,7 @@ const App = (props)=> {
     }
 
     return (
+        <ThemeProvider theme={theme(quiz?quiz.userTheme:{})}>
         <Grid container spacing={3}>
             <Grid item xs style={{margin:'auto'}}>
                 <div className={classnames(
@@ -126,7 +131,6 @@ const App = (props)=> {
 
                     {quiz &&
                         <>
-                    {/*<div className={classes.inner}>*/}
                         <Quiz
                             key={quiz.id}
                         />
@@ -150,12 +154,13 @@ const App = (props)=> {
                         })
                         }
                         {displayScore()}
-                    {/*</div>*/}
+
                         </>
                     }
                 </div>
             </Grid>
         </Grid>
+        </ThemeProvider>
     );
 };
 

@@ -80,7 +80,7 @@ const formatValue = value => {
                 return formattedValue;
             }
         } catch (e) {
-            console.warn('value is not an object, maybe the format used before version 1.0.2 ');
+            console.warn('value is not an object, maybe the format used is before version 1.0.2 ');
         }
     }
 
@@ -169,87 +169,6 @@ const QnAJsonCmp = ({field, id, value, onChange, classes}) => {
             </Grid>
         </Grid>
     );
-
-    // Return (
-    //     <FormControl className={classes.root} component="fieldset">
-    //         <FormLabel component="legend">Answer 1</FormLabel>
-    //         <FormGroup row aria-label="position">
-    //             <FormControlLabel
-    //                 value="start"
-    //                 control={<Checkbox color="primary"/>}
-    //                 label="is Answer"
-    //                 labelPlacement="start"
-    //             />
-    //             <InputBase
-    //                 placeholder="CDP value to store (optional)"
-    //                 // Variant="outlined"
-    //                 id={`cdp-${id}`}
-    //                 value={controlledValue.cdpValue}
-    //                 className={classes.input}
-    //             />
-    //             <InputBase
-    //                 placeholder="Answer"
-    //                 // Variant="outlined"
-    //                 id={id}
-    //                 value={controlledValue.label}
-    //                 className={classes.input}
-    //                 maxLength={maxLength}
-    //                 onChange={handleChangeLabel}
-    //             />
-    //         </FormGroup>
-    //     </FormControl>
-    // );
-
-    // Return (
-    //     <FormControl className={classes.root} component="fieldset">
-    //         <FormLabel component="legend">Answer 1</FormLabel>
-    //         <FormGroup row aria-label="position">
-    //             <FormControlLabel
-    //                 value="start"
-    //                 control={<Checkbox color="primary"/>}
-    //                 label="is Answer"
-    //                 labelPlacement="start"
-    //             />
-    //             <TextField id={`cdp-${id}`} label="CDP value to store" maxLength={maxLength} onChange={handleChangeLabel}/>
-    //             <TextField id={id} label="Answer" value={controlledValue.label}/>
-    //         </FormGroup>
-    //     </FormControl>
-    // );
-
-    // Return (
-    //     <fieldset name="toto">
-    //         <FormControlLabel
-    //             value="start"
-    //             control={<Checkbox color="primary"/>}
-    //             label="Start"
-    //             labelPlacement="start"
-    //         />
-    //
-    //         <Input
-    //             id={id}
-    //             name={id}
-    //             inputProps={{
-    //                 'aria-labelledby': `${field.name}-label`,
-    //                 'aria-required': field.mandatory,
-    //                 maxlength: maxLength && maxLength.value
-    //             }}
-    //             value={controlledValue.label}
-    //             readOnly={field.readOnly}
-    //             type="text"
-    //             onChange={handleChangeLabel}
-    //         />
-    //         <Input
-    //             fullWidth
-    //             id={`cdp-${id}`}
-    //             name={`cdp-${id}`}
-    //             value={controlledValue.cdpValue}
-    //             readOnly={field.readOnly}
-    //             type="text"
-    //             onChange={handleChangeCdpValue}
-    //         />
-    //
-    //     </fieldset>
-    // );
 };
 
 QnAJsonCmp.propTypes = {

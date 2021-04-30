@@ -6,7 +6,7 @@ import classnames from 'clsx';
 
 const useStyles = makeStyles(theme => ({
     indicator: {
-        boxSizing: 'content-box',
+        boxSizing: 'content-box !important',
         flex: '0 1 auto',
         width: theme.geometry.indicator.width,
         height: theme.geometry.indicator.height,

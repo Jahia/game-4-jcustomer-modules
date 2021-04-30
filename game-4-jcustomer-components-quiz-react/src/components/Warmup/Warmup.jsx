@@ -21,6 +21,7 @@ const useStyles = makeStyles(theme => ({
         textAlign:'justify',
         maxWidth:'800px',
         margin:"auto",
+        marginTop:`${theme.spacing(3)}px`,
         marginBottom:`${theme.spacing(4)}px`
     }
 }));
