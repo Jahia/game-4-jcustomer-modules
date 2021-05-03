@@ -60,18 +60,46 @@ const Header = (props) => {
         slideSet,
         currentResult,
         showNext,
-        showScore
+        showScore,
+        transitionTimeout,
+        transitionIsEnabled
     } = state;
 
-    const handleNextSlide = () =>
-        dispatch({
-            case:"NEXT_SLIDE"
-        });
+    const handleNextSlide = () =>{
+        if(transitionIsEnabled){
+            dispatch({
+                case:"TOGGLE_TRANSITION"
+            });
+            setTimeout(()=>dispatch({
+                case:"TOGGLE_TRANSITION"
+            }),transitionTimeout);
+            setTimeout(()=>dispatch({
+                case:"NEXT_SLIDE"
+            }),transitionTimeout);
+        }else{
+            dispatch({
+                case:"NEXT_SLIDE"
+            })
+        }
+    }
 
-    const handleShowScore = () =>
-        dispatch({
-            case:"SHOW_SCORE"
-        });
+    const handleShowScore = () =>{
+        if(transitionIsEnabled){
+            dispatch({
+                case:"TOGGLE_TRANSITION"
+            });
+            setTimeout(()=>dispatch({
+                case:"TOGGLE_TRANSITION"
+            }),transitionTimeout);
+            setTimeout(()=>dispatch({
+                case:"SHOW_SCORE"
+            }),transitionTimeout);
+        }else{
+            dispatch({
+                case:"SHOW_SCORE"
+            })
+        }
+    }
 
     const getHeaderResultLabel=()=>{
         if(currentResult)

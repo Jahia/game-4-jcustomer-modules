@@ -12,15 +12,37 @@ import Header from "components/Header/Header";
 const Score = (props) => {
     const sharedClasses = cssSharedClasses(props);
     const { state,dispatch } = React.useContext(StoreContext);
-    const { quiz,currentSlide,score,scoreIndex,jContent,cxs } = state;
+    const {
+        quiz,
+        currentSlide,
+        score,
+        scoreIndex,
+        jContent,
+        cxs,
+        transitionIsEnabled,
+        transitionTimeout,
+        resetBtnIsEnabled
+    } = state;
     const { language_bundle } =  jContent;
 
     const show = currentSlide === scoreIndex;
 
     const onClick = () => {
-        dispatch({
-            case:"RESET"
-        });
+        if(transitionIsEnabled){
+            dispatch({
+                case:"TOGGLE_TRANSITION"
+            });
+            setTimeout(()=>dispatch({
+                case:"TOGGLE_TRANSITION"
+            }),transitionTimeout);
+            setTimeout(()=>dispatch({
+                case:"RESET"
+            }),transitionTimeout);
+        }else{
+            dispatch({
+                case:"RESET"
+            })
+        }
     }
     const displayResult = () => {
         if(quiz.personalizedResult.id){
@@ -29,6 +51,15 @@ const Score = (props) => {
             return <p>cxs is loading...</p>
         }
         return <Percentage score={score}/>
+    }
+
+    const getResetBtn = () => {
+        if(!resetBtnIsEnabled)
+            return;
+
+        return <Button onClick={onClick}>
+            {language_bundle && language_bundle.btnReset}
+        </Button>
     }
 
     return(
@@ -59,9 +90,7 @@ const Score = (props) => {
 
                 {displayResult()}
 
-                <Button onClick={onClick}>
-                    {language_bundle && language_bundle.btnReset}
-                </Button>
+                {getResetBtn()}
             </div>
         </div>
     );

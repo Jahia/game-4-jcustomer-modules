@@ -22,6 +22,7 @@ import classnames from 'clsx';
 
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from 'components/theme';
+import Transition from "components/Transition";
 
 const useStyles = makeStyles(theme => ({
     main: {
@@ -75,7 +76,7 @@ const App = (props)=> {
         showResult,
         showScore
     } = state;
-
+console.log("state : ",state);
     const {loading, error, data} = useQuery(GET_QUIZ, {
         variables:jContent.gql_variables,
     });
@@ -124,11 +125,12 @@ const App = (props)=> {
         <ThemeProvider theme={theme(quiz?quiz.userTheme:{})}>
         <Grid container spacing={3}>
             <Grid item xs style={{margin:'auto'}}>
+
                 <div className={classnames(
                     classes.main,
                     (showResult?'showResult':'')
                 )}>
-
+                    <Transition/>
                     {quiz &&
                         <>
                         <Quiz

@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
         borderTop: `${theme.geometry.indicator.hitAreaHeight} solid transparent`,
         borderBottom: `${theme.geometry.indicator.hitAreaHeight} solid transparent`,
         opacity: '.5',
-        transition:theme.transitions.create(['opacity'],{
+        transition:theme.transitions.create(['opacity','height'],{
             duration: theme.transitions.duration.long,
             easing: theme.transitions.easing.ease,
         }),

@@ -61,6 +61,14 @@ export default{
                 format:"uri",
                 default:process.env.REACT_APP_JCUSTOMER_ENDPOINT //could be null in case of edit!
             },
+            transition:{
+                type:"boolean",
+                default:false
+            },
+            reset:{
+                type:"boolean",
+                default:false
+            }
             // theme:{
             //     type:"object",
             // },

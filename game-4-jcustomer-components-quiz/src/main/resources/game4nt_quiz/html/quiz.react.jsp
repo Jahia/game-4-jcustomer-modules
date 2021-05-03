@@ -2,41 +2,23 @@
 <%@ taglib prefix="template" uri="http://www.jahia.org/tags/templateLib" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="jcr" uri="http://www.jahia.org/tags/jcr" %>
-<%@ taglib prefix="ui" uri="http://www.jahia.org/tags/uiComponentsLib" %>
-<%@ taglib prefix="functions" uri="http://www.jahia.org/tags/functions" %>
-<%@ taglib prefix="query" uri="http://www.jahia.org/tags/queryLib" %>
-<%@ taglib prefix="utility" uri="http://www.jahia.org/tags/utilityLib" %>
-<%@ taglib prefix="s" uri="http://www.jahia.org/tags/search" %>
 <jsp:useBean id="random" class="java.util.Random" scope="application" />
 
 <%--Add files used by the webapp--%>
 <template:addResources type="css" resources="webapp/2.6c0f60ba.chunk.css" />
 <template:addResources type="css" resources="webapp/main.3443d2d0.chunk.css" media="screen"/>
-<template:addResources type="javascript" resources="webapp/2.6932389d.chunk.js" />
-<template:addResources type="javascript" resources="webapp/main.d6e3fd34.chunk.js" />
+<template:addResources type="javascript" resources="webapp/2.da382c5a.chunk.js" />
+<template:addResources type="javascript" resources="webapp/main.c81ffe29.chunk.js" />
 
-
-<%--<c:set var="_path_" value="${currentNode.path}"/>--%>
 <c:set var="_uuid_" value="${currentNode.identifier}"/>
 <c:set var="language" value="${currentResource.locale.language}"/>
-<%--<c:set var="mode" value="${renderContext.mode}"/>--%>
 <c:set var="workspace" value="${renderContext.workspace}"/>
 
 <c:set var="site" value="${renderContext.site.siteKey}"/>
 <c:set var="host" value="${url.server}"/>
 
-<%--<c:set var="theme" value="${currentNode.properties['game4:webappTheme'].string}"/>--%>
-<%--<c:set var="token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vamFoaWEuY29tIiwic3ViIjoiYXBpIHZlcmlmaWNhdGlvbiIsImlzcyI6ImR4Iiwic2NvcGVzIjpbImVsMiJdLCJpYXQiOjE1ODg3ODEwODMsImp0aSI6IjAwNzUzZjAwLThlYjgtNGFkMS1hMzk5LTMzMGU0N2MxZDIwZCJ9.4iQMBy_olTt-w5VuDXTocCN6IGdwEnWm71xU7dQ3MN8"/>--%>
-
-<%--<utility:logger level="INFO" value="**** MA REQUEST : ${renderContext.request.requestURL}******"/>--%>
-<%--<utility:logger level="INFO" value="**** SERVEUR : ${url.server}******"/>--%>
-<%--<utility:logger level="INFO" value="**** workspace : ${workspace}******"/>--%>
-
+<c:set var="token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vamFoaWEuY29tIiwic3ViIjoiYXBpIHZlcmlmaWNhdGlvbiIsImlzcyI6ImR4Iiwic2NvcGVzIjpbImdhbWU0UXVpeiJdLCJpYXQiOjE2MjAwMzY2MjIsImp0aSI6IjAxZjA4ODU4LTI0ODgtNDIzMy1iYWM2LTI3ZWQ0MzBhYjFjMCJ9.kgQy5hZwnDqOrGwn8afRHxlf3nMPpKUrOJZurSbc0dk"/>
 <c:set var="targetId" value="REACT_Quiz_${fn:replace(random.nextInt(),'-','_')}"/>
-<%--<c:set var="targetId" value="REACT_Quiz_${random.nextInt(100000)}"/>--%>
-
 
 <div id="${targetId}"></div>
 
@@ -48,14 +30,12 @@
         scope:"${site}",//site key
         files_endpoint:"${host}/files/${workspace}",
         gql_endpoint:"${host}/modules/graphql",
-        //Note: le mode default utilise le cookie JSESSIONID et le live utilise le token pour authentifier l'accès au scope
-        // soit je génère le token dans un filter soit j'ouvre tout au niveau  : org.jahia.modules.api.permissions-gql.cfg
-        // permission.JCRQuery.* = jcr:read
-        gql_authorization:"Basic cm9vdDpyb290",//"Bearer ${token}",
+        gql_authorization:"Bearer ${token}",
         gql_variables:{
             id:"${_uuid_}",
             language: "${language}",
         },
+        transition:true,
         cdp_endpoint:window.digitalData?window.digitalData.contextServerPublicUrl:undefined,//digitalData is set in live mode only
     };
 

@@ -10,10 +10,7 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from '@apollo/react-hooks';
 
 import {contextValidator} from "douane";
-
-import {Store} from "components/Store";
-import { ThemeProvider } from '@material-ui/core/styles';
-import theme from 'components/theme';
+import {Store} from "store";
 
 import 'index.css';
 

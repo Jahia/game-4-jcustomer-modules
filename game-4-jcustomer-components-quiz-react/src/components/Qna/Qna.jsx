@@ -110,7 +110,7 @@ const Qna = (props) => {
     const classes = useStyles(props);
     const sharedClasses = cssSharedClasses(props);
     const { state, dispatch } = React.useContext(StoreContext);
-    const { currentSlide,jContent,reset,showScore } = state;
+    const { currentSlide,jContent,reset,showScore,transitionTimeout,transitionIsEnabled } = state;
     const { gql_variables,language_bundle } =  jContent;
 
     const variables = Object.assign(gql_variables,{id:props.id})
@@ -155,14 +155,34 @@ const Qna = (props) => {
 
     const handleSubmit = () => {
         if(qna.notUsedForScore){
+            if(transitionIsEnabled){
+                dispatch({
+                    case: "TOGGLE_TRANSITION"
+                });
+                setTimeout(() => dispatch({
+                    case: "TOGGLE_TRANSITION"
+                }), 1000);
+            }
             if(showScore){
-                dispatch({
-                    case:"SHOW_SCORE"
-                });
+                if(transitionIsEnabled){
+                    setTimeout(()=>dispatch({
+                        case:"SHOW_SCORE"
+                    }),transitionTimeout);
+                }else{
+                    dispatch({
+                        case:"SHOW_SCORE"
+                    });
+                }
             }else{
-                dispatch({
-                    case:"NEXT_SLIDE"
-                });
+                if(transitionIsEnabled){
+                    setTimeout(()=>dispatch({
+                        case:"NEXT_SLIDE"
+                    }),transitionTimeout);
+                }else{
+                    dispatch({
+                        case:"NEXT_SLIDE"
+                    });
+                }
             }
         }else{
             dispatch({

@@ -6,6 +6,7 @@ import {syncQuizScore} from "misc/tracker";
 import QuizMapper from "components/Quiz/QuizModel";
 
 const init = jContent => {
+    // console.log("jContent.transition : ",jContent.transition);
     return {
         jContent,
         quiz: null,//{consents:[],childNodes:[]},
@@ -20,6 +21,11 @@ const init = jContent => {
         score:0,
         cxs:null,
         reset:false,
+        resetBtnIsEnabled:jContent.reset,
+        transitionActive:false,
+        transitionIsEnabled:jContent.transition,
+        transitionTimeout:1000,
+        transitionRow : [...Array(5)],
         scoreIndex:getRandomString(5,"#aA")
     }
 }
@@ -101,7 +107,7 @@ const reducer = (state, action) => {
                 showResult:false,
                 showScore,
                 // score,
-                reset:false
+                reset:false,
             };
         }
         case "SHOW_SCORE": {
@@ -162,6 +168,13 @@ const reducer = (state, action) => {
                 showScore:false,
                 currentResult:false,
                 reset:true
+            }
+        }
+        case "TOGGLE_TRANSITION": {
+            console.debug("[STORE] TOGGLE_TRANSITION");
+            return {
+                ...state,
+                transitionActive:!state.transitionActive
             }
         }
         default:

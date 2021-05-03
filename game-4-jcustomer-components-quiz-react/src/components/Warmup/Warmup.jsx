@@ -30,7 +30,7 @@ const Warmup = (props) => {
     const classes = useStyles(props);
     const sharedClasses = cssSharedClasses(props);
     const { state, dispatch } = React.useContext(StoreContext);
-    const { currentSlide,jContent} = state;
+    const { currentSlide,jContent,transitionTimeout,transitionIsEnabled} = state;
     const { gql_variables,cnd_type,language_bundle } =  jContent;
 
     const variables = Object.assign(gql_variables,{id:props.id})
@@ -62,10 +62,26 @@ const Warmup = (props) => {
     console.debug("*** paint warmup : ",warmup.title);
 
     const show = currentSlide === props.id;
-    const handleCLick = () =>
-        dispatch({
-            case:"NEXT_SLIDE"
-        });
+    const handleCLick = () =>{
+        if(transitionIsEnabled){
+            dispatch({
+                case:"TOGGLE_TRANSITION"
+            });
+            setTimeout(()=>dispatch({
+                case:"TOGGLE_TRANSITION"
+            }),transitionTimeout);
+            setTimeout(()=>dispatch({
+                case:"NEXT_SLIDE"
+            }),transitionTimeout);
+        }else{
+            dispatch({
+                case:"NEXT_SLIDE"
+            })
+        }
+    }
+        // dispatch({
+        //     case:"NEXT_SLIDE"
+        // });
 
     return(
         <>

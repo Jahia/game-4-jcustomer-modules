@@ -159,7 +159,7 @@ const Quiz = (props) => {
     const sharedClasses = cssSharedClasses(props);
     const { state, dispatch } = React.useContext(StoreContext);
 
-    const {quiz,showNext,currentSlide,jContent,cxs} = state;
+    const {quiz,showNext,currentSlide,jContent,cxs,transitionIsEnabled,transitionTimeout} = state;
     const {consent_status,scope,gql_variables,language_bundle} = jContent;
 
     const [quizState, quizDispatch] = React.useReducer(
@@ -188,9 +188,23 @@ const Quiz = (props) => {
             });
         })
 
-        dispatch({
-            case:"NEXT_SLIDE"
-        });
+        if(transitionIsEnabled){
+            dispatch({
+                case:"TOGGLE_TRANSITION"
+            });
+            setTimeout(()=>dispatch({
+                case:"TOGGLE_TRANSITION"
+            }),transitionTimeout);
+            setTimeout(()=>dispatch({
+                case:"NEXT_SLIDE"
+            }),transitionTimeout);
+        }else{
+            dispatch({
+                case:"NEXT_SLIDE"
+            })
+        }
+
+
     };
     return(
         <div className={classnames(
