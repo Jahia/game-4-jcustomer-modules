@@ -37,7 +37,13 @@
  - game4:correctAnswer (string) = resourceBundle('label.game4_correctAnswer') autocreated internationalized mandatory indexed=no
  - game4:wrongAnswer (string) = resourceBundle('label.game4_wrongAnswer') autocreated internationalized mandatory indexed=no
 
-[game4nt:quiz] > jnt:content, game4mix:components, game4mix:showInTree, game4mix:usesConsents, wdenmix:mediaReference, game4mix:usesCustomTheme, mix:title, game4mix:quizStaticLabels orderable
+[game4mix:quizConfiguration] mixin
+ - game4:transition (boolean) = false autocreated mandatory indexed=no
+ - game4:transitionLabel (string) indexed=no
+ - game4:reset (boolean) = false autocreated mandatory indexed=no
+ - game4:browsing (boolean) = false autocreated mandatory indexed=no
+
+[game4nt:quiz] > jnt:content, game4mix:components, game4mix:showInTree, game4mix:usesConsents, wdenmix:mediaReference,game4mix:quizConfiguration, game4mix:usesCustomTheme, mix:title, game4mix:quizStaticLabels orderable
  - game4:quizKey (string) primary mandatory
  - game4:subtitle (string) internationalized
  - game4:description (string, richtext[ckeditor.customConfig='$context/modules/game-4-jcustomer-components-quiz/javascript/ckeditor/config/small.js']) internationalized

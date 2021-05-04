@@ -76,7 +76,7 @@ const App = (props)=> {
         showResult,
         showScore
     } = state;
-console.log("state : ",state);
+
     const {loading, error, data} = useQuery(GET_QUIZ, {
         variables:jContent.gql_variables,
     });

@@ -34,7 +34,6 @@
       // host,
       // workspace:"default",
       scope:"myFashionBlog",//site key
-      allow_indicator_browsing:true,
       // files_endpoint:`${host}/files/${workspace}`,
       // gql_endpoint:`${host}/modules/graphql`,
       gql_authorization:"Basic cm9vdDpyb290",//`Bearer ${token}`,
@@ -42,13 +41,17 @@
         // workspace:"default",
         // id:"f3fb9760-d16a-48c3-9e98-fc0be023d5e6",
         id:"788364b8-cccf-4d57-87f7-1b0de5d58448",
-        // id:"673c4c8a-ed86-4e78-b49f-ef1a9c4bab6f",
+        // id:"af1a2236-7c00-4707-ab46-c126c8e2c7b8",
         language: "en",
         // language: "fr",
       },
-      transition:true,
-      reset:true,
       // cdp_endpoint:"http://localhost:8181"
+
+      //properties below was moved to graphQL call
+      // transition:true,
+      // reset:true,
+      // allow_indicator_browsing:true,
+
     };
 
     window.addEventListener("DOMContentLoaded", (event) => window.quizUIApp("root",context));

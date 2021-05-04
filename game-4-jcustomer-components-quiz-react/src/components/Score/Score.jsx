@@ -71,8 +71,8 @@ const Score = (props) => {
             <Header/>
             {quiz.media &&
             <Media id={quiz.media.id}
-                   type={quiz.media.type.value}
-                   mixins={quiz.media.mixins.map(mixin=>mixin.value)}
+                   type={quiz.media.type?quiz.media.type.value:null}
+                   mixins={quiz.media.mixins?quiz.media.mixins.map(mixin=>mixin.value):[]}
                    path={quiz.media.path}
                    alt={quiz.title}
             />

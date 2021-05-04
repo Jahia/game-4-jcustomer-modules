@@ -15,6 +15,7 @@ import {makeStyles} from "@material-ui/core/styles";
 import {Typography, Button} from "@material-ui/core";
 import DOMPurify from "dompurify";
 import Header from "components/Header/Header";
+import {manageTransition} from "misc/utils";
 
 const useStyles = makeStyles(theme => ({
     contentGroup:{
@@ -62,23 +63,30 @@ const Warmup = (props) => {
     console.debug("*** paint warmup : ",warmup.title);
 
     const show = currentSlide === props.id;
-    const handleCLick = () =>{
-        if(transitionIsEnabled){
-            dispatch({
-                case:"TOGGLE_TRANSITION"
-            });
-            setTimeout(()=>dispatch({
-                case:"TOGGLE_TRANSITION"
-            }),transitionTimeout);
-            setTimeout(()=>dispatch({
+    const handleCLick = () =>
+        manageTransition({
+            state,
+            dispatch,
+            payload:{
                 case:"NEXT_SLIDE"
-            }),transitionTimeout);
-        }else{
-            dispatch({
-                case:"NEXT_SLIDE"
-            })
-        }
-    }
+            }
+        });
+        // if(transitionIsEnabled){
+        //     dispatch({
+        //         case:"TOGGLE_TRANSITION"
+        //     });
+        //     setTimeout(()=>dispatch({
+        //         case:"TOGGLE_TRANSITION"
+        //     }),transitionTimeout);
+        //     setTimeout(()=>dispatch({
+        //         case:"NEXT_SLIDE"
+        //     }),transitionTimeout);
+        // }else{
+        //     dispatch({
+        //         case:"NEXT_SLIDE"
+        //     })
+        // }
+
         // dispatch({
         //     case:"NEXT_SLIDE"
         // });
@@ -93,8 +101,8 @@ const Warmup = (props) => {
                 <Header/>
                 {warmup.media &&
                     <Media id={warmup.media.id}
-                           type={warmup.media.type.value}
-                           mixins={warmup.media.mixins.map(mixin=>mixin.value)}
+                           type={warmup.media.type?warmup.media.type.value:null}
+                           mixins={warmup.media.mixins?warmup.media.mixins.map(mixin=>mixin.value):[]}
                            path={warmup.media.path}
                            alt={warmup.title}
                     />

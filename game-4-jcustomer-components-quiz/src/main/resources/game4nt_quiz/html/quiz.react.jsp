@@ -7,8 +7,8 @@
 <%--Add files used by the webapp--%>
 <template:addResources type="css" resources="webapp/2.6c0f60ba.chunk.css" />
 <template:addResources type="css" resources="webapp/main.3443d2d0.chunk.css" media="screen"/>
-<template:addResources type="javascript" resources="webapp/2.da382c5a.chunk.js" />
-<template:addResources type="javascript" resources="webapp/main.c81ffe29.chunk.js" />
+<template:addResources type="javascript" resources="webapp/2.8898124e.chunk.js" />
+<template:addResources type="javascript" resources="webapp/main.4c8d1ebe.chunk.js" />
 
 <c:set var="_uuid_" value="${currentNode.identifier}"/>
 <c:set var="language" value="${currentResource.locale.language}"/>
@@ -20,13 +20,17 @@
 <c:set var="token" value="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJodHRwOi8vamFoaWEuY29tIiwic3ViIjoiYXBpIHZlcmlmaWNhdGlvbiIsImlzcyI6ImR4Iiwic2NvcGVzIjpbImdhbWU0UXVpeiJdLCJpYXQiOjE2MjAwMzY2MjIsImp0aSI6IjAxZjA4ODU4LTI0ODgtNDIzMy1iYWM2LTI3ZWQ0MzBhYjFjMCJ9.kgQy5hZwnDqOrGwn8afRHxlf3nMPpKUrOJZurSbc0dk"/>
 <c:set var="targetId" value="REACT_Quiz_${fn:replace(random.nextInt(),'-','_')}"/>
 
+<%--<c:set var="transition" value="${currentNode.properties['game4:transition'].string}"/>--%>
+<%--<c:set var="transitionLabel" value="${currentNode.properties['game4:transitionLabel'].string}"/>--%>
+<%--<c:set var="reset" value="${currentNode.properties['game4:reset'].string}"/>--%>
+<%--<c:set var="browsing" value="${currentNode.properties['game4:browsing'].string}"/>--%>
+
 <div id="${targetId}"></div>
 
 <script>
     const quiz_context_${targetId}={
         host:"${host}",
         workspace:"${workspace}",
-        // allow_indicator_browsing:true,
         scope:"${site}",//site key
         files_endpoint:"${host}/files/${workspace}",
         gql_endpoint:"${host}/modules/graphql",
@@ -35,7 +39,10 @@
             id:"${_uuid_}",
             language: "${language}",
         },
-        transition:true,
+        <%--transition:${transition},--%>
+        <%--transitionLabel:${transitionLabel},--%>
+        <%--reset:${reset},--%>
+        <%--allow_indicator_browsing:${browsing},--%>
         cdp_endpoint:window.digitalData?window.digitalData.contextServerPublicUrl:undefined,//digitalData is set in live mode only
     };
 

@@ -25,7 +25,8 @@ const Transition = (props) => {
     const { state } = React.useContext(StoreContext);
     const {
         transitionActive,
-        transitionRow
+        transitionRow,
+        transitionLabel
     } = state;
 
     const useStyles = makeStyles(theme => ({
@@ -60,6 +61,9 @@ const Transition = (props) => {
                 // transition: 'opacity .5s 1.4s ease',
             },
         },
+        text:{
+            textTransform:'uppercase'
+        },
         tile: {
             position: 'absolute',
             left: 0,
@@ -82,9 +86,9 @@ const Transition = (props) => {
             (transitionActive?'active':'')
         )}>
             <div className={classes.icon}>
-                <Typography variant="h4">
+                <Typography variant="h4" className={classes.text}>
                     {/*<PowerSettingsNewIcon/>*/}
-                    JAHIA
+                    {transitionLabel}
                 </Typography>
             {/*    <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg"*/}
             {/*         xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px"*/}
@@ -97,7 +101,7 @@ const Transition = (props) => {
             {/*                          to="360 20 20" dur="0.5s" repeatCount="indefinite"></animateTransform>*/}
             {/*    </svg>*/}
             </div>
-            {transitionRow.map(row=><div className={classes.tile}></div>)}
+            {transitionRow.map((row,i)=><div key={i} className={classes.tile}></div>)}
         </div>
     )
 };

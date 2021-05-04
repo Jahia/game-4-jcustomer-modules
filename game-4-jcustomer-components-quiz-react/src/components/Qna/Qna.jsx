@@ -17,6 +17,7 @@ import classnames from "clsx";
 import {FormGroup, Typography,Button} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import Header from "components/Header/Header";
+import {manageTransition} from "misc/utils";
 
 
 const useStyles = makeStyles(theme => ({
@@ -154,56 +155,71 @@ const Qna = (props) => {
     const show = currentSlide === props.id;
 
     const handleSubmit = () => {
-        if(qna.notUsedForScore){
-            if(transitionIsEnabled){
-                dispatch({
-                    case: "TOGGLE_TRANSITION"
-                });
-                setTimeout(() => dispatch({
-                    case: "TOGGLE_TRANSITION"
-                }), 1000);
-            }
-            if(showScore){
-                if(transitionIsEnabled){
-                    setTimeout(()=>dispatch({
-                        case:"SHOW_SCORE"
-                    }),transitionTimeout);
-                }else{
-                    dispatch({
-                        case:"SHOW_SCORE"
-                    });
-                }
-            }else{
-                if(transitionIsEnabled){
-                    setTimeout(()=>dispatch({
-                        case:"NEXT_SLIDE"
-                    }),transitionTimeout);
-                }else{
-                    dispatch({
-                        case:"NEXT_SLIDE"
-                    });
-                }
-            }
-        }else{
-            dispatch({
-                case:"SHOW_RESULT",
-                payload:{
-                    result: qna.answers
-                            .filter(answer => answer.isAnswer)
-                            .reduce( (test,answer) => test && answer.checked,true)
-                }
-            });
-        }
-        // dispatch({
-        //     case:"SHOW_RESULT",
-        //     payload:{
-        //         result:qna.notUsedForScore ?
-        //                 true :
-        //                 qna.answers
+
+
+        // if(qna.notUsedForScore){
+        //     // if(transitionIsEnabled){
+        //     //     dispatch({
+        //     //         case: "TOGGLE_TRANSITION"
+        //     //     });
+        //     //     setTimeout(() => dispatch({
+        //     //         case: "TOGGLE_TRANSITION"
+        //     //     }), 1000);
+        //     // }
+        //     if(showScore){
+        //         manageTransition({
+        //             state,
+        //             dispatch,
+        //             payload:{
+        //                 case:"SHOW_SCORE"
+        //             }
+        //         });
+        //         // if(transitionIsEnabled){
+        //         //     setTimeout(()=>dispatch({
+        //         //         case:"SHOW_SCORE"
+        //         //     }),transitionTimeout);
+        //         // }else{
+        //         //     dispatch({
+        //         //         case:"SHOW_SCORE"
+        //         //     });
+        //         // }
+        //     }else{
+        //         manageTransition({
+        //             state,
+        //             dispatch,
+        //             payload:{
+        //                 case:"NEXT_SLIDE"
+        //             }
+        //         });
+        //         // if(transitionIsEnabled){
+        //         //     setTimeout(()=>dispatch({
+        //         //         case:"NEXT_SLIDE"
+        //         //     }),transitionTimeout);
+        //         // }else{
+        //         //     dispatch({
+        //         //         case:"NEXT_SLIDE"
+        //         //     });
+        //         // }
+        //     }
+        // }else{
+        //     dispatch({
+        //         case:"SHOW_RESULT",
+        //         payload:{
+        //             skipScore:qna.notUsedForScore,
+        //             result: qna.answers
         //                 .filter(answer => answer.isAnswer)
         //                 .reduce( (test,answer) => test && answer.checked,true)
-        //     }
-        // });
+        //         }
+        //     });
+        //     // dispatch({
+        //     //     case:"SHOW_RESULT",
+        //     //     payload:{
+        //     //         result: qna.answers
+        //     //                 .filter(answer => answer.isAnswer)
+        //     //                 .reduce( (test,answer) => test && answer.checked,true)
+        //     //     }
+        //     // });
+        // }
 
         // console.log("[handleSubmit] qna.jExpField2Map => ",qna.jExpField2Map);
         if(qna.jExpField2Map){
@@ -236,6 +252,26 @@ const Qna = (props) => {
                 propertyValue:values
             })
         }
+
+        const payload = {
+            case:"SHOW_RESULT",
+            payload:{
+                skipScore:qna.notUsedForScore,
+                result: qna.answers
+                    .filter(answer => answer.isAnswer)
+                    .reduce( (test,answer) => test && answer.checked,true)
+            }
+        }
+
+        if(qna.notUsedForScore){
+            manageTransition({
+                state,
+                dispatch,
+                payload
+            });
+        }else{
+            dispatch(payload);
+        }
     }
 
     const getAnswers = () => {
@@ -259,8 +295,8 @@ const Qna = (props) => {
 
             {qna.media &&
                 <Media id={qna.media.id}
-                       type={qna.media.type.value}
-                       mixins={qna.media.mixins.map(mixin=>mixin.value)}
+                       type={qna.media.type?qna.media.type.value:null}
+                       mixins={qna.media.mixins?qna.media.mixins.map(mixin=>mixin.value):[]}
                        path={qna.media.path}
                        alt={qna.title}
                 />

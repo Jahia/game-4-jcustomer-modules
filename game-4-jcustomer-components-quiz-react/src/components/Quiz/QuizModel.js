@@ -22,6 +22,10 @@ export default function(quizData) {
         description: get(quizData, "description.value", ""),
         duration: get(quizData, "duration.value", ""),
         userTheme: getTheme(get(quizData, "userTheme.value", {})),
+        transitionIsEnabled: JSON.parse(get(quizData, "transition.value", false)),
+        transitionLabel: get(quizData, "transitionLabel.value", ""),
+        resetIsEnabled: JSON.parse(get(quizData, "reset.value", false)),
+        browsingIsEnabled: JSON.parse(get(quizData, "browsing.value", false)),
         //cover: get(quizData, "cover.node.path", ""),
         media: get(quizData, "media.node", {}),
         consents: get(quizData, "consents.nodes", []).map(node =>{

@@ -15,6 +15,7 @@ import classnames from "clsx";
 import cssSharedClasses from "components/cssSharedClasses";
 import DOMPurify from "dompurify";
 import Header from "components/Header/Header";
+import {manageTransition} from "misc/utils";
 
 const useStyles = makeStyles(theme => ({
     duration:{
@@ -188,21 +189,28 @@ const Quiz = (props) => {
             });
         })
 
-        if(transitionIsEnabled){
-            dispatch({
-                case:"TOGGLE_TRANSITION"
-            });
-            setTimeout(()=>dispatch({
-                case:"TOGGLE_TRANSITION"
-            }),transitionTimeout);
-            setTimeout(()=>dispatch({
+        manageTransition({
+            state,
+            dispatch,
+            payload:{
                 case:"NEXT_SLIDE"
-            }),transitionTimeout);
-        }else{
-            dispatch({
-                case:"NEXT_SLIDE"
-            })
-        }
+            }
+        });
+        // if(transitionIsEnabled){
+        //     dispatch({
+        //         case:"TOGGLE_TRANSITION"
+        //     });
+        //     setTimeout(()=>dispatch({
+        //         case:"TOGGLE_TRANSITION"
+        //     }),transitionTimeout);
+        //     setTimeout(()=>dispatch({
+        //         case:"NEXT_SLIDE"
+        //     }),transitionTimeout);
+        // }else{
+        //     dispatch({
+        //         case:"NEXT_SLIDE"
+        //     })
+        // }
 
 
     };
@@ -215,8 +223,8 @@ const Quiz = (props) => {
             <Header/>
             {quiz.media &&
             <Media id={quiz.media.id}
-                   type={quiz.media.type.value}
-                   mixins={quiz.media.mixins.map(mixin=>mixin.value)}
+                   type={quiz.media.type?quiz.media.type.value:null}
+                   mixins={quiz.media.mixins?quiz.media.mixins.map(mixin=>mixin.value):[]}
                    path={quiz.media.path}
                    alt={quiz.title}
             />

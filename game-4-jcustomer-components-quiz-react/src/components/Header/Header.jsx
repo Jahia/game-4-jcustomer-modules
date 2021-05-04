@@ -3,6 +3,7 @@ import {Button, Typography} from "@material-ui/core";
 import React from "react";
 import {StoreContext} from "contexts";
 import {makeStyles} from "@material-ui/core/styles";
+import {manageTransition} from "misc/utils";
 
 const useStyles = makeStyles(theme => ({
     header:{
@@ -61,45 +62,61 @@ const Header = (props) => {
         currentResult,
         showNext,
         showScore,
-        transitionTimeout,
-        transitionIsEnabled
+        // transitionTimeout,
+        // transitionIsEnabled,
+        browsingIsEnabled
     } = state;
 
-    const handleNextSlide = () =>{
-        if(transitionIsEnabled){
-            dispatch({
-                case:"TOGGLE_TRANSITION"
-            });
-            setTimeout(()=>dispatch({
-                case:"TOGGLE_TRANSITION"
-            }),transitionTimeout);
-            setTimeout(()=>dispatch({
+    const handleNextSlide = () =>
+        manageTransition({
+            state,
+            dispatch,
+            payload:{
                 case:"NEXT_SLIDE"
-            }),transitionTimeout);
-        }else{
-            dispatch({
-                case:"NEXT_SLIDE"
-            })
-        }
-    }
+            }
+        });
+    // {
+    //     if(transitionIsEnabled){
+    //         dispatch({
+    //             case:"TOGGLE_TRANSITION"
+    //         });
+    //         setTimeout(()=>dispatch({
+    //             case:"TOGGLE_TRANSITION"
+    //         }),transitionTimeout);
+    //         setTimeout(()=>dispatch({
+    //             case:"NEXT_SLIDE"
+    //         }),transitionTimeout);
+    //     }else{
+    //         dispatch({
+    //             case:"NEXT_SLIDE"
+    //         })
+    //     }
+    // }
 
-    const handleShowScore = () =>{
-        if(transitionIsEnabled){
-            dispatch({
-                case:"TOGGLE_TRANSITION"
-            });
-            setTimeout(()=>dispatch({
-                case:"TOGGLE_TRANSITION"
-            }),transitionTimeout);
-            setTimeout(()=>dispatch({
+    const handleShowScore = () =>
+        manageTransition({
+            state,
+            dispatch,
+            payload:{
                 case:"SHOW_SCORE"
-            }),transitionTimeout);
-        }else{
-            dispatch({
-                case:"SHOW_SCORE"
-            })
-        }
-    }
+            }
+        });
+        // if(transitionIsEnabled){
+        //     dispatch({
+        //         case:"TOGGLE_TRANSITION"
+        //     });
+        //     setTimeout(()=>dispatch({
+        //         case:"TOGGLE_TRANSITION"
+        //     }),transitionTimeout);
+        //     setTimeout(()=>dispatch({
+        //         case:"SHOW_SCORE"
+        //     }),transitionTimeout);
+        // }else{
+        //     dispatch({
+        //         case:"SHOW_SCORE"
+        //     })
+        // }
+
 
     const getHeaderResultLabel=()=>{
         if(currentResult)
@@ -126,7 +143,7 @@ const Header = (props) => {
                     <Indicator
                         key={itemId}
                         id={itemId}
-                        enabled={jContent.allow_indicator_browsing}
+                        enabled={browsingIsEnabled}
                     />
                 )}
             </ol>
