@@ -11,7 +11,7 @@ const Media = ({id,type,mixins,path,sourceID,alt}) => {
     const {cnd_type,files_endpoint} = state.jContent;
 
     // console.log("Media equals: ",type === cnd_type.WIDEN_IMAGE)
-    let component;
+    let component = <></>;
     switch(type){
         case cnd_type.WIDEN_IMAGE :
             component = <WidenImage uuid={id} />
@@ -34,7 +34,8 @@ const Media = ({id,type,mixins,path,sourceID,alt}) => {
             break;
             
         default:
-            component = <Image path={path} alt={alt}/>
+            if(path)
+                component = <Image path={path} alt={alt}/>
             break;
     }
     // console.log("Media component: ",component)
@@ -43,8 +44,8 @@ const Media = ({id,type,mixins,path,sourceID,alt}) => {
 
 Media.propTypes={
     id:PropTypes.string,
-    type:PropTypes.string.isRequired,
-    mixins:PropTypes.array.isRequired,
+    type:PropTypes.string,
+    mixins:PropTypes.array,
     path:PropTypes.string,
     sourceID:PropTypes.string,
     alt:PropTypes.string

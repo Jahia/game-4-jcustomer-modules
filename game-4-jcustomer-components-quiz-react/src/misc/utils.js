@@ -42,8 +42,28 @@ function getGQLWorkspace(workspace){
         workspace.toUpperCase()
 }
 
+function manageTransition({state,dispatch,payload}){
+    const {
+        transitionIsEnabled,
+        transitionTimeout
+    }=state;
+
+    if(transitionIsEnabled){
+        dispatch({
+            case:"TOGGLE_TRANSITION"
+        });
+        setTimeout(()=>dispatch({
+            case:"TOGGLE_TRANSITION"
+        }),transitionTimeout);
+        setTimeout(()=>dispatch(payload),transitionTimeout);
+    }else{
+        dispatch(payload)
+    }
+}
+
 export {
     getProperties,
     getRandomString,
-    getGQLWorkspace
+    getGQLWorkspace,
+    manageTransition
 }

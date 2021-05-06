@@ -24,10 +24,6 @@ export default{
                 format:"uri",
                 default:process.env.REACT_APP_JCONTENT_HOST || "http://localhost:8080"
             },
-            allow_indicator_browsing:{
-                type:"boolean",
-                default:false
-            },
             workspace:{
                 type:"string",
                 enum:workspace,
@@ -60,7 +56,22 @@ export default{
                 type:"string",
                 format:"uri",
                 default:process.env.REACT_APP_JCUSTOMER_ENDPOINT //could be null in case of edit!
-            }//,
+            },
+            // transition:{
+            //     type:"boolean",
+            //     default:false
+            // },
+            // reset:{
+            //     type:"boolean",
+            //     default:false
+            // },
+            // allow_indicator_browsing:{
+            //     type:"boolean",
+            //     default:false
+            // },
+            // theme:{
+            //     type:"object",
+            // },
             // language_bundle:{
             //     type:"object",
             //     properties:{
@@ -88,7 +99,7 @@ export default{
         },
         required: [
             "host",
-            "allow_indicator_browsing",
+            // "allow_indicator_browsing",
             "workspace",
             "scope",
             "files_endpoint",

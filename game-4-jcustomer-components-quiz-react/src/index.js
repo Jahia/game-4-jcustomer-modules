@@ -10,8 +10,7 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from '@apollo/react-hooks';
 
 import {contextValidator} from "douane";
-
-import {Store} from "components/Store";
+import {Store} from "store";
 
 import 'index.css';
 
@@ -28,11 +27,17 @@ const render=(target,context)=>{
       headers
     })
 
-    // console.log("lesson : ",src.data.jcr.lesson);
+    // console.log("context.theme : ",context.theme);
+    // console.log("typeof context.theme : ",typeof context.theme);
     ReactDOM.render(
       <Store jContent={context}>
         <ApolloProvider client={client}>
-          <App />
+          {/*<ThemeProvider theme={theme(context.theme)}>*/}
+          <div style={{overflow:'hidden'}}>
+            <App />
+          </div>
+
+          {/*</ThemeProvider>*/}
         </ApolloProvider>
       </Store>,
       document.getElementById(target)
@@ -40,7 +45,7 @@ const render=(target,context)=>{
 
   }catch(e){
     console.error("error : ",e);
-    //TODO create a generic error handler
+    //Note: create a generic error handler
     ReactDOM.render(
       <AjvError
         item={e.item}

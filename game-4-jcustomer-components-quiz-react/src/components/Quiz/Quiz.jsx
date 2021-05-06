@@ -1,15 +1,57 @@
 import React from 'react';
 // import PropTypes from "prop-types";
-import {Button} from "react-bootstrap";
+
+import {Button,Typography} from "@material-ui/core";
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import {makeStyles} from "@material-ui/core/styles";
 
 import {StoreContext} from "contexts";
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Consent from "components/Consent";
 import get from "lodash.get";
 
 import {syncConsentStatus} from "misc/tracker";
 import Media from '../Media'
+import classnames from "clsx";
+import cssSharedClasses from "components/cssSharedClasses";
+import DOMPurify from "dompurify";
+import Header from "components/Header/Header";
+import {manageTransition} from "misc/utils";
+
+const useStyles = makeStyles(theme => ({
+    duration:{
+        display: 'flex',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        '& svg': {
+            marginRight: '3px',
+        },
+        marginTop:`${theme.spacing(3)}px`,
+    },
+    description:{
+        // textAlign: 'left',
+        maxWidth:'500px',
+        margin:`${theme.spacing(4)}px auto`,
+
+    },
+    consent:{
+        width:'100%',
+        paddingRight:`${theme.spacing(4)}px`,
+        paddingLeft:`${theme.spacing(4)}px`,
+        zIndex: 10,
+        "& ul":{
+            listStyle: 'none',
+            padding:0,
+        },
+        "& li":{
+            marginBottom: '.5rem'
+        }
+    },
+    consentTitle:{
+        textTransform:'capitalize',
+        textDecoration:'underline'
+    }
+}));
 
 const init = variables =>{
     return {
@@ -17,6 +59,7 @@ const init = variables =>{
         consents:[]//list of consent
     }
 }
+
 
 const computeEnableStartBtn = (state) => {
     const {showNext,workspace,consents} = state;
@@ -107,9 +150,11 @@ function reducer(state, action) {
 }
 
 const Quiz = (props) => {
+    const classes = useStyles(props);
+    const sharedClasses = cssSharedClasses(props);
     const { state, dispatch } = React.useContext(StoreContext);
 
-    const {quiz,showNext,currentSlide,jContent,cxs} = state;
+    const {quiz,showNext,currentSlide,jContent,cxs,transitionIsEnabled,transitionTimeout} = state;
     const {consent_status,scope,gql_variables,language_bundle} = jContent;
 
     const [quizState, quizDispatch] = React.useReducer(
@@ -138,44 +183,68 @@ const Quiz = (props) => {
             });
         })
 
-        dispatch({
-            case:"NEXT_SLIDE"
+        manageTransition({
+            state,
+            dispatch,
+            payload:{
+                case:"NEXT_SLIDE"
+            }
         });
-    };
 
+    };
     return(
-        <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
+        <div className={classnames(
+            sharedClasses.item,
+            sharedClasses.showOverlay,
+            (show ? 'active':'')
+        )}>
+            <Header/>
             {quiz.media &&
-                <Media id={quiz.media.id}
-                       type={quiz.media.type.value}
-                       mixins={quiz.media.mixins.map(mixin=>mixin.value)}
-                       path={quiz.media.path}
-                       alt={quiz.title}
-                />
+            <Media id={quiz.media.id}
+                   type={quiz.media.type?quiz.media.type.value:null}
+                   mixins={quiz.media.mixins?quiz.media.mixins.map(mixin=>mixin.value):[]}
+                   path={quiz.media.path}
+                   alt={quiz.title}
+            />
             }
 
-            <div className="game4-quiz__caption">
-                <h2 className="text-uppercase">{quiz.title}
-                    <span className="subtitle">{quiz.subtitle}</span>
-                </h2>
 
-                <div className={"duration"}>
-                    <FontAwesomeIcon icon={['far','clock']} />
+            <div className={classnames(
+                sharedClasses.caption,
+                sharedClasses.captionMain
+            )}>
+                <Typography className={sharedClasses.textUppercase}
+                            variant="h3">
+                    {quiz.title}
+                </Typography>
+                <Typography className={sharedClasses.subtitle}
+                            color="primary"
+                            variant="h4">
+                    {quiz.subtitle}
+                </Typography>
+
+                <Typography component="div"
+                            className={classes.duration}>
+                    <AccessTimeIcon />
                     {quiz.duration}
-                </div>
+                </Typography>
 
-                <div className="lead" dangerouslySetInnerHTML={{__html:quiz.description}}></div>
+                <Typography component="div"
+                            className={classes.description}
+                            dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(quiz.description, { ADD_ATTR: ['target'] })}}/>
 
-                <Button variant="game4-quiz"
-                        onClick={onClick}
+                <Button onClick={onClick}
                         disabled={!quizState.enableStartBtn}>
                     {language_bundle && language_bundle.btnStart}
                 </Button>
             </div>
             {
                 quiz.consents.length > 0 && cxs &&
-                <div className="game4-quiz__consent">
-                    <h5>{language_bundle && language_bundle.consentTitle}</h5>
+                <div className={classes.consent}>
+                    <Typography className={classes.consentTitle}
+                                variant="h5">
+                        {language_bundle && language_bundle.consentTitle}
+                    </Typography>
                     <ul>
                         {
                             quiz.consents.map( consent =>{
@@ -194,6 +263,75 @@ const Quiz = (props) => {
             }
         </div>
     );
+
+
+    // return(
+    //     <div className={classnames(
+    //         sharedClasses.item,
+    //         sharedClasses.showOverlay,
+    //         (show ? 'active':'')
+    //     )}>
+    //         {quiz.media &&
+    //         <Media id={quiz.media.id}
+    //                type={quiz.media.type.value}
+    //                mixins={quiz.media.mixins.map(mixin=>mixin.value)}
+    //                path={quiz.media.path}
+    //                alt={quiz.title}
+    //         />
+    //         }
+    //
+    //         <div className={sharedClasses.caption}>
+    //             <Typography className={sharedClasses.textUppercase}
+    //                         variant="h3">
+    //                 {quiz.title}
+    //             </Typography>
+    //             <Typography className={sharedClasses.subtitle}
+    //                         color="primary"
+    //                         variant="h4">
+    //                 {quiz.subtitle}
+    //             </Typography>
+    //
+    //             <Typography component="div"
+    //                         className={classes.duration}>
+    //                 <AccessTimeIcon />
+    //                 {quiz.duration}
+    //             </Typography>
+    //
+    //             <Typography component="div"
+    //                         className={classes.description}
+    //                         dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(quiz.description, { ADD_ATTR: ['target'] })}}/>
+    //
+    //             <Button onClick={onClick}
+    //                     disabled={!quizState.enableStartBtn}>
+    //                 {language_bundle && language_bundle.btnStart}
+    //             </Button>
+    //         </div>
+    //         {
+    //             quiz.consents.length > 0 && cxs &&
+    //             <div className={classes.consent}>
+    //                 <Typography className={classes.consentTitle}
+    //                             variant="h5">
+    //                     {language_bundle && language_bundle.consentTitle}
+    //                 </Typography>
+    //                 <ul>
+    //                     {
+    //                         quiz.consents.map( consent =>{
+    //                             if(consent.actived)
+    //                                 return <Consent
+    //                                     key={consent.id}
+    //                                     id={consent.id}
+    //                                     quizState={quizState}
+    //                                     quizDispatch={quizDispatch}
+    //                                 />
+    //                             return <></>
+    //                         })
+    //                     }
+    //                 </ul>
+    //             </div>
+    //         }
+    //     </div>
+    // );
+
 }
 
 // Quiz.propTypes={}

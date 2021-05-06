@@ -6,6 +6,7 @@ import {syncQuizScore} from "misc/tracker";
 import QuizMapper from "components/Quiz/QuizModel";
 
 const init = jContent => {
+    // console.log("jContent.transition : ",jContent.transition);
     return {
         jContent,
         quiz: null,//{consents:[],childNodes:[]},
@@ -20,6 +21,13 @@ const init = jContent => {
         score:0,
         cxs:null,
         reset:false,
+        resetBtnIsEnabled:false,//jContent.reset,
+        transitionActive:false,
+        transitionIsEnabled:false,//jContent.transition,
+        transitionLabel:"jahia",
+        transitionTimeout:1000,
+        transitionRow : [...Array(5)],
+        browsingIsEnabled:false,
         scoreIndex:getRandomString(5,"#aA")
     }
 }
@@ -29,6 +37,20 @@ const reducer = (state, action) => {
 
     const showNext = ({slideSet,max,slide}) =>
         slideSet.indexOf(slide) < max;
+
+    const getScore = ({resultSet,quizKey,split}) =>{
+        const goodAnswers = resultSet.filter(result => result).length;
+        const answers = resultSet.length;
+        const score = Math.floor((goodAnswers/answers)*100);
+
+        syncQuizScore({
+            quizKey,//:state.quiz.key,
+            split,//:state.jContent.score_splitPattern,
+            quizScore:score
+        });
+
+        return score;
+    }
 
     switch (action.case) {
         case "DATA_READY": {
@@ -47,6 +69,10 @@ const reducer = (state, action) => {
                 ...state,
                 quiz,
                 currentSlide:quiz.id,
+                transitionIsEnabled:quiz.transitionIsEnabled,
+                transitionLabel:quiz.transitionLabel,
+                resetBtnIsEnabled:quiz.resetIsEnabled,
+                browsingIsEnabled:quiz.browsingIsEnabled,
                 slideSet,
                 showNext:showNext({slideSet,max,slide:quiz.id}),
                 max
@@ -92,15 +118,44 @@ const reducer = (state, action) => {
             if(currentIndex  < state.max )
                 nextSlide = state.slideSet[nextIndex];
 
-            const showScore = currentIndex === state.max-1;
+            // const showScore = nextIndex === state.max-1;
 
             return {
                 ...state,
                 currentSlide:nextSlide,
                 showNext: showNext({...state,slide:nextSlide}),
                 showResult:false,
-                showScore,
-                reset:false
+                // showScore,
+                // score,
+                reset:false,
+            };
+        }
+        case "SHOW_SCORE": {
+            console.debug("[STORE] SHOW_SCORE");
+            const [slide] = state.slideSet.slice(-1);
+
+            const score = getScore({
+                resultSet:state.resultSet,
+                quizKey:state.quiz.key,
+                split:state.jContent.score_splitPattern
+            });
+
+            // const goodAnswers = state.resultSet.filter(result => result).length;
+            // const answers = state.resultSet.length;
+            // const score = Math.floor((goodAnswers/answers)*100);
+            //
+            // syncQuizScore({
+            //     quizKey:state.quiz.key,
+            //     split:state.jContent.score_splitPattern,
+            //     quizScore:score
+            // });
+
+            return {
+                ...state,
+                currentSlide: slide,
+                showNext: showNext({...state, slide}),
+                showResult:false,
+                score
             };
         }
         case "SHOW_SLIDE": {
@@ -113,41 +168,54 @@ const reducer = (state, action) => {
             };
         }
         case "SHOW_RESULT": {
-            const currentResult = payload.result;
+            const {result:currentResult,skipScore} = payload;
             const currentIndex = state.slideSet.indexOf(state.currentSlide);
-            const showScore = currentIndex === state.max-1;
+            const nextIndex = currentIndex+1;
+            const showScore = nextIndex === state.max;
+
             console.debug("[STORE] SHOW_RESULT - currentResult: ", currentResult);
 
+            const resultSet = [...state.resultSet, currentResult];
+            let {score,currentSlide:nextSlide} = state;
+
+            if(skipScore) {
+                if(showScore){
+                    score = getScore({
+                        resultSet: resultSet,
+                        quizKey: state.quiz.key,
+                        split: state.jContent.score_splitPattern
+                    });
+                    [nextSlide] = state.slideSet.slice(-1);
+                }else{
+                    nextSlide=state.slideSet[nextIndex]
+                }
+            }
+
             return {
                 ...state,
+                currentSlide:nextSlide,
+                showNext: showNext({...state,slide:nextSlide}),
                 showScore,
-                resultSet: [...state.resultSet, currentResult],
+                resultSet,
                 currentResult,
-                showResult: true
+                score,
+                showResult: !skipScore
             };
         }
-        case "SHOW_SCORE": {
-            console.debug("[STORE] SHOW_SCORE");
-            const [slide] = state.slideSet.slice(-1);
-
-            const goodAnswers = state.resultSet.filter(result => result).length;
-            const answers = state.resultSet.length;
-            const score = Math.floor((goodAnswers/answers)*100);
-
-            syncQuizScore({
-                quizKey:state.quiz.key,
-                split:state.jContent.score_splitPattern,
-                quizScore:score
-            });
-
-            return {
-                ...state,
-                currentSlide: slide,
-                showNext: showNext({...state, slide}),
-                showResult:false,
-                score
-            };
-        }
+        // case "SHOW_RESULT": {
+        //     const currentResult = payload.result;
+        //     const currentIndex = state.slideSet.indexOf(state.currentSlide);
+        //     const showScore = currentIndex === state.max-1;
+        //     console.debug("[STORE] SHOW_RESULT - currentResult: ", currentResult);
+        //
+        //     return {
+        //         ...state,
+        //         showScore,
+        //         resultSet: [...state.resultSet, currentResult],
+        //         currentResult,
+        //         showResult: true
+        //     };
+        // }
         case "RESET": {
             console.debug("[STORE] RESET");
 
@@ -161,6 +229,13 @@ const reducer = (state, action) => {
                 showScore:false,
                 currentResult:false,
                 reset:true
+            }
+        }
+        case "TOGGLE_TRANSITION": {
+            console.debug("[STORE] TOGGLE_TRANSITION");
+            return {
+                ...state,
+                transitionActive:!state.transitionActive
             }
         }
         default:

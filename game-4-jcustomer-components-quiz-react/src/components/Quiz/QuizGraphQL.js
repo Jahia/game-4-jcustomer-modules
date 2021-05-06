@@ -27,6 +27,21 @@ export const GET_QUIZ = gql`
                 duration: property(name:"game4:duration"){
                     value
                 }
+                userTheme: property(name:"game4:webappTheme"){
+                    value
+                }
+                transition: property(name:"game4:transition"){
+                    value
+                }
+                transitionLabel: property(name:"game4:transitionLabel"){
+                    value
+                }
+                reset: property(name:"game4:reset"){
+                    value
+                }
+                browsing: property(name:"game4:browsing"){
+                    value
+                }
                 media: property(language:$language,name:"wden:mediaNode",){
                     node: refNode {
                         id: uuid

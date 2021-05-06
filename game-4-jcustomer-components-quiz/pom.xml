@@ -9,11 +9,11 @@
   <parent>
     <groupId>org.jahia.se.modules</groupId>
     <artifactId>game-4-jcustomer</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.3-SNAPSHOT</version>
   </parent>
   <groupId>org.jahia.se.modules</groupId>
   <artifactId>game-4-jcustomer-components-quiz</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.3-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <name>Game for jCustomer QuizChild Components Module</name>
   <description>This is the custom module (Game for jCustomer QuizChild Components Module) for running on a Jahia server.</description>

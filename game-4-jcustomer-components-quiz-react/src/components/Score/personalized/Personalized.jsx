@@ -5,8 +5,18 @@ import {useQuery} from "@apollo/react-hooks";
 import {GET_PERSONALIZED_RESULT} from "./PersonalizedGraphQL";
 import get from "lodash.get";
 import DOMPurify from "dompurify";
+import {Typography} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
 
-const Personalized = ({id,cxs}) => {
+const useStyles = makeStyles(theme => ({
+    result:{
+        marginTop: `${theme.spacing(4)}px`,
+    }
+}));
+
+const Personalized = (props) => {
+    const {id,cxs}=props;
+    const classes = useStyles(props);
     const { state } = React.useContext(StoreContext);
     const { jContent } = state;
 
@@ -36,11 +46,18 @@ const Personalized = ({id,cxs}) => {
     console.debug("*** paint personalized result : ",result.title);
 
     // console.log("Personalized props.show :",props.show);
+
     return(
-        <div className="game4-quiz__score-result col-6 offset-3 col-md-4 offset-md-4 mb-5"
-             dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(result.text, { ADD_ATTR: ['target'] })}}>
-        </div>
+        <Typography className={classes.result}
+                    component="div"
+                    dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(result.text, { ADD_ATTR: ['target'] })}}/>
     );
+
+    // return(
+    //     <div className="game4-quiz__score-result col-6 offset-3 col-md-4 offset-md-4 mb-5"
+    //          dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(result.text, { ADD_ATTR: ['target'] })}}>
+    //     </div>
+    // );
 }
 
 Personalized.propTypes={

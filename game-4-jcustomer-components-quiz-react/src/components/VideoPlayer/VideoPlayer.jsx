@@ -1,11 +1,16 @@
 import React, {useRef} from 'react';
 import PropTypes from "prop-types";
 import {StoreContext} from "contexts";
-
 import ReactPlayer from "react-player";
 import {syncVideoStatus} from "misc/tracker";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles(theme => ({
+    playerWrapper:{}
+}));
 
 const VideoPlayer = (props)=>{
+    const classes = useStyles(props);
     const {ownerID,videoURL} = props;
     const { state } = React.useContext(StoreContext);
     const {quiz} = state;
@@ -36,7 +41,7 @@ const VideoPlayer = (props)=>{
     const onPauseHandler = () => handleVideoStatus({status:"pause"});
 
     return (
-        <div className='player-wrapper'>
+        <div className={classes.playerWrapper}>
             <ReactPlayer
                 ref={player}
                 className='react-player'

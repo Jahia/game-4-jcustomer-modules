@@ -1,46 +1,21 @@
 {
   "metadata": {
-    "id": "updateVisitorData",
+    "id": "updateQuizVisitorData",
     "name": "Update Visitor Data",
     "description": "Update visitor data with Quiz response value"
   },
   "raiseEventOnlyOnceForProfile": false,
   "raiseEventOnlyOnceForSession": false,
   "condition": {
-    "type": "booleanCondition",
+    "type": "eventTypeCondition",
     "parameterValues": {
-      "subConditions": [
-        {
-          "type": "eventTypeCondition",
-          "parameterValues": {
-            "eventTypeId": "updateVisitorData"
-          }
-        },
-        {
-          "type": "eventPropertyCondition",
-          "parameterValues": {
-            "propertyName": "properties.update.propertyName",
-            "comparisonOperator": "exists"
-          }
-        },
-        {
-          "type": "eventPropertyCondition",
-          "parameterValues": {
-            "propertyName": "properties.update.propertyValue",
-            "comparisonOperator": "exists"
-          }
-        }
-      ],
-      "operator": "and"
+      "eventTypeId": "updateQuizVisitorData"
     }
   },
   "actions": [
     {
-      "type": "setPropertyAction",
+      "type": "updatePropertiesAction",
       "parameterValues": {
-        "setPropertyName": "script::event.properties.update.propertyName.startsWith(\"properties.\") ? event.properties.update.propertyName : null",
-        "setPropertyValue": "script::event.properties.update.propertyValue",
-        "setPropertyStrategy": "alwaysSet"
       }
     }
   ]

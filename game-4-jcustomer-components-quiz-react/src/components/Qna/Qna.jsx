@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {Button} from "react-bootstrap";
 
 import {useQuery} from "@apollo/react-hooks";
 import get from "lodash.get";
@@ -13,6 +12,46 @@ import Answer from "./Answer";
 import QnaMapper from "components/Qna/QnaModel";
 import {syncVisitorData} from "misc/tracker";
 import Media from "components/Media";
+import cssSharedClasses from "components/cssSharedClasses";
+import classnames from "clsx";
+import {FormGroup, Typography,Button} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+import Header from "components/Header/Header";
+import {manageTransition} from "misc/utils";
+
+
+const useStyles = makeStyles(theme => ({
+    questionGroup:{
+        textAlign:'left',
+        marginTop: `${theme.spacing(2)}px`,
+        marginBottom: `${theme.spacing(4)}px`,
+    },
+    question:{
+        marginBottom: `${theme.spacing(2)}px`,
+    },
+    formGroup: {
+        textAlign:'left',
+        "& > div::before":{
+            flexBasis:'100%',
+            content:'""',
+            height: '2px',
+            marginLeft : '50px',
+            borderTop: '2px solid rgba(255,255,255,.2)',
+        },
+        "&  > div:first-child::before":{
+            borderTop: 'none',
+        },
+        "&  > div:last-child::after":{
+            flexBasis:'100%',
+            content:'""',
+            height: '2px',
+            marginLeft : '50px',
+            borderBottom: '2px solid rgba(255,255,255,.2)',
+        },
+        marginBottom:`${theme.spacing(4)}px`
+    },
+}));
+
 
 const initialQNA = {
     enableSubmit:false,
@@ -69,8 +108,14 @@ const reducer = (qna, action) => {
 }
 
 const Qna = (props) => {
+    const classes = useStyles(props);
+    const sharedClasses = cssSharedClasses(props);
     const { state, dispatch } = React.useContext(StoreContext);
-    const { currentSlide,jContent,reset } = state;
+    const {
+        currentSlide,
+        jContent,
+        reset
+    } = state;
     const { gql_variables,language_bundle } =  jContent;
 
     const variables = Object.assign(gql_variables,{id:props.id})
@@ -114,30 +159,6 @@ const Qna = (props) => {
     const show = currentSlide === props.id;
 
     const handleSubmit = () => {
-        if(qna.notUsedForScore){
-            dispatch({
-                case:"NEXT_SLIDE"
-            });
-        }else{
-            dispatch({
-                case:"SHOW_RESULT",
-                payload:{
-                    result: qna.answers
-                            .filter(answer => answer.isAnswer)
-                            .reduce( (test,answer) => test && answer.checked,true)
-                }
-            });
-        }
-        // dispatch({
-        //     case:"SHOW_RESULT",
-        //     payload:{
-        //         result:qna.notUsedForScore ?
-        //                 true :
-        //                 qna.answers
-        //                 .filter(answer => answer.isAnswer)
-        //                 .reduce( (test,answer) => test && answer.checked,true)
-        //     }
-        // });
 
         // console.log("[handleSubmit] qna.jExpField2Map => ",qna.jExpField2Map);
         if(qna.jExpField2Map){
@@ -150,11 +171,7 @@ const Qna = (props) => {
                     (item,answer,index) =>{
                         if(answer.cdpValue && answer.cdpValue.length > 0) {
                             if (index === 0) {
-                                //workaround
-                                let cdpValue = answer.cdpValue;
-                                if(cdpValue==='true') cdpValue=true;
-                                if(cdpValue==='false') cdpValue=false;
-                                item = cdpValue
+                                item = answer.cdpValue
                             } else {
                                 item = `${item}, ${answer.cdpValue}`
                             }
@@ -170,47 +187,76 @@ const Qna = (props) => {
                 propertyValue:values
             })
         }
+
+        const payload = {
+            case:"SHOW_RESULT",
+            payload:{
+                skipScore:qna.notUsedForScore,
+                result: qna.answers
+                    .filter(answer => answer.isAnswer)
+                    .reduce( (test,answer) => test && answer.checked,true)
+            }
+        }
+
+        if(qna.notUsedForScore){
+            manageTransition({
+                state,
+                dispatch,
+                payload
+            });
+        }else{
+            dispatch(payload);
+        }
     }
-    // <img className="d-block w-100"
-    //      src={`${files_endpoint}${encodeURI(qna.cover)}`}
-    //      alt={qna.title}/>
+
+    const getAnswers = () => {
+        if(qna.answers)
+            return qna.answers.map( answer =>
+                <Answer
+                    key={answer.id}
+                    id={answer.id}
+                    qna={qna}
+                    qnaDispatch={qnaDispatch}
+                />);
+    }
+
     return(
-        <div className={`game4-quiz__item show-overlay ${show ? 'active':''} `}>
+        <div className={classnames(
+            sharedClasses.item,
+            sharedClasses.showOverlay,
+            (show ? 'active':'')
+        )}>
+            <Header/>
+
             {qna.media &&
                 <Media id={qna.media.id}
-                       type={qna.media.type.value}
-                       mixins={qna.media.mixins.map(mixin=>mixin.value)}
+                       type={qna.media.type?qna.media.type.value:null}
+                       mixins={qna.media.mixins?qna.media.mixins.map(mixin=>mixin.value):[]}
                        path={qna.media.path}
                        alt={qna.title}
                 />
-
             }
+            <div className={sharedClasses.caption}>
+                <div className={classes.questionGroup}>
+                    <Typography  className={classes.question}
+                                 variant="h4">
+                        {qna.question}
+                    </Typography>
+                    <Typography variant="h5">
+                        {qna.help}
+                    </Typography>
+                </div>
 
-            <div className="game4-quiz__caption d-none d-md-block">
-                <fieldset>
-                    <legend>{qna.question}
-                        <i>{qna.help}</i>
-                    </legend>
-                    {qna.answers &&
-                        <ol className="game4-quiz__answer-list">
-                            {qna.answers.map( answer =>
-                                <Answer
-                                    key={answer.id}
-                                    id={answer.id}
-                                    qna={qna}
-                                    qnaDispatch={qnaDispatch}
-                                />)
-                            }
-                        </ol>
-                    }
-                </fieldset>
+                <FormGroup className={classes.formGroup}
+                           style={{}}
+                           aria-label="answer">
+                    {getAnswers()}
+                </FormGroup>
 
-                <Button variant="game4-quiz"
-                        onClick={handleSubmit}
+                <Button onClick={handleSubmit}
                         disabled={!qna.enableSubmit}>
                     {language_bundle && language_bundle.btnSubmit}
                 </Button>
-
             </div>
         </div>
     );
