@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
         marginBottom: `${theme.spacing(4)}px`,
     },
     question:{
-        marginBottom: `${theme.spacing(1)}px`,
+        marginBottom: `${theme.spacing(2)}px`,
     },
     formGroup: {
         textAlign:'left',
@@ -111,7 +111,11 @@ const Qna = (props) => {
     const classes = useStyles(props);
     const sharedClasses = cssSharedClasses(props);
     const { state, dispatch } = React.useContext(StoreContext);
-    const { currentSlide,jContent,reset,showScore,transitionTimeout,transitionIsEnabled } = state;
+    const {
+        currentSlide,
+        jContent,
+        reset
+    } = state;
     const { gql_variables,language_bundle } =  jContent;
 
     const variables = Object.assign(gql_variables,{id:props.id})
@@ -156,71 +160,6 @@ const Qna = (props) => {
 
     const handleSubmit = () => {
 
-
-        // if(qna.notUsedForScore){
-        //     // if(transitionIsEnabled){
-        //     //     dispatch({
-        //     //         case: "TOGGLE_TRANSITION"
-        //     //     });
-        //     //     setTimeout(() => dispatch({
-        //     //         case: "TOGGLE_TRANSITION"
-        //     //     }), 1000);
-        //     // }
-        //     if(showScore){
-        //         manageTransition({
-        //             state,
-        //             dispatch,
-        //             payload:{
-        //                 case:"SHOW_SCORE"
-        //             }
-        //         });
-        //         // if(transitionIsEnabled){
-        //         //     setTimeout(()=>dispatch({
-        //         //         case:"SHOW_SCORE"
-        //         //     }),transitionTimeout);
-        //         // }else{
-        //         //     dispatch({
-        //         //         case:"SHOW_SCORE"
-        //         //     });
-        //         // }
-        //     }else{
-        //         manageTransition({
-        //             state,
-        //             dispatch,
-        //             payload:{
-        //                 case:"NEXT_SLIDE"
-        //             }
-        //         });
-        //         // if(transitionIsEnabled){
-        //         //     setTimeout(()=>dispatch({
-        //         //         case:"NEXT_SLIDE"
-        //         //     }),transitionTimeout);
-        //         // }else{
-        //         //     dispatch({
-        //         //         case:"NEXT_SLIDE"
-        //         //     });
-        //         // }
-        //     }
-        // }else{
-        //     dispatch({
-        //         case:"SHOW_RESULT",
-        //         payload:{
-        //             skipScore:qna.notUsedForScore,
-        //             result: qna.answers
-        //                 .filter(answer => answer.isAnswer)
-        //                 .reduce( (test,answer) => test && answer.checked,true)
-        //         }
-        //     });
-        //     // dispatch({
-        //     //     case:"SHOW_RESULT",
-        //     //     payload:{
-        //     //         result: qna.answers
-        //     //                 .filter(answer => answer.isAnswer)
-        //     //                 .reduce( (test,answer) => test && answer.checked,true)
-        //     //     }
-        //     // });
-        // }
-
         // console.log("[handleSubmit] qna.jExpField2Map => ",qna.jExpField2Map);
         if(qna.jExpField2Map){
             //Get response cdpValue
@@ -232,11 +171,7 @@ const Qna = (props) => {
                     (item,answer,index) =>{
                         if(answer.cdpValue && answer.cdpValue.length > 0) {
                             if (index === 0) {
-                                //workaround
-                                let cdpValue = answer.cdpValue;
-                                if(cdpValue==='true') cdpValue=true;
-                                if(cdpValue==='false') cdpValue=false;
-                                item = cdpValue
+                                item = answer.cdpValue
                             } else {
                                 item = `${item}, ${answer.cdpValue}`
                             }
@@ -312,14 +247,11 @@ const Qna = (props) => {
                     </Typography>
                 </div>
 
-
-                {/*<ol className="game4-quiz__answer-list">*/}
                 <FormGroup className={classes.formGroup}
                            style={{}}
                            aria-label="answer">
                     {getAnswers()}
                 </FormGroup>
-                {/*</ol>*/}
 
                 <Button onClick={handleSubmit}
                         disabled={!qna.enableSubmit}>
@@ -328,51 +260,6 @@ const Qna = (props) => {
             </div>
         </div>
     );
-
-    // return(
-    //     <div className={classnames(
-    //         sharedClasses.item,
-    //         sharedClasses.showOverlay,
-    //         (show ? 'active':'')
-    //     )}>
-    //         {qna.media &&
-    //         <Media id={qna.media.id}
-    //                type={qna.media.type.value}
-    //                mixins={qna.media.mixins.map(mixin=>mixin.value)}
-    //                path={qna.media.path}
-    //                alt={qna.title}
-    //         />
-    //
-    //         }
-    //
-    //         <div className="game4-quiz__caption d-none d-md-block">
-    //             <fieldset>
-    //                 <legend>{qna.question}
-    //                     <i>{qna.help}</i>
-    //                 </legend>
-    //                 {qna.answers &&
-    //                 <ol className="game4-quiz__answer-list">
-    //                     {qna.answers.map( answer =>
-    //                         <Answer
-    //                             key={answer.id}
-    //                             id={answer.id}
-    //                             qna={qna}
-    //                             qnaDispatch={qnaDispatch}
-    //                         />)
-    //                     }
-    //                 </ol>
-    //                 }
-    //             </fieldset>
-    //
-    //             <Button variant="game4-quiz"
-    //                     onClick={handleSubmit}
-    //                     disabled={!qna.enableSubmit}>
-    //                 {language_bundle && language_bundle.btnSubmit}
-    //             </Button>
-    //
-    //         </div>
-    //     </div>
-    // );
 }
 
 Qna.propTypes={

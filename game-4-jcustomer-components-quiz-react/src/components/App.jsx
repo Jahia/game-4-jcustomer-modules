@@ -31,17 +31,6 @@ const useStyles = makeStyles(theme => ({
             boxSizing:"border-box",
         }
     },
-    // inner:{
-    //     // position: 'relative',
-    //     width: '100%',
-    //     // overflow: 'hidden',
-    //     // @include clearfix()
-    //     "&::after": {
-    //         display: 'block',
-    //         clear: 'both',
-    //         content: "",
-    //     }
-    // }
 }));
 
 

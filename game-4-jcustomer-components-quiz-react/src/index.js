@@ -33,7 +33,10 @@ const render=(target,context)=>{
       <Store jContent={context}>
         <ApolloProvider client={client}>
           {/*<ThemeProvider theme={theme(context.theme)}>*/}
+          <div style={{overflow:'hidden'}}>
             <App />
+          </div>
+
           {/*</ThemeProvider>*/}
         </ApolloProvider>
       </Store>,

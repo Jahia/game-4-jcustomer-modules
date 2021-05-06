@@ -17,18 +17,9 @@ export default makeStyles((theme)=> ({
         },
     },
     item:{
-        //TODO manage transition
-
-        // position: 'absolute',
-        // right:'-105%',
-        // transform: 'translateX(-100%)',
-        // visibility:'hidden',
-        // opacity:0,
         display: 'none',
-        minHeight:theme.geometry.item.minHeight,//'700px',
-        // float: 'left',
+        minHeight:theme.geometry.item.minHeight,
         width: '100%',
-        // marginRight: '-100%',
         backfaceVisibility: 'hidden',
         // transition:theme.transitions.create(['opacity','visibility'],{
         //     // duration: theme.transitions.duration.long,
@@ -42,11 +33,6 @@ export default makeStyles((theme)=> ({
             zIndex: -1,
         },
         "&.active":{
-            // display:'block'
-            // right:0,
-            // visibility:'visible',
-            // opacity:1,
-            // transform: 'translateX(0%)',
             display:'flex',
             flexWrap:'wrap',
             flexDirection:'column',
@@ -58,16 +44,24 @@ export default makeStyles((theme)=> ({
             top:0, right:0, bottom:0, left:0,
             content:'""',
             backgroundColor: theme.palette.background.overlay,
-            // TODO works see better choice
-            boxShadow: theme.palette.shadows.overlay,
 
+            boxShadow: theme.palette.shadows.overlay.lg,
+            [theme.breakpoints.between('xs', 'sm')]: {
+                boxShadow: theme.palette.shadows.overlay.xs,
+            }
         }
     },
     caption:{
+        width:'100%',
         flexGrow:2,
-        paddingRight:theme.geometry.caption.padding,
-        paddingLeft:theme.geometry.caption.padding,
-        paddingBottom:theme.geometry.caption.padding,
+        paddingRight:theme.geometry.caption.padding.lg,
+        paddingLeft:theme.geometry.caption.padding.lg,
+        paddingBottom:theme.geometry.caption.padding.lg,
+        [theme.breakpoints.between('xs', 'sm')]: {
+            paddingRight:theme.geometry.caption.padding.xs,
+            paddingLeft:theme.geometry.caption.padding.xs,
+            paddingBottom:theme.geometry.caption.padding.xs,
+        },
         zIndex: 10,
         textAlign: 'center',
 
@@ -77,4 +71,17 @@ export default makeStyles((theme)=> ({
             }
         }
     },
+    captionMain:{
+        [theme.breakpoints.between('xs', 'sm')]: {
+            "& h3": {
+                fontSize:'2.125rem'
+            },
+            "& h4": {
+                fontSize:'1.875rem'
+            },
+            paddingRight:theme.geometry.caption.padding.main,
+            paddingLeft:theme.geometry.caption.padding.main
+        },
+
+    }
 }));

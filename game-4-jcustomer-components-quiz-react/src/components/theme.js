@@ -14,8 +14,12 @@ const defaultTheme = {
         },
         caption:{
             // minHeight:"700px",
-            padding:"60px",
-            width:"calc(100% - 120px)",
+            padding:{
+                lg:"60px",
+                xs:"45px",
+                main:"20px"
+            }
+            // width:"calc(100% - 120px)",
         },
         indicator:{
             width:"30px",
@@ -47,7 +51,10 @@ const defaultTheme = {
             checkedAnswer: "rgba(255,255,255,1)",
         },
         shadows:{
-            overlay:"inset 1140px 0 570px -570px rgba(0,0,0,.5)",
+            overlay:{
+                lg:"inset 1140px 0 570px -570px rgba(0,0,0,.5)",
+                xs:"inset 500px 0 250px -250px rgba(0,0,0,.5)",
+            }
         }
     },
     typography:{

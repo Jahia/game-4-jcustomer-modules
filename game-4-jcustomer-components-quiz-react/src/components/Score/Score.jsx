@@ -77,7 +77,10 @@ const Score = (props) => {
                    alt={quiz.title}
             />
             }
-            <div className={sharedClasses.caption}>
+            <div className={classnames(
+                sharedClasses.caption,
+                sharedClasses.captionMain
+            )}>
                 <Typography className={sharedClasses.textUppercase}
                             variant="h3">
                     {quiz.title}

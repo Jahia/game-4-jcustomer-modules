@@ -11,7 +11,11 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         flexDirection:'column',
         justifyContent: 'center',
-        padding: `${theme.spacing(2)}px ${theme.geometry.caption.padding}`,
+        width:'100%',
+        padding: `${theme.spacing(2)}px ${theme.geometry.caption.padding.lg}`,
+        [theme.breakpoints.between('xs', 'sm')]: {
+            padding: `${theme.spacing(2)}px ${theme.geometry.caption.padding.main}`,
+        },
         '.showResult &':{
             backgroundColor: theme.palette.grey['300'],
         }
@@ -26,6 +30,9 @@ const useStyles = makeStyles(theme => ({
         marginBottom: `${theme.spacing(2)}px`,
         '.showResult &':{
             marginBottom:0,
+            [theme.breakpoints.between('xs', 'sm')]: {
+                marginBottom:`${theme.spacing(1)}px`
+            }
         }
     },
     headerResult:{
@@ -49,6 +56,9 @@ const useStyles = makeStyles(theme => ({
         textTransform: 'capitalize',
         fontWeight: theme.typography.fontWeightBold,
         color: theme.palette.grey[700],
+        [theme.breakpoints.between('xs', 'sm')]: {
+            fontSize:'1.75rem'
+        }
     },
 }));
 

@@ -59,10 +59,9 @@ const syncVideoStatus = ({content,parent,status,player}) =>
     });
 
 const syncVisitorData = ({propertyName,propertyValue}) =>
-    uTracker.track("updateVisitorData",{
+    uTracker.track("updateQuizVisitorData",{
         update : {
-            propertyName,
-            propertyValue
+            [propertyName]:propertyValue
         }
     });
 

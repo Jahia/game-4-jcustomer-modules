@@ -35,13 +35,7 @@ const useStyles = makeStyles(theme => ({
 
     },
     consent:{
-        // position: 'absolute',
-        // bottom: '.5rem',
-        // '--percentage':`calc(100% - ${theme.geometry.caption.width})`,
-        // right: 'calc(var(--percentage) / 2)',
-        // left: 'calc(var(--percentage) / 2)',
-        // paddingRight:theme.geometry.caption.padding,
-        // paddingLeft:theme.geometry.caption.padding,
+        width:'100%',
         paddingRight:`${theme.spacing(4)}px`,
         paddingLeft:`${theme.spacing(4)}px`,
         zIndex: 10,
@@ -196,22 +190,6 @@ const Quiz = (props) => {
                 case:"NEXT_SLIDE"
             }
         });
-        // if(transitionIsEnabled){
-        //     dispatch({
-        //         case:"TOGGLE_TRANSITION"
-        //     });
-        //     setTimeout(()=>dispatch({
-        //         case:"TOGGLE_TRANSITION"
-        //     }),transitionTimeout);
-        //     setTimeout(()=>dispatch({
-        //         case:"NEXT_SLIDE"
-        //     }),transitionTimeout);
-        // }else{
-        //     dispatch({
-        //         case:"NEXT_SLIDE"
-        //     })
-        // }
-
 
     };
     return(
@@ -231,7 +209,10 @@ const Quiz = (props) => {
             }
 
 
-            <div className={sharedClasses.caption}>
+            <div className={classnames(
+                sharedClasses.caption,
+                sharedClasses.captionMain
+            )}>
                 <Typography className={sharedClasses.textUppercase}
                             variant="h3">
                     {quiz.title}
