@@ -27,6 +27,7 @@ const QuizMapper = (quizData) => ({
     browsingIsEnabled: JSON.parse(get(quizData, "browsing.value", false)),
     //cover: get(quizData, "cover.node.path", ""),
     media: get(quizData, "media.node", {}),
+    // mktoForm:true,//TODO get the value from Quiz
     consents: get(quizData, "consents.nodes", []).map(node =>{
         return {
             id:get(node,"id"),

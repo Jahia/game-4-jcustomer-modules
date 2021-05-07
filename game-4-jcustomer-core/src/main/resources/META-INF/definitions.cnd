@@ -17,5 +17,7 @@
 [game4mix:usesResultAsProperty] mixin
  - game4:jExpProperty (string, choicelist[jExpProfilePropertiesInitializer,resourceBundle]) indexed=no
 
-[game4mix:usesCustomTheme] mixin
- - game4:webappTheme (string) indexed=no
+//[game4mix:usesCustomTheme] mixin
+// - game4:webappTheme (string) indexed=no
+
+

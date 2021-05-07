@@ -16,6 +16,7 @@ import cssSharedClasses from "components/cssSharedClasses";
 import DOMPurify from "dompurify";
 import Header from "components/Header/Header";
 import {manageTransition} from "misc/utils";
+import useMarketo from "components/Marketo/LoadScript";
 
 const useStyles = makeStyles(theme => ({
     duration:{
@@ -60,7 +61,6 @@ const init = variables =>{
     }
 }
 
-
 const computeEnableStartBtn = (state) => {
     const {showNext,workspace,consents} = state;
 console.log("consents:",consents);
@@ -70,7 +70,6 @@ console.log("consents:",consents);
     const granted = consents.filter( consent => consent.checked || consent.granted );
     return consents.length === granted.length;
 }
-
 
 function reducer(state, action) {
     const { payload } = action;
@@ -149,6 +148,13 @@ function reducer(state, action) {
     }
 }
 
+const MktoForm = (props) => {
+    const { baseUrl, munchkinId, formId } = props;
+    //
+    useMarketo(props);
+    return <form id={`mktoForm_${formId}`} />;
+}
+
 const Quiz = (props) => {
     const classes = useStyles(props);
     const sharedClasses = cssSharedClasses(props);
@@ -165,6 +171,7 @@ const Quiz = (props) => {
     const {consent_status,scope,gql_variables,language_bundle} = jContent;
 
     const enableStartBtn = showNext &&
+        // !quiz.mktoForm &&
         quiz.consents.length > 0? gql_variables.workspace !== "LIVE" : true;
 
     const [quizState, quizDispatch] = React.useReducer(
@@ -172,7 +179,7 @@ const Quiz = (props) => {
         {
             enableStartBtn,//: showNext && gql_variables.workspace !== "LIVE",
             workspace:gql_variables.workspace,
-            showNext
+            showNext,
         },
         init
     );
@@ -202,6 +209,29 @@ const Quiz = (props) => {
         });
 
     };
+    const handleMktoFormSuccess = (values,targetPageUrl) =>{
+        console.log("[handleMktoFormSuccess] values : ",values);
+    }
+
+    const handleMktoForm = form =>{
+        // const config = {
+        //     addHiddenFields:{
+        //         'pageURL' : document.location.href
+        //     },
+        //     onSuccess:handleMktoFormSuccess
+        //
+        // }
+        // Object.keys(config).forEach(key =>{
+        //     form[key].addHiddenFields();
+        // })
+
+        form.addHiddenFields({
+            'pageURL' : document.location.href
+        });
+        form.onSuccess(handleMktoFormSuccess);
+    }
+
+
     return(
         <div className={classnames(
             sharedClasses.item,
@@ -242,6 +272,13 @@ const Quiz = (props) => {
                 <Typography component="div"
                             className={classes.description}
                             dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(quiz.description, { ADD_ATTR: ['target'] })}}/>
+
+                <MktoForm
+                    baseUrl="//pages.jahia.com"
+                    munchkinId="564-JKW-111"
+                    formId="1005"
+                    callback={handleMktoForm}
+                />
 
                 <Button onClick={onClick}
                         disabled={!quizState.enableStartBtn}>
