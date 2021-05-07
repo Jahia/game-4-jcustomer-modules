@@ -63,7 +63,7 @@ const init = variables =>{
 
 const computeEnableStartBtn = (state) => {
     const {showNext,workspace,consents} = state;
-
+console.log("consents:",consents);
     if(showNext && workspace !== "LIVE")
         return true;
 
@@ -154,13 +154,23 @@ const Quiz = (props) => {
     const sharedClasses = cssSharedClasses(props);
     const { state, dispatch } = React.useContext(StoreContext);
 
-    const {quiz,showNext,currentSlide,jContent,cxs,transitionIsEnabled,transitionTimeout} = state;
+    const {
+        quiz,
+        showNext,
+        currentSlide,
+        jContent,
+        cxs
+    } = state;
+
     const {consent_status,scope,gql_variables,language_bundle} = jContent;
+
+    const enableStartBtn = showNext &&
+        quiz.consents.length > 0? gql_variables.workspace !== "LIVE" : true;
 
     const [quizState, quizDispatch] = React.useReducer(
         reducer,
         {
-            enableStartBtn: showNext && gql_variables.workspace !== "LIVE",
+            enableStartBtn,//: showNext && gql_variables.workspace !== "LIVE",
             workspace:gql_variables.workspace,
             showNext
         },
@@ -263,75 +273,6 @@ const Quiz = (props) => {
             }
         </div>
     );
-
-
-    // return(
-    //     <div className={classnames(
-    //         sharedClasses.item,
-    //         sharedClasses.showOverlay,
-    //         (show ? 'active':'')
-    //     )}>
-    //         {quiz.media &&
-    //         <Media id={quiz.media.id}
-    //                type={quiz.media.type.value}
-    //                mixins={quiz.media.mixins.map(mixin=>mixin.value)}
-    //                path={quiz.media.path}
-    //                alt={quiz.title}
-    //         />
-    //         }
-    //
-    //         <div className={sharedClasses.caption}>
-    //             <Typography className={sharedClasses.textUppercase}
-    //                         variant="h3">
-    //                 {quiz.title}
-    //             </Typography>
-    //             <Typography className={sharedClasses.subtitle}
-    //                         color="primary"
-    //                         variant="h4">
-    //                 {quiz.subtitle}
-    //             </Typography>
-    //
-    //             <Typography component="div"
-    //                         className={classes.duration}>
-    //                 <AccessTimeIcon />
-    //                 {quiz.duration}
-    //             </Typography>
-    //
-    //             <Typography component="div"
-    //                         className={classes.description}
-    //                         dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(quiz.description, { ADD_ATTR: ['target'] })}}/>
-    //
-    //             <Button onClick={onClick}
-    //                     disabled={!quizState.enableStartBtn}>
-    //                 {language_bundle && language_bundle.btnStart}
-    //             </Button>
-    //         </div>
-    //         {
-    //             quiz.consents.length > 0 && cxs &&
-    //             <div className={classes.consent}>
-    //                 <Typography className={classes.consentTitle}
-    //                             variant="h5">
-    //                     {language_bundle && language_bundle.consentTitle}
-    //                 </Typography>
-    //                 <ul>
-    //                     {
-    //                         quiz.consents.map( consent =>{
-    //                             if(consent.actived)
-    //                                 return <Consent
-    //                                     key={consent.id}
-    //                                     id={consent.id}
-    //                                     quizState={quizState}
-    //                                     quizDispatch={quizDispatch}
-    //                                 />
-    //                             return <></>
-    //                         })
-    //                     }
-    //                 </ul>
-    //             </div>
-    //         }
-    //     </div>
-    // );
-
 }
 
 // Quiz.propTypes={}

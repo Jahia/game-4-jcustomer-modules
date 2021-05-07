@@ -29,7 +29,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build-jahia": "react-scripts build && find ../game-4-jcustomer-components-quiz/src/main/resources/css/webapp/ ! -name 'README.txt' -type f -exec rm -f {} + && cp -R build/static/css/* ../game-4-jcustomer-components-quiz/src/main/resources/css/webapp && rm -rf ../game-4-jcustomer-components-quiz/src/main/resources/javascript/webapp/* && cp -R build/static/js/* ../game-4-jcustomer-components-quiz/src/main/resources/javascript/webapp && rm -rf ../game-4-jcustomer-components-quiz/src/main/resources/fonts/webapp/* && cp -R build/static/media/* ../game-4-jcustomer-components-quiz/src/main/resources/fonts/webapp",
+    "build-jahia": "react-scripts build && find ../game-4-jcustomer-components-quiz/src/main/resources/css/webapp/ ! -name 'README.txt' -type f -exec rm -f {} + && cp -R build/static/css/* ../game-4-jcustomer-components-quiz/src/main/resources/css/webapp && find ../game-4-jcustomer-components-quiz/src/main/resources/javascript/webapp/ ! -name 'README.txt' -type f -exec rm -f {} && cp -R build/static/js/* ../game-4-jcustomer-components-quiz/src/main/resources/javascript/webapp && rm -rf ../game-4-jcustomer-components-quiz/src/main/resources/fonts/webapp/* && cp -R build/static/media/* ../game-4-jcustomer-components-quiz/src/main/resources/fonts/webapp",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

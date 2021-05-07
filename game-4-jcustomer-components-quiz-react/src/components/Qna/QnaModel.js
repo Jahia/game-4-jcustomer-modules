@@ -1,7 +1,7 @@
 import get from "lodash.get";
 import {getRandomString} from "misc/utils";
 
-export default function(qnaData){
+const QnAMapper = (qnaData) => {
     const randomSelection=JSON.parse(get(qnaData, "randomSelection.value", false));
     const answers= get(qnaData, "answers.values", []).map(answer=>{
         const controlledAnswer = JSON.parse(answer);
@@ -10,13 +10,6 @@ export default function(qnaData){
             id:getRandomString(5,"#aA"),
             checked:false
         }
-
-        // const id = getRandomString(5,"#aA");
-        // const valid = answer.indexOf(quiz_validMark) === 0;
-        // if(valid)
-        //     answer = answer.substring(quiz_validMark.length+1);//+1 is for space between mark and label
-
-        // return {id,label:answer,checked:false,valid}
     })
 
     if(randomSelection)
@@ -38,3 +31,4 @@ export default function(qnaData){
         inputType
     }
 }
+export default QnAMapper;

@@ -1,7 +1,7 @@
 import React from 'react'; //useEffect,useContext
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 
-import {Grid, Button, Typography} from '@material-ui/core';
+import {Grid,Typography} from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 
 import get from "lodash.get";
@@ -33,8 +33,6 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-
-
 const initLanguageBundle = quizData => {
     const keys = [
         "btnStart",
@@ -54,7 +52,6 @@ const initLanguageBundle = quizData => {
     },{});
 }
 
-//NOPE ! TODO jCustomer/context.json -> context. jContext.value = {context,jCustomer}
 const App = (props)=> {
     const classes = useStyles(props);
 
@@ -88,7 +85,7 @@ const App = (props)=> {
                 }
             });
 
-            //init unomi tracker
+            //Init unomi tracker
             if(jContent.gql_variables.workspace === "LIVE")
                 syncTracker({
                     scope: jContent.scope,
@@ -105,7 +102,6 @@ const App = (props)=> {
 
 
     const displayScore=()=>{
-        // console.log("[displayScore] showScore: ",showScore);
         if(showScore)
             return <Score/>
     }

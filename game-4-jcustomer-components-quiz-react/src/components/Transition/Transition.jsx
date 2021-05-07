@@ -3,7 +3,7 @@ import classnames from "clsx";
 import React from "react";
 import {StoreContext} from "contexts";
 import {Typography} from "@material-ui/core";
-import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
+// import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 
 const childTiles = (transitionRow) =>{
     const nb = transitionRow.length;
