@@ -82,6 +82,10 @@ export default makeStyles((theme)=> ({
             paddingRight:theme.geometry.caption.padding.main,
             paddingLeft:theme.geometry.caption.padding.main
         },
+        "& .mktoForm":{
+            margin:'auto',
+            color:`${theme.palette.text.primary} !important`
+        }
 
     }
 }));
