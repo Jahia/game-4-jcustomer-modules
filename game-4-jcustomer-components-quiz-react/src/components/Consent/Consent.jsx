@@ -128,35 +128,7 @@ const Consent = (props)=> {
             }
         </li>
     )
-
-    // return(
-    //     <li>
-    //         {!consent.granted &&
-    //             <div className="consent-to-grant">
-    //                 <Form.Check
-    //                     custom
-    //                     type="checkbox"
-    //                     name={consent.identifier}
-    //                     id={consent.id}
-    //                     label={consent.title}
-    //                     onChange={handleChange}
-    //                     checked={consent.checked}
-    //                 />
-    //                 <i>{consent.description}</i>
-    //             </div>
-    //         }
-    //         {consent.granted &&
-    //             <p className="consent-granted">
-    //
-    //                 <FontAwesomeIcon icon={['fas','check']}/>
-    //                 {consent.title}
-    //                 <FontAwesomeIcon className="consent-denied" icon={['fas','ban']} onClick={()=> handleDenied(consent)}/>
-    //                 <i>{consent.description}</i>
-    //             </p>
-    //         }
-    //     </li>
-    // )
-}
+};
 
 Consent.propTypes={
     id:PropTypes.string.isRequired,

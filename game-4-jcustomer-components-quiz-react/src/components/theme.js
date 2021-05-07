@@ -1,5 +1,4 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import React from "react";
 import _merge from "lodash.merge";
 
 const defaultTheme = {

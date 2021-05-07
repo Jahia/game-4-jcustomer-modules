@@ -1,6 +1,6 @@
 import get from "lodash.get";
 
-export default function(warmupData,cnd_type) {
+const WarmupMapper = (warmupData,cnd_type) => {
     let video = null;
     const videoLink = get(warmupData, "videoLink.value", "");
     const videoIntPath = get(warmupData, "videoIntPath.node");
@@ -15,8 +15,6 @@ export default function(warmupData,cnd_type) {
                 path:get(warmupData, "videoExtPath.value")
             }
 
-
-    // cover: get(warmupData, "cover.node.path", ""),
     return{
         id: get(warmupData, "id", ""),
         title: get(warmupData, "title", ""),
@@ -25,12 +23,13 @@ export default function(warmupData,cnd_type) {
         duration: get(warmupData, "duration.value", ""),
         media: get(warmupData, "media.node", {}),
         childNodes: get(warmupData,"children.nodes",[])
-                    .map(node => {
-                        return{
-                            id: get(node, "id"),
-                            type: get(node, "type.value")
-                        }
-                    }),
+            .map(node => {
+                return{
+                    id: get(node, "id"),
+                    type: get(node, "type.value")
+                }
+            }),
         video
     }
 }
+export default WarmupMapper;

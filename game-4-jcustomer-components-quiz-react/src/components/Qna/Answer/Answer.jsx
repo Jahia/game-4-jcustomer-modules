@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-import {Radio, Checkbox, FormControlLabel, FormGroup} from "@material-ui/core";
+import {Radio, Checkbox, FormControlLabel} from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from '@material-ui/icons/Clear';
 import {makeStyles} from "@material-ui/core/styles";
@@ -104,8 +104,6 @@ const Answer = (props) =>{
     };
 
     return(
-        // <li className={answer.checked?"checked":""}>
-        //     <FormGroup row aria-label="answer">
         <div className={classnames(
             classes.answerGroup,
             (answer.checked?"checked":"")
@@ -126,32 +124,7 @@ const Answer = (props) =>{
                 checked={answer.checked}
             />
         </div>
-
-            // </FormGroup>
-        // </li>
     );
-
-    // return(
-    //     <li className={answer.checked?"checked":""}>
-    //         <div className={`result ${isValid?"valid":""}`}>
-    //             {isValid &&
-    //                 <FontAwesomeIcon icon={['fas','check']}/>
-    //             }
-    //             {!isValid &&
-    //                 <FontAwesomeIcon icon={['fas','times']}/>
-    //             }
-    //         </div>
-    //         <Form.Check
-    //             custom
-    //             type={qna.inputType}
-    //             name={qna.id}
-    //             id={answer.id}
-    //             label={answer.label}
-    //             onChange={handleChange}
-    //             checked={answer.checked}
-    //         />
-    //     </li>
-    // );
 };
 
 Answer.propTypes={

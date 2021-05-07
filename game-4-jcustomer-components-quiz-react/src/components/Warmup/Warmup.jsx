@@ -31,11 +31,14 @@ const Warmup = (props) => {
     const classes = useStyles(props);
     const sharedClasses = cssSharedClasses(props);
     const { state, dispatch } = React.useContext(StoreContext);
-    const { currentSlide,jContent,transitionTimeout,transitionIsEnabled} = state;
+    const {
+        currentSlide,
+        jContent
+    } = state;
     const { gql_variables,cnd_type,language_bundle } =  jContent;
 
     const variables = Object.assign(gql_variables,{id:props.id})
-    // const query = loader("./Warmup.graphql.disabled");
+
     const {loading, error, data} = useQuery(GET_WARMUP, {
         variables:variables,
     });
@@ -71,25 +74,6 @@ const Warmup = (props) => {
                 case:"NEXT_SLIDE"
             }
         });
-        // if(transitionIsEnabled){
-        //     dispatch({
-        //         case:"TOGGLE_TRANSITION"
-        //     });
-        //     setTimeout(()=>dispatch({
-        //         case:"TOGGLE_TRANSITION"
-        //     }),transitionTimeout);
-        //     setTimeout(()=>dispatch({
-        //         case:"NEXT_SLIDE"
-        //     }),transitionTimeout);
-        // }else{
-        //     dispatch({
-        //         case:"NEXT_SLIDE"
-        //     })
-        // }
-
-        // dispatch({
-        //     case:"NEXT_SLIDE"
-        // });
 
     return(
         <>
@@ -108,7 +92,10 @@ const Warmup = (props) => {
                     />
                 }
 
-                <div className={sharedClasses.caption}>
+                <div className={classnames(
+                    sharedClasses.caption,
+                    sharedClasses.captionMain
+                )}>
                     <Typography className={sharedClasses.textUppercase}
                                 variant="h3">
                         {warmup.title}
@@ -135,7 +122,6 @@ const Warmup = (props) => {
                         </div>
                         }
                     </div>
-
 
                     <Button onClick={ handleCLick }>
                         {language_bundle && language_bundle.btnQuestion}

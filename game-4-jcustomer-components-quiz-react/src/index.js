@@ -48,7 +48,7 @@ const render=(target,context)=>{
     //Note: create a generic error handler
     ReactDOM.render(
       <AjvError
-        item={e.item}
+        item={e.message}
         errors={e.errors}
       />,
       document.getElementById(target)
