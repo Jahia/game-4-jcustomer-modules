@@ -1,0 +1,28 @@
+{
+  "name": "game4mix:marketingFormReference",
+  "description": "",
+  "dynamic": false,
+  "fields": [
+    {
+      "name": "game4:marketingFormChoice",
+      "selectorType": "Choicelist",
+      "valueConstraints": [
+        {
+          "value": {
+            "type": "String",
+            "value": "mkto"
+          },
+          "displayValue": "Marketo",
+          "propertyList": [
+            {
+              "name": "addMixin",
+              "value": "game4mix:mktoForm"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+	
+ 

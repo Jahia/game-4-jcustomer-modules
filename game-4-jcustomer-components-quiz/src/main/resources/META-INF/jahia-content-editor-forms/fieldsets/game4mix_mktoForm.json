@@ -1,0 +1,15 @@
+{
+  "name": "game4mix:mktoForm",
+  "fields": [
+    {
+      "name": "game4:mktoConfig",
+      "selectorType": "CodeMirror",
+      "selectorOptions":[
+        {
+          "name": "mode",
+          "value" : "javascript"
+        }
+      ]
+    }
+  ]
+}

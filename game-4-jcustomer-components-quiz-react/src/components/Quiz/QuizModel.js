@@ -11,6 +11,20 @@ const getTheme = (theme)=>{
     return theme;
 }
 
+const getMktoConfig = (config)=>{
+    if(!config)
+        return;
+
+    if(typeof config === 'string'){
+        try{
+            return JSON.parse(config);
+        }catch(e){
+            console.error("the marketo config => \n"+config+"\n => is not a json object : ",e);
+        }
+    };
+}
+
+
 const QuizMapper = (quizData) => ({
     //NOTE be sure string value like "false" or "true" are boolean I use JSON.parse to cast
     id: get(quizData, "id"),
@@ -27,7 +41,8 @@ const QuizMapper = (quizData) => ({
     browsingIsEnabled: JSON.parse(get(quizData, "browsing.value", false)),
     //cover: get(quizData, "cover.node.path", ""),
     media: get(quizData, "media.node", {}),
-    // mktoForm:true,//TODO get the value from Quiz
+    mktgForm: get(quizData, "mktgForm.value"),
+    mktoConfig: getMktoConfig(get(quizData, "mktoConfig.value")),
     consents: get(quizData, "consents.nodes", []).map(node =>{
         return {
             id:get(node,"id"),

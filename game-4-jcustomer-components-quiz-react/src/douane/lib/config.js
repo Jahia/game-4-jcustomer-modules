@@ -16,11 +16,15 @@ const consent_status={
     DENIED:"DENIED",
     REVOKED:"REVOKED"
 };
+const mktgForm={
+    MARKETO:"mkto",
+}
 
 export {
     workspace,
     cnd_type,
     validMark,
     consent_status,
-    score_splitPattern
+    score_splitPattern,
+    mktgForm
 }

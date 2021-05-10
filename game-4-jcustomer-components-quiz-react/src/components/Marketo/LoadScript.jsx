@@ -9,7 +9,7 @@ const appendScript = (baseUrl, setScriptLoaded) => {
     document.body.appendChild(script);
 }
 
-const useMarketo = ({ baseUrl, munchkinId, formId, callback,handleSuccess }) => {
+const useMarketo = ({ baseUrl, munchkinId, formId, callback, whenReadyCallback,handleSuccess }) => {
     const [scriptLoaded, setScriptLoaded] = useState(false);
 
     useEffect(() => {
@@ -18,13 +18,7 @@ const useMarketo = ({ baseUrl, munchkinId, formId, callback,handleSuccess }) => 
 
         if (scriptLoaded) {
             window.MktoForms2.loadForm(baseUrl, munchkinId, formId, callback);
-            // window.MktoForms2.whenReady( form => {
-            //     //Note : see this should be a params
-            //     form.addHiddenFields({
-            //         'pageURL' : document.location.href
-            //     });
-            //     form.onSuccess(handleSuccess)
-            // });
+            window.MktoForms2.whenReady( whenReadyCallback );
 
             return;
         }

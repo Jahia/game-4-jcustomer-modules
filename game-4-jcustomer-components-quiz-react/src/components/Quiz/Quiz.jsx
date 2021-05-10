@@ -17,6 +17,7 @@ import DOMPurify from "dompurify";
 import Header from "components/Header/Header";
 import {manageTransition} from "misc/utils";
 import useMarketo from "components/Marketo/LoadScript";
+import {mktgForm} from "douane/lib/config";
 
 const useStyles = makeStyles(theme => ({
     duration:{
@@ -168,7 +169,13 @@ const Quiz = (props) => {
         cxs
     } = state;
 
-    const {consent_status,scope,gql_variables,language_bundle} = jContent;
+    const {
+        consent_status,
+        scope,
+        gql_variables,
+        language_bundle,
+        mktgForm
+    } = jContent;
 
     const enableStartBtn = showNext &&
         // !quiz.mktoForm &&
@@ -210,7 +217,16 @@ const Quiz = (props) => {
 
     };
     const handleMktoFormSuccess = (values,targetPageUrl) =>{
-        console.log("[handleMktoFormSuccess] values : ",values);
+        console.debug("[handleMktoFormSuccess] values : ",values);
+        manageTransition({
+            state,
+            dispatch,
+            payload:{
+                case:"NEXT_SLIDE"
+            }
+        });
+        // alert("stop me here");
+        return false;
     }
 
     const handleMktoForm = form =>{
@@ -231,6 +247,46 @@ const Quiz = (props) => {
         form.onSuccess(handleMktoFormSuccess);
     }
 
+    const getStartComponent = () => {
+        if(!quiz.mktgForm)
+            return <Button onClick={onClick}
+                           disabled={!quizState.enableStartBtn}>
+                {language_bundle && language_bundle.btnStart}
+            </Button>
+        if(quiz.mktgForm === mktgForm.MARKETO && quiz.mktoConfig)
+            return <MktoForm
+                baseUrl={quiz.mktoConfig.baseUrl}
+                munchkinId={quiz.mktoConfig.munchkinId}
+                formId={quiz.mktoConfig.formId}
+                whenReadyCallback={handleMktoForm}
+            />
+    }
+
+    const getConsent = () =>{
+        if(quiz.mktgForm)
+            return;
+        if(quiz.consents.length > 0 && cxs)
+            return <div className={classes.consent}>
+                <Typography className={classes.consentTitle}
+                            variant="h5">
+                    {language_bundle && language_bundle.consentTitle}
+                </Typography>
+                <ul>
+                    {
+                        quiz.consents.map( consent =>{
+                            if(consent.actived)
+                                return <Consent
+                                    key={consent.id}
+                                    id={consent.id}
+                                    quizState={quizState}
+                                    quizDispatch={quizDispatch}
+                                />
+                            return <></>
+                        })
+                    }
+                </ul>
+            </div>
+    }
 
     return(
         <div className={classnames(
@@ -273,41 +329,9 @@ const Quiz = (props) => {
                             className={classes.description}
                             dangerouslySetInnerHTML={{__html:DOMPurify.sanitize(quiz.description, { ADD_ATTR: ['target'] })}}/>
 
-                <MktoForm
-                    baseUrl="//pages.jahia.com"
-                    munchkinId="564-JKW-111"
-                    formId="1005"
-                    callback={handleMktoForm}
-                />
-
-                <Button onClick={onClick}
-                        disabled={!quizState.enableStartBtn}>
-                    {language_bundle && language_bundle.btnStart}
-                </Button>
+                {getStartComponent()}
             </div>
-            {
-                quiz.consents.length > 0 && cxs &&
-                <div className={classes.consent}>
-                    <Typography className={classes.consentTitle}
-                                variant="h5">
-                        {language_bundle && language_bundle.consentTitle}
-                    </Typography>
-                    <ul>
-                        {
-                            quiz.consents.map( consent =>{
-                                if(consent.actived)
-                                    return <Consent
-                                        key={consent.id}
-                                        id={consent.id}
-                                        quizState={quizState}
-                                        quizDispatch={quizDispatch}
-                                    />
-                                return <></>
-                            })
-                        }
-                    </ul>
-                </div>
-            }
+            {getConsent()}
         </div>
     );
 }

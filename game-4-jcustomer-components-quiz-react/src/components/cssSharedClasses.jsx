@@ -82,9 +82,62 @@ export default makeStyles((theme)=> ({
             paddingRight:theme.geometry.caption.padding.main,
             paddingLeft:theme.geometry.caption.padding.main
         },
+
+        //Marketo Style override
         "& .mktoForm":{
             margin:'auto',
-            color:`${theme.palette.text.primary} !important`
+            color:`${theme.palette.text.primary} !important`,
+            "& .mktoAsterix":{
+                color:theme.palette.primary.main,
+            },
+            "& .mktoError":{
+                "& .mktoErrorArrow":{
+                    background:theme.palette.primary.main,
+                    borderColor:theme.palette.primary.dark,
+                },
+                "& .mktoErrorMsg":{
+                    background:theme.palette.primary.main,
+                    textShadow : "unset",
+                    borderColor:theme.palette.primary.dark,
+                    boxShadow: `rgba(0,0,0,0.65) 0 2px 7px, inset ${theme.palette.primary.dark} 0 1px 0px`
+                },
+            },
+            "& .mktoRequiredField":{},
+            "& .mktoLabel":{
+                fontSize: theme.typography.body1.fontSize,
+                fontWeight: "400 !important",
+                lineHeight: "1.2rem",
+                marginBottom: "5px",
+            },
+            "& .mktoField":{
+                lineHeight: "1.5rem",
+                fontSize: theme.typography.body1.fontSize,
+                padding: "8px 3px",
+                border:0,
+                borderRadius:"5px"
+            },
+            "& .mktoButtonWrap.mktoBluePill":{
+                "& .mktoButton":{
+                    border:0,
+                    background:theme.palette.primary.main,
+                    borderRadius:"4px",
+                    color:theme.palette.text.secondary,
+                    fontSize: "0.875rem",
+                    fontWeight: "500",
+                    lineHeight: 1.75,
+                    padding:"6px 16px",
+                    minWidth:"64px",
+                    textTransform: "uppercase",
+                    boxShadow:"0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)",
+                    textShadow: "unset",
+                    fontFamily: theme.typography.fontFamily,
+                    "&:hover":{
+                        border:0,
+                        background:theme.palette.primary.dark,
+                        boxShadow:"0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12)",
+                    }
+                }
+            }
         }
 
     }
