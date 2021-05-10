@@ -225,24 +225,13 @@ const Quiz = (props) => {
                 case:"NEXT_SLIDE"
             }
         });
-        // alert("stop me here");
         return false;
     }
 
-    const handleMktoForm = form =>{
-        // const config = {
-        //     addHiddenFields:{
-        //         'pageURL' : document.location.href
-        //     },
-        //     onSuccess:handleMktoFormSuccess
-        //
-        // }
-        // Object.keys(config).forEach(key =>{
-        //     form[key].addHiddenFields();
-        // })
-
+    const handleMktoForm = (form,_cxs) =>{
         form.addHiddenFields({
-            'pageURL' : document.location.href
+            'pageURL' : document.location.href,
+            'cxsProfileId' : cxs?cxs.profileId:'',
         });
         form.onSuccess(handleMktoFormSuccess);
     }
@@ -253,7 +242,7 @@ const Quiz = (props) => {
                            disabled={!quizState.enableStartBtn}>
                 {language_bundle && language_bundle.btnStart}
             </Button>
-        if(quiz.mktgForm === mktgForm.MARKETO && quiz.mktoConfig)
+        if(quiz.mktgForm === mktgForm.MARKETO && quiz.mktoConfig && cxs)
             return <MktoForm
                 baseUrl={quiz.mktoConfig.baseUrl}
                 munchkinId={quiz.mktoConfig.munchkinId}
@@ -267,25 +256,25 @@ const Quiz = (props) => {
             return;
         if(quiz.consents.length > 0 && cxs)
             return <div className={classes.consent}>
-                <Typography className={classes.consentTitle}
-                            variant="h5">
-                    {language_bundle && language_bundle.consentTitle}
-                </Typography>
-                <ul>
-                    {
-                        quiz.consents.map( consent =>{
-                            if(consent.actived)
-                                return <Consent
-                                    key={consent.id}
-                                    id={consent.id}
-                                    quizState={quizState}
-                                    quizDispatch={quizDispatch}
-                                />
-                            return <></>
-                        })
-                    }
-                </ul>
-            </div>
+                        <Typography className={classes.consentTitle}
+                                    variant="h5">
+                            {language_bundle && language_bundle.consentTitle}
+                        </Typography>
+                        <ul>
+                            {
+                                quiz.consents.map( consent =>{
+                                    if(consent.actived)
+                                        return <Consent
+                                            key={consent.id}
+                                            id={consent.id}
+                                            quizState={quizState}
+                                            quizDispatch={quizDispatch}
+                                        />
+                                    return <></>
+                                })
+                            }
+                        </ul>
+                    </div>
     }
 
     return(
