@@ -79,3 +79,6 @@
  - game4:randomSelection (boolean) = false autocreated indexed=no
  - game4:notUsedForScore (boolean) indexed=no
 // - game4:cover (weakreference, picker[type='image']) hidden < 'jmix:image'
+
+[game4nt:quizReference] > jnt:content,jmix:nodeReference, game4mix:components
+ - j:node (weakreference) < 'game4nt:quiz'
