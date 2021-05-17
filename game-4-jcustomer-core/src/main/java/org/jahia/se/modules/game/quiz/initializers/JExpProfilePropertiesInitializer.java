@@ -1,4 +1,4 @@
-package org.jahia.se.modules.game.core.initializers;
+package org.jahia.se.modules.game.quiz.initializers;
 
 import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
@@ -79,21 +79,6 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
         List<ChoiceListValue> choiceListValues = new ArrayList<>();
 
         try {
-//            JSONObject params= new JSONObject();
-//            if(!param.isEmpty())
-//                params = new JSONObject(param);
-//
-//            final String occurrence = params.optString("occurrence","single");
-//            final String type = params.optString("type");
-//            final JSONArray jsonArrayCardName = params.optJSONArray("cardName");
-//            final ArrayList<String> cardName = new ArrayList<String>();
-//            if(jsonArrayCardName != null){
-//                int len = jsonArrayCardName.length();
-//                for (int i=0;i<len;i++){
-//                    cardName.add(jsonArrayCardName.get(i).toString());
-//                }
-//            }
-
             JCRNodeWrapper node = (JCRNodeWrapper)
                     ((context.get("contextParent") != null)
                             ? context.get("contextParent")

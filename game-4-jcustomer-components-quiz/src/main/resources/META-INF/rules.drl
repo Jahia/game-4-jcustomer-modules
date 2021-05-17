@@ -4,7 +4,7 @@ package org.jahia.se.modules.games4jcustomer.componentsquiz.rules
 import org.jahia.services.content.rules.*
 import org.jahia.services.content.JCRContentUtils
 import org.slf4j.Logger
-//import org.jahia.se.modules.game.core.rules.CU_UserProperty
+import org.jahia.se.modules.game.quiz.rules.ScoreAsUserProperty
 
 //expander rules.dsl
 
@@ -13,7 +13,7 @@ global User user
 global Service service
 global Logger logger
 global JCRContentUtils jcrUtils
-//global CU_UserProperty cU_UserProperty
+global ScoreAsUserProperty scoreAsUserProperty
 
 //rule "Enable default quiz label"
 //    when
@@ -44,3 +44,16 @@ global JCRContentUtils jcrUtils
 ////        Log "node " + node
 //        Create or update jCustomer property from node
 //end
+
+rule "Create Remove user profile attribute"
+    when
+        A property game4:quizKey has been set on a node
+        - the node has the type game4nt:quiz
+//        - it has the extension type game4mix:usesResultAsProperty
+    then
+        Log "property.getValue() : " + property.getValue().toString()
+//        Log "property.getProperty() : " + property.getProperty().getString()
+//        Log "property.getStringValue() " + property.getValue().getString()
+        Log "node " + node.getClass()
+        Quiz score as jCustomer property from property
+end

@@ -104,9 +104,8 @@
         <extensions>true</extensions>
         <configuration>
           <instructions>
-            <_dsannotations>org.jahia.se.modules.game.core.initializers.*,
-              org.jahia.se.modules.game.core.rules.*</_dsannotations>
-            <Export-Package>org.jahia.se.modules.game.core.rules</Export-Package>
+            <_dsannotations>org.jahia.se.modules.game.quiz.initializers.*</_dsannotations>
+<!--            <Export-Package>org.jahia.se.modules.game.quiz.rules</Export-Package>-->
           </instructions>
         </configuration>
       </plugin>
