@@ -14,9 +14,13 @@
   },
   "actions": [
     {
-      "type": "updatePropertiesAction",
+      "type": "setOrUpdateDistinctObjectValuesAction",
       "parameterValues": {
+        "setPropertyName":"quizScores",
+        "setPropertyValue":"eventProperty::properties(score)",
+        "setSplitPattern":"::"
       }
     }
-  ]
+  ],
+  "itemType": "rule"
 }

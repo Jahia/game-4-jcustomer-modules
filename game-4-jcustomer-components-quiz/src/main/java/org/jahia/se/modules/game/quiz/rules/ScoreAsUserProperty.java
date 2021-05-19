@@ -5,21 +5,16 @@ import com.ning.http.client.AsyncCompletionHandler;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.ListenableFuture;
 import com.ning.http.client.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.jahia.services.content.decorator.JCRSiteNode;
-import org.jahia.services.content.rules.AddedNodeFact;
-//import org.jahia.services.content.rules.PublishedNodeFact;
-//import java.lang.reflect.Method;
-//import org.quartz.SchedulerException;
 
-//import org.jahia.modules.jexperience.admin.ContextServerService;
-//import org.jahia.modules.jexperience.admin.JExperienceConfigFactory;
-//import org.apache.http.HttpEntity;
-//import org.apache.http.util.EntityUtils;
 
 import org.jahia.services.content.rules.ChangedPropertyFact;
 import org.jahia.modules.jexperience.admin.ContextServerService;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -28,11 +23,15 @@ import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
 
 @Component(service = ScoreAsUserProperty.class, immediate = true)
 public class ScoreAsUserProperty {
     private static final Logger logger = LoggerFactory.getLogger(ScoreAsUserProperty.class);
+    private static final String PROPERTIES_PATH= "/cxs/profiles/properties";
+    private static final String PROPERTIES_ID= "quiz-score-";
+
     private String key="scoreAsUserProperty";
     private ContextServerService contextServerService;
 
@@ -52,47 +51,26 @@ public class ScoreAsUserProperty {
 
     public void executeActionNow(ChangedPropertyFact propertyFact) throws RepositoryException {
 
-        final String PROPERTIES_PATH= "/cxs/profiles/properties";
         String jExpPropertyId = propertyFact.getValue().toString();
-        String path = PROPERTIES_PATH+"/"+jExpPropertyId;
+        String testPath = PROPERTIES_PATH+"/"+PROPERTIES_ID+jExpPropertyId;
         JCRSiteNode site = propertyFact.getNode().getNode().getResolveSite();
-
-        String item = getItem(contextServerService,site,path);
-
-
-
 
         logger.info("**** jExpPropertyId : "+jExpPropertyId);
 
-//        AbstractNodeFact node = (AbstractNodeFact) node.;
-//        JCRNodeWrapper jcrNodeWrapper = node.getNode();
-
-        //Get value game4:jExpPropertyId
-//        String jExpPropertyId = jcrNodeWrapper.getProperty(PROPERTY_ID).getString();
-        //Request jCustomer to see if exist
-        //TODO quid du copy/past? l'id sera copié et la valeur maj alors que je veux peut plutot en créer un...
-        //Le mieux serait peut etre une Initializer qui call jCustomer pour avoir la liste des properties!!!
-        //If doesn't exist POST new propertie to jCustomer
-        //If exist update the name
-
-//        game4:jExpPropertyName (string) indexed=no
-//          game4:jExpPropertyId (string) hidden indexed=no
-
-
-//        Method[] methods = node.getClass().getMethods();
-//        for (int i = 0; i < methods.length; i++) {
-//            logger.info("public method: " + methods[i]);
+        String item = getItem(contextServerService,site,testPath);
+//        if(StringUtils.isNotBlank(item)) {
+//            logger.info("This item is already registered on Apache Unomi, id is {} and path is {}", jExpPropertyId, path);
+//        }else{
+//            item = registerItem(contextServerService, site, path);
 //        }
-//        logger.info("executeActionNow ! ");
-//        logger.info("class node : "+node.getClass());
-//        logger.info("class myNode : "+myNode.getClass());
-//        logger.info("class node.getNode() : "+myNode.getNode().getPath());
-//        logger.info("class node.getNode() : "+myNode.getNode().getClass());
+        if(item=="")
+            item = registerItem(contextServerService, site, PROPERTIES_PATH, jExpPropertyId);
+
     }
 
 
     private static String getItem(ContextServerService contextServerService, JCRSiteNode site, String path){
-        String responseString = null;
+        String responseString = "";
         try{
             final AsyncHttpClient asyncHttpClient = contextServerService
                     .initAsyncHttpClient(site.getSiteKey());
@@ -120,9 +98,53 @@ public class ScoreAsUserProperty {
         return responseString;
     };
 
-    private static void registerItem(ContextServerService contextServerService, JCRSiteNode site, String path) {
-        String json = "";
+    private static String registerItem(ContextServerService contextServerService, JCRSiteNode site, String path, String jExpPropertyId) {
         String response="0";
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            JSONObject metadata = new JSONObject();
+            JSONArray systemTags = new JSONArray("[\"hasCardDataTag\",\"cardDataTag/_game4Quiz/20.1/Game4Quiz\",\"positionInCard.2\"]");
+
+            metadata.put("id",PROPERTIES_ID+jExpPropertyId);
+            metadata.put("name","Quiz Score "+jExpPropertyId);
+            metadata.put("readOnly",false);
+            metadata.put("systemTags",systemTags);
+
+            jsonObject.put("target", "profiles");
+            jsonObject.put("multivalued", "false");
+            jsonObject.put("type", "integer");
+            jsonObject.put("metadata", metadata);
+
+            String json = jsonObject.toString();
+            try (AsyncHttpClient asyncHttpClient = contextServerService.initAsyncHttpClient(site.getSiteKey())) {
+                //preparePost Builder
+                AsyncHttpClient.BoundRequestBuilder requestBuilder = contextServerService
+                        .initAsyncRequestBuilder(site.getSiteKey(), asyncHttpClient, PROPERTIES_PATH,
+                                false, true, true);
+
+                requestBuilder.setBodyEncoding(StandardCharsets.UTF_8.name()).setBody(json);
+                requestBuilder.setHeader("accept", "application/json");
+                requestBuilder.setHeader("content-type", "application/json");
+                ListenableFuture<Response> future = requestBuilder.execute(new AsyncCompletionHandler<Response>() {
+                    @Override
+                    public Response onCompleted(Response response) {
+                        asyncHttpClient.closeAsynchronously();
+                        return response;
+                    }
+                });
+                response = future.get().getResponseBody();
+
+            } catch (IOException | ExecutionException | InterruptedException e) {
+                logger.error("Error happened", e);
+            }
+
+        }catch (JSONException e){
+            logger.error("JSON builder failed : ",e);
+        }
+
+        return response;
+
 //        public static String post(String url, String json, Long timeOut, TimeUnit timeUnit, String charset) {
 //            Future<Response> f = null;
 //            try (AsyncHttpClient asyncHttpClient = new AsyncHttpClient()) {
@@ -141,32 +163,6 @@ public class ScoreAsUserProperty {
 
 
 
-
-
-        try{
-            final AsyncHttpClient asyncHttpClient = contextServerService
-                    .initAsyncHttpClient(site.getSiteKey());
-
-            if (asyncHttpClient != null) {
-                AsyncHttpClient.BoundRequestBuilder requestBuilder = contextServerService
-                        .initAsyncRequestBuilder(site.getSiteKey(), asyncHttpClient, path,
-                                false, true, true);
-
-                ListenableFuture<Response> future = requestBuilder.execute(new AsyncCompletionHandler<Response>() {
-                    @Override
-                    public Response onCompleted(Response response) {
-                        asyncHttpClient.closeAsynchronously();
-                        return response;
-                    }
-                });
-
-                response = future.post().getResponseBody();
-            }
-            logger.info("Item registered on Apache Unomi, on path {} and json {}", path, json);
-        }catch (IOException | ExecutionException | InterruptedException e){
-            logger.error("Error happened", e);
-        }
-        return response
     }
 
 //TODO review this

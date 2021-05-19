@@ -35,10 +35,18 @@ const syncConsentStatus= ({typeIdentifier,scope,status}) => {
     });
 };
 
+// const syncQuizScore = ({quizKey,split,quizScore}) =>
+//     uTracker.track("setQuizScore",{
+//         score:`${quizKey}${split}${quizScore}`
+//     });
+
 const syncQuizScore = ({quizKey,split,quizScore}) =>
     uTracker.track("setQuizScore",{
-        score:`${quizKey}${split}${quizScore}`
+        update : {
+            [`properties.quiz-score-${quizKey}`]:quizScore
+        }
     });
+
 
 const syncVideoStatus = ({content,parent,status,player}) =>
     uTracker.track("video",{
