@@ -51,9 +51,9 @@ rule "Create Remove user profile attribute"
         - the node has the type game4nt:quiz
 //        - it has the extension type game4mix:usesResultAsProperty
     then
-        Log "property.getValue() : " + property.getValue().toString()
+//        Log "property.getValue() : " + property.getValue().toString()
 //        Log "property.getProperty() : " + property.getProperty().getString()
 //        Log "property.getStringValue() " + property.getValue().getString()
-        Log "node " + node.getClass()
+//        Log "node " + node.getClass()
         Quiz score as jCustomer property from property
 end
