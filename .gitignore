@@ -10,6 +10,8 @@
 
 # Maven
 target
+pom.xml.releaseBackup
+release.properties
 
 # Jahia DX Studio
 repository.xml.generated
