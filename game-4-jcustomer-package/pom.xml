@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>jahia-packages-parent</artifactId>
+        <groupId>org.jahia.packages</groupId>
+        <version>8.0.2.0</version>
+    </parent>
+    <artifactId>game-experience-package</artifactId>
+    <name>Jahia Gamification Experience Package</name>
+    <version>1.0.0</version>
+    <description>This project package game-4-jcustomer modules: including core and Quiz modules</description>
+    <packaging>pom</packaging>
+    <properties>
+        <jahia.final.package.name>game-experience-package</jahia.final.package.name>
+        <jahia.manifest.package.id>Gamification Experience</jahia.manifest.package.id>
+        <jahia.manifest.description>game-4-jcustomer-core, game-4-jcustomer-components-quiz</jahia.manifest.description>
+        <jahia.package.sources.assembly.file>src/main/assembly/dependencies-sources.xml</jahia.package.sources.assembly.file>
+        <jahia.package.assembly.file>src/main/assembly/dependencies.xml</jahia.package.assembly.file>
+    </properties>
+    <repositories>
+        <repository>
+            <id>jahia-public</id>
+            <name>Jahia Public Repository</name>
+            <url>https://devtools.jahia.com/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>org.jahia.se.modules</groupId>
+            <artifactId>game-4-jcustomer-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jahia.se.modules</groupId>
+            <artifactId>game-4-jcustomer-components-quiz</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>packaging-dependencies</id>
+                        <configuration>
+                            <attach>true</attach>
+                            <archive>
+                                <manifestEntries>
+                                    <Jahia-Required-Version>8.0.0.0</Jahia-Required-Version>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>packaging-dependencies-sources</id>
+                        <configuration>
+                            <archive>
+                                <manifestEntries>
+                                    <Jahia-Required-Version>8.0.0.0</Jahia-Required-Version>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

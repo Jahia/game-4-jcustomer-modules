@@ -1,0 +1,22 @@
+# Eclipse
+/.classpath
+/.project
+/.settings
+
+# Intellij
+.idea
+*.iml
+*.ipr
+
+# Maven
+target
+
+node
+node_modules
+yarn-error.log
+yarn.lock
+/src/main/resources/javascript/apps
+coverage
+
+# Jahia DX Studio
+repository.xml.generated
