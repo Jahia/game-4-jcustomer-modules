@@ -9,7 +9,7 @@
     <groupId>org.jahia.se.modules</groupId>
     <artifactId>game-4-jcustomer</artifactId>
     <name>Game for jCustomer Main Module</name>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 <!--    <scm>-->
 <!--        <connection>scm:dummy:uri</connection>-->
@@ -45,5 +45,6 @@
     <modules>
         <module>game-4-jcustomer-core</module>
         <module>game-4-jcustomer-components-quiz</module>
+<!--        <module>game-4-jcustomer-package</module>-->
     </modules>
 </project>
