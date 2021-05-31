@@ -11,10 +11,11 @@
     <name>Game for jCustomer Main Module</name>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-<!--    <scm>-->
-<!--        <connection>scm:dummy:uri</connection>-->
-<!--        <developerConnection>scm:dummy:uri</developerConnection>-->
-<!--    </scm>-->
+    <scm>
+        <connection>scm:git:git@github.com:hduchesne/game-4-jcustomer-modules.git</connection>
+        <developerConnection>scm:git:git@github.com:hduchesne/game-4-jcustomer-modules.git</developerConnection>
+        <url>https://github.com/hduchesne/game-4-jcustomer-modules</url>
+    </scm>
     <repositories>
         <repository>
             <id>jahia-public</id>
@@ -45,6 +46,5 @@
     <modules>
         <module>game-4-jcustomer-core</module>
         <module>game-4-jcustomer-components-quiz</module>
-<!--        <module>game-4-jcustomer-package</module>-->
     </modules>
 </project>
