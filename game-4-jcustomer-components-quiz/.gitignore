@@ -14,6 +14,7 @@ target
 node
 node_modules
 yarn-error.log
+yarn.lock
 /src/main/resources/javascript/apps
 coverage
 
