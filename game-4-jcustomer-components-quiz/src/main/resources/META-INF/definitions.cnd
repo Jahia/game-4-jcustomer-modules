@@ -71,8 +71,8 @@
 // - game4:multiMediaReference (string, choicelist) indexed=no
  - game4:qnaDuration (string,choicelist[resourceBundle]) = '5 mins' autocreated indexed=no < '5 mins', '10 mins', '30 mins', '1h' , '> 1h'
  + * (game4nt:qna)
-
-[game4nt:qna] > jnt:content, game4mix:showInTree, game4mix:usesResultAsProperty, game4mix:quizChild, wdenmix:mediaReference, mix:title
+// game4mix:usesResultAsJExpProperty
+[game4nt:qna] > jnt:content, game4mix:showInTree, game4mix:usesResultAsJExpProperty, game4mix:quizChild, wdenmix:mediaReference, mix:title
  - game4:question (string) mandatory internationalized
  - game4:help (string) internationalized
  - game4:answers (string) mandatory multiple internationalized

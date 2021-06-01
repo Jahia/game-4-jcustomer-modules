@@ -9,13 +9,17 @@
 [game4mix:usesConsents] mixin
  - game4:consentType (weakreference, choicelist[nodes='$currentSite/consentTypes;wemnt:consentType']) multiple nofulltext
 
-[game4mix:usesNewProfileProperty] > jmix:dynamicFieldset mixin
- extends = game4mix:usesResultAsProperty
- - game4:newjExpPropertyName (string) indexed=no
- - game4:newjExpPropertyId (string) hidden indexed=no
+//[game4mix:usesNewProfileProperty] > jmix:dynamicFieldset mixin
+// extends = game4mix:usesResultAsProperty
+// - game4:newjExpPropertyName (string) indexed=no
+// - game4:newjExpPropertyId (string) hidden indexed=no
 
-[game4mix:usesResultAsProperty] mixin
- - game4:jExpProperty (string, choicelist[jExpProfilePropertiesInitializer,resourceBundle]) indexed=no
+//[game4mix:usesResultAsProperty] mixin
+// - game4:jExpProperty (string, choicelist[jExpProfilePropertiesInitializer,resourceBundle]) indexed=no
+
+[game4mix:usesResultAsJExpProperty] mixin
+ - game4:jExpCard (string, choicelist[jExpProfileCardsInitializer,resourceBundle]) indexed=no
+ - game4:jExpProperty (string, choicelist[jExpProfilePropertiesInitializer,dependentProperties='game4:jExpCard',resourceBundle]) indexed=no
 
 //[game4mix:usesCustomTheme] mixin
 // - game4:webappTheme (string) indexed=no
