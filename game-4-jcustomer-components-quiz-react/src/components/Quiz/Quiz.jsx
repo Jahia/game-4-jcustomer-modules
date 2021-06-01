@@ -17,7 +17,7 @@ import DOMPurify from "dompurify";
 import Header from "components/Header/Header";
 import {manageTransition} from "misc/utils";
 import useMarketo from "components/Marketo/LoadScript";
-import {mktgForm} from "douane/lib/config";
+// import {mktgForm} from "douane/lib/config";
 
 const useStyles = makeStyles(theme => ({
     duration:{
@@ -52,6 +52,12 @@ const useStyles = makeStyles(theme => ({
     consentTitle:{
         textTransform:'capitalize',
         textDecoration:'underline'
+    },
+    cxsError:{
+        backgroundColor:theme.palette.error.dark,
+        borderRadius:'3px',
+        display: 'inline',
+        padding: '5px 10px'
     }
 }));
 
@@ -150,8 +156,8 @@ function reducer(state, action) {
 }
 
 const MktoForm = (props) => {
-    const { baseUrl, munchkinId, formId } = props;
-    //
+    // const { baseUrl, munchkinId, formId } = props;
+    const { formId } = props;
     useMarketo(props);
     return <form id={`mktoForm_${formId}`} />;
 }
@@ -166,7 +172,8 @@ const Quiz = (props) => {
         showNext,
         currentSlide,
         jContent,
-        cxs
+        cxs,
+        cxsError
     } = state;
 
     const {
@@ -237,6 +244,22 @@ const Quiz = (props) => {
     }
 
     const getStartComponent = () => {
+
+        const _cxs = window.cxs || false;
+        if(!state.cxs &&
+            _cxs.constructor === Object &&
+            Object.keys(_cxs).length === 0)
+            return <Typography className={classes.cxsError}
+                               variant="h5">
+                Internal jExperience connection issue
+            </Typography>
+
+        // //TODO creuse cette approche et verifier que ca foncitonne partout avec un cxs object vide, faire un boolean cxs enabled?
+        // console.log("getConsent cxs : ",cxs);
+        // let _cxs = window.cxs || false;
+        // if(!cxs && _cxs.constructor === Object && Object.keys(_cxs).length === 0)
+        //     console.log("cxs a merde : ",_cxs);
+
         if(!quiz.mktgForm)
             return <Button onClick={onClick}
                            disabled={!quizState.enableStartBtn}>

@@ -24,7 +24,7 @@
 
 [game4mix:mktoForm] > jmix:dynamicFieldset mixin
  extends = game4mix:marketingFormReference
- - game4:mktoConfig (string) fulltextsearchable=no
+ - game4:mktoConfig (string) internationalized fulltextsearchable=no
 
 [game4mix:marketingFormReference] mixin
  - game4:marketingFormChoice (string) indexed=no

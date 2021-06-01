@@ -8,6 +8,7 @@ const syncTracker = ({scope,url,sessionId,dispatch}) => {
             sessionId
         }
     });
+
     uTracker.ready( () =>
         dispatch({
             case:"ADD_CXS",

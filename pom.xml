@@ -47,6 +47,6 @@
     <modules>
         <module>game-4-jcustomer-core</module>
         <module>game-4-jcustomer-components-quiz</module>
-        <module>game-experience-package</module>
+<!--        <module>game-4-jcustomer-package</module>-->
     </modules>
 </project>
