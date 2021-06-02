@@ -34,15 +34,18 @@ Import the package module in your Jahia server. This deploys 2 modules :
 * game-4-jcustomer-components-quiz
 * game-4-jcustomer-core
 
-![100]
+<img src="./doc/images/100_modules.png" width="600px"/>
   
 To be able to create Quiz enable game-4-jcustomer-components-quiz for your project.
 
 Now your are able to create a Quiz in jContent or create a Quiz Reference in Page composer.
+
 <img src="./doc/images/200_contentToCreate.png" width="375px"/>
 
 When you have a quiz create you can create subcontent like *Question and Answer* (Qna) and *Warmup*
+
 <img src="./doc/images/202_subContent.png" width="375px"/>
+
 
 [100]: doc/images/100_modules.png
 
