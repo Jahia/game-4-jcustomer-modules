@@ -98,7 +98,7 @@ public class Utils {
             String itemId = property.optString("itemId");
             String displayName = metadata.optString("name",itemId);
 
-            propertyNames.put(itemId,displayName+"<"+type+">");
+            propertyNames.put(itemId,displayName+" <"+type+">");
 //            propertyNames.put(itemId,displayName);
         }
 

@@ -45,7 +45,7 @@ export const GET_QUIZ = gql`
                 mktgForm: property(name:"game4:marketingFormChoice"){
                     value
                 }
-                mktoConfig: property(name:"game4:mktoConfig"){
+                mktoConfig: property(language:$language,name:"game4:mktoConfig"){
                     value
                 }
                 media: property(language:$language,name:"wden:mediaNode",){

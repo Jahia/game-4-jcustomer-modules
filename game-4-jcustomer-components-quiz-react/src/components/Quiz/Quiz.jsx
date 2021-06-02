@@ -70,7 +70,7 @@ const init = variables =>{
 
 const computeEnableStartBtn = (state) => {
     const {showNext,workspace,consents} = state;
-console.log("consents:",consents);
+
     if(showNext && workspace !== "LIVE")
         return true;
 
@@ -156,6 +156,7 @@ function reducer(state, action) {
 }
 
 const MktoForm = (props) => {
+
     // const { baseUrl, munchkinId, formId } = props;
     const { formId } = props;
     useMarketo(props);
@@ -172,8 +173,7 @@ const Quiz = (props) => {
         showNext,
         currentSlide,
         jContent,
-        cxs,
-        cxsError
+        cxs
     } = state;
 
     const {
@@ -254,17 +254,12 @@ const Quiz = (props) => {
                 Internal jExperience connection issue
             </Typography>
 
-        // //TODO creuse cette approche et verifier que ca foncitonne partout avec un cxs object vide, faire un boolean cxs enabled?
-        // console.log("getConsent cxs : ",cxs);
-        // let _cxs = window.cxs || false;
-        // if(!cxs && _cxs.constructor === Object && Object.keys(_cxs).length === 0)
-        //     console.log("cxs a merde : ",_cxs);
-
         if(!quiz.mktgForm)
             return <Button onClick={onClick}
                            disabled={!quizState.enableStartBtn}>
                 {language_bundle && language_bundle.btnStart}
             </Button>
+
         if(quiz.mktgForm === mktgForm.MARKETO && quiz.mktoConfig && cxs)
             return <MktoForm
                 baseUrl={quiz.mktoConfig.baseUrl}
