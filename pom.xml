@@ -9,7 +9,7 @@
     <groupId>org.jahia.se.modules</groupId>
     <artifactId>game-4-jcustomer</artifactId>
     <name>Game for jCustomer Main Module</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 <!--    <version>${revision}</version>-->
     <packaging>pom</packaging>
 <!--    <properties>-->
@@ -19,6 +19,7 @@
         <connection>scm:git:git@github.com:hduchesne/game-4-jcustomer-modules.git</connection>
         <developerConnection>scm:git:git@github.com:hduchesne/game-4-jcustomer-modules.git</developerConnection>
         <url>https://github.com/hduchesne/game-4-jcustomer-modules</url>
+    <tag>game-4-jcustomer-1.0.0</tag>
   </scm>
     <repositories>
         <repository>
