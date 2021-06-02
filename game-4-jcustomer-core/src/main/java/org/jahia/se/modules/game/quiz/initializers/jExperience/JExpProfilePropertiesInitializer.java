@@ -1,5 +1,6 @@
 package org.jahia.se.modules.game.quiz.initializers.jExperience;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.value.StringValue;
 import org.jahia.modules.jexperience.admin.ContextServerService;
 import org.jahia.services.content.JCRNodeWrapper;
@@ -22,7 +23,7 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
 
     private String key="jExpProfilePropertiesInitializer";
     private ContextServerService contextServerService;
-    private String cardName = "Basic info";
+    private final String DEPENDENT_PROP_NAME = "game4:jExpCard";
 
     @Reference(service= ContextServerService.class)
     public void setContextServerService(ContextServerService contextServerService) {
@@ -32,14 +33,29 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
     @Override
     public List<ChoiceListValue> getChoiceListValues(ExtendedPropertyDefinition epd, String param, List<ChoiceListValue> values, Locale locale, Map<String, Object> context) {
         List<ChoiceListValue> choiceListValues = new ArrayList<>();
+        List<String> cardNames = new ArrayList<>();
 
         try {
-            if (context.containsKey("game4:jExpCard")){
+
+            if (context.containsKey(DEPENDENT_PROP_NAME)){
 //                cardName = (String) context.get("jExpCard");
-                cardName = ((ArrayList<String>) context.get("game4:jExpCard")).get(0);
+                cardNames = (ArrayList<String>) context.get(DEPENDENT_PROP_NAME);
             }else{
-                logger.warn("No jExperience card selected fallback to 'Basic info'");
+//                logger.warn("No jExperience card selected fallback to 'Basic info'");
+                if(context.get("contextNode") != null){
+                    final JCRNodeWrapper contextNode = (JCRNodeWrapper) context.get("contextNode");
+                    if(contextNode.hasProperty(DEPENDENT_PROP_NAME)){
+                        String value = contextNode.getPropertyAsString(DEPENDENT_PROP_NAME);
+                        if(contextNode.getProperty(DEPENDENT_PROP_NAME).isMultiple()){
+                            cardNames.addAll(Arrays.asList(StringUtils.split(value," ")));
+                        }else{
+                            cardNames.add(value);
+                        }
+                    }
+                }
             }
+            if(cardNames.isEmpty())
+                return choiceListValues;
 
             JCRNodeWrapper node = (JCRNodeWrapper)
                     ((context.get("contextParent") != null)
@@ -48,7 +64,7 @@ public class JExpProfilePropertiesInitializer implements ModuleChoiceListInitial
 
             JCRSiteNode site = node.getResolveSite();
             Utils utils = new Utils(site,contextServerService);
-            Map<String,String> propertyNames = utils.getPropertyNames(cardName);
+            Map<String,String> propertyNames = utils.getPropertyNames(cardNames.get(0));
             propertyNames.forEach( (id,name) ->  choiceListValues.add(new ChoiceListValue(name, null, new StringValue(id))));
             Collections.sort(choiceListValues, this.choiceListValueComparator);
 

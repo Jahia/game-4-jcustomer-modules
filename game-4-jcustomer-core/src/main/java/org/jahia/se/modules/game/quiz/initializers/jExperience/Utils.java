@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
@@ -97,14 +98,20 @@ public class Utils {
             String itemId = property.optString("itemId");
             String displayName = metadata.optString("name",itemId);
 
-            propertyNames.put(itemId,displayName+" ( "+type+" )");
+            propertyNames.put(itemId,displayName+"<"+type+">");
+//            propertyNames.put(itemId,displayName);
         }
 
         return propertyNames;
     };
 
     private TreeSet<String> getCardNames(JSONArray profileProperties) throws JSONException {
-        TreeSet<String> cardNames= new TreeSet<>();
+        TreeSet<String> cardNames= new TreeSet<>(new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                return s1.trim().toUpperCase().compareTo(s2.trim().toUpperCase());
+            }
+        });
         for (int i = 0; i < profileProperties.length(); i++) {
             JSONObject property = profileProperties.getJSONObject(i);
             String cardName = getCardName(property);
