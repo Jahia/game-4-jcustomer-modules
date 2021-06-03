@@ -55,7 +55,7 @@
 [game4nt:quiz] > jnt:content, game4mix:components, game4mix:showInTree, game4mix:usesConsents, wdenmix:mediaReference,game4mix:quizConfiguration,game4mix:marketingFormReference, mix:title, game4mix:quizStaticLabels orderable
  - game4:quizKey (string) primary mandatory
  - game4:subtitle (string) internationalized
- - game4:description (string, richtext[ckeditor.customConfig='$context/modules/game-4-jcustomer-components-quiz/javascript/ckeditor/config/small.js']) internationalized
+ - game4:description (string, richtext[ckeditor.toolbar='Tinny',ckeditor.customConfig='$context/modules/game-4-jcustomer-components-quiz/javascript/ckeditor/config/small.js']) internationalized
 // - game4:cover (weakreference, picker[type='image']) hidden < 'jmix:image'
  - game4:duration (string,choicelist[resourceBundle]) = '5 mins' autocreated indexed=no < '5 mins', '10 mins', '30 mins', '1h' , '> 1h'
  - game4:personalizedResultContent (weakreference, choicelist[nodes='$currentSite//*;wemnt:personalizedContent'])
@@ -66,7 +66,7 @@
  - game4:subtitle (string) internationalized
 // - game4:masterQnaCover (weakreference, picker[type='image']) hidden < 'jmix:image'
 // - abstract (string, textarea) internationalized
- - game4:content (string, richtext[ckeditor.customConfig='$context/modules/game-4-jcustomer-components-quiz/javascript/ckeditor/config/small.js']) internationalized
+ - game4:content (string, richtext[ckeditor.toolbar='Tinny',ckeditor.customConfig='$context/modules/game-4-jcustomer-components-quiz/javascript/ckeditor/config/small.js']) internationalized
 // - game4:multiMediaReference (string, choicelist[quizVideoTypeInitializer,resourceBundle]) indexed=no //< 'internal', 'external'
 // - game4:multiMediaReference (string, choicelist) indexed=no
  - game4:qnaDuration (string,choicelist[resourceBundle]) = '5 mins' autocreated indexed=no < '5 mins', '10 mins', '30 mins', '1h' , '> 1h'
