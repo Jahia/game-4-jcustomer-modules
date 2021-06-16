@@ -6,6 +6,9 @@ import AjvError from "components/Error/Ajv";
 
 import * as serviceWorker from 'misc/serviceWorker';
 
+import {StylesProvider, createGenerateClassName} from '@material-ui/core/styles';
+import {getRandomString} from 'misc/utils';
+
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from '@apollo/react-hooks';
 
@@ -13,6 +16,8 @@ import {contextValidator} from "douane";
 import {Store} from "store";
 
 import 'index.css';
+
+
 
 const render=(target,context)=>{
   try{
@@ -27,19 +32,26 @@ const render=(target,context)=>{
       headers
     })
 
+    const generateClassName = createGenerateClassName({
+      // disableGlobal:true,
+      seed: getRandomString(8, 'aA')
+    });
+
     // console.log("context.theme : ",context.theme);
     // console.log("typeof context.theme : ",typeof context.theme);
     ReactDOM.render(
-      <Store jContent={context}>
-        <ApolloProvider client={client}>
-          {/*<ThemeProvider theme={theme(context.theme)}>*/}
-          <div style={{overflow:'hidden'}}>
-            <App />
-          </div>
+      <StylesProvider generateClassName={generateClassName}>
+        <Store jContent={context}>
+          <ApolloProvider client={client}>
+            {/*<ThemeProvider theme={theme(context.theme)}>*/}
+            <div style={{overflow:'hidden'}}>
+              <App />
+            </div>
 
-          {/*</ThemeProvider>*/}
-        </ApolloProvider>
-      </Store>,
+            {/*</ThemeProvider>*/}
+          </ApolloProvider>
+        </Store>
+      </StylesProvider>,
       document.getElementById(target)
     );
 

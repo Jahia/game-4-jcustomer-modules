@@ -7,8 +7,8 @@
 <%--Add files used by the webapp--%>
 <template:addResources type="css" resources="webapp/2.6c0f60ba.chunk.css" />
 <template:addResources type="css" resources="webapp/main.3443d2d0.chunk.css" media="screen"/>
-<template:addResources type="javascript" resources="webapp/2.b700b35c.chunk.js" />
-<template:addResources type="javascript" resources="webapp/main.22cdc7d7.chunk.js" />
+<template:addResources type="javascript" resources="webapp/2.13ee417f.chunk.js" />
+<template:addResources type="javascript" resources="webapp/main.a8f6e11e.chunk.js" />
 
 <c:set var="_uuid_" value="${currentNode.identifier}"/>
 <c:set var="language" value="${currentResource.locale.language}"/>
