@@ -90,7 +90,7 @@ const App = (props)=> {
                 syncTracker({
                     scope: jContent.scope,
                     url: jContent.cdp_endpoint,
-                    sessionId:`qZ-${quizKey}-${Date.now()}`,
+                    // sessionId:`qZ-${quizKey}-${Date.now()}`,
                     dispatch
                 });
         }

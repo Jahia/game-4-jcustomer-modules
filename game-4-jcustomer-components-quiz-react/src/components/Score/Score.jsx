@@ -48,7 +48,7 @@ const Score = (props) => {
         if(quiz.personalizedResult.id){
             if(cxs)
                 return <Personalized id={quiz.personalizedResult.id} cxs={cxs}/>
-            return <p>cxs is loading...</p>
+            return <p>score calculation in progress...</p>
         }
         return <Percentage score={score}/>
     }

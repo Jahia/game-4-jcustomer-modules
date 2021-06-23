@@ -133,12 +133,15 @@ const reducer = (state, action) => {
         case "SHOW_SCORE": {
             console.debug("[STORE] SHOW_SCORE");
             const [slide] = state.slideSet.slice(-1);
+            const {quiz} = state;
+            let {score} = state;
 
-            const score = getScore({
-                resultSet:state.resultSet,
-                quizKey:state.quiz.key,
-                split:state.jContent.score_splitPattern
-            });
+            if(!quiz.personalizedResult || !quiz.personalizedResult.id)
+                score = getScore({
+                    resultSet:state.resultSet,
+                    quizKey:state.quiz.key,
+                    split:state.jContent.score_splitPattern
+                });
 
             // const goodAnswers = state.resultSet.filter(result => result).length;
             // const answers = state.resultSet.length;
@@ -176,15 +179,17 @@ const reducer = (state, action) => {
             console.debug("[STORE] SHOW_RESULT - currentResult: ", currentResult);
 
             const resultSet = [...state.resultSet, currentResult];
+            const {quiz} = state;
             let {score,currentSlide:nextSlide} = state;
 
             if(skipScore) {
                 if(showScore){
-                    score = getScore({
-                        resultSet: resultSet,
-                        quizKey: state.quiz.key,
-                        split: state.jContent.score_splitPattern
-                    });
+                    if(!quiz.personalizedResult || !quiz.personalizedResult.id)
+                            score = getScore({
+                            resultSet: resultSet,
+                            quizKey: state.quiz.key,
+                            split: state.jContent.score_splitPattern
+                        });
                     [nextSlide] = state.slideSet.slice(-1);
                 }else{
                     nextSlide=state.slideSet[nextIndex]

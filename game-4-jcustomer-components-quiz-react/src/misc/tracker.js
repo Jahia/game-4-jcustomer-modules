@@ -5,7 +5,7 @@ const syncTracker = ({scope,url,sessionId,dispatch}) => {
         "Apache Unomi": {
             scope,
             url,
-            sessionId
+            // sessionId
         }
     });
 
