@@ -73,7 +73,7 @@ const App = (props)=> {
             console.debug("App Quiz init Set Data!");
 
             const quizData = get(data, "response.quiz", {});
-            const quizKey = get(quizData, "key.value");
+            // const quizKey = get(quizData, "key.value");
 
             jContent.language_bundle = initLanguageBundle(quizData);
             console.debug("jContent.language_bundle: ",jContent.language_bundle);

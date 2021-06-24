@@ -8,7 +8,7 @@
 <template:addResources type="css" resources="webapp/2.6c0f60ba.chunk.css" />
 <template:addResources type="css" resources="webapp/main.3443d2d0.chunk.css" media="screen"/>
 <template:addResources type="javascript" resources="webapp/2.13ee417f.chunk.js" />
-<template:addResources type="javascript" resources="webapp/main.1b901044.chunk.js" />
+<template:addResources type="javascript" resources="webapp/main.21108146.chunk.js" />
 
 <c:set var="_uuid_" value="${currentNode.identifier}"/>
 <c:set var="language" value="${currentResource.locale.language}"/>
