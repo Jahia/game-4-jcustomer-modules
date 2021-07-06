@@ -12,6 +12,7 @@ import Header from "components/Header/Header";
 const Score = (props) => {
     const sharedClasses = cssSharedClasses(props);
     const { state,dispatch } = React.useContext(StoreContext);
+    const [timer, setTimer] = React.useState(false);
     const {
         quiz,
         currentSlide,
@@ -26,6 +27,14 @@ const Score = (props) => {
     const { language_bundle } =  jContent;
 
     const show = currentSlide === scoreIndex;
+//wait 1s before to call jExp in order to have time to synch user profile with answer
+    React.useEffect(() => {
+        if(quiz.personalizedResult.id)
+            setTimeout(
+                () => setTimer(true),
+                1000
+            );
+    },[])
 
     const onClick = () => {
         if(transitionIsEnabled){
@@ -46,9 +55,14 @@ const Score = (props) => {
     }
     const displayResult = () => {
         if(quiz.personalizedResult.id){
-            if(cxs)
+            if(cxs && timer)
                 return <Personalized id={quiz.personalizedResult.id} cxs={cxs}/>
-            return <p>score calculation in progress...</p>
+            return <Typography className={classnames(
+                        sharedClasses.wait,
+                        sharedClasses.textUppercase)}
+                               variant="body2">
+                        score calculation in progress...
+                    </Typography>
         }
         return <Percentage score={score}/>
     }

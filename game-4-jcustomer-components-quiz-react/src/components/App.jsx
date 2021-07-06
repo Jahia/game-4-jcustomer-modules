@@ -99,8 +99,6 @@ const App = (props)=> {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
-
-
     const displayScore=()=>{
         if(showScore)
             return <Score/>

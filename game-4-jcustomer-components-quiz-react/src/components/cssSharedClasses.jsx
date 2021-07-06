@@ -38,6 +38,9 @@ export default makeStyles((theme)=> ({
             flexDirection:'column',
         }
     },
+    wait: {
+        marginTop:theme.spacing(3)
+    },
     showOverlay:{
         "&::before":{
             position:'absolute',

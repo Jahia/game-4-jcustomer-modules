@@ -7,6 +7,8 @@ import get from "lodash.get";
 import DOMPurify from "dompurify";
 import {Typography} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
+import classnames from "clsx";
+import cssSharedClasses from "components/cssSharedClasses";
 
 const useStyles = makeStyles(theme => ({
     result:{
@@ -16,6 +18,7 @@ const useStyles = makeStyles(theme => ({
 
 const Personalized = (props) => {
     const {id,cxs}=props;
+    const sharedClasses = cssSharedClasses(props);
     const classes = useStyles(props);
     const { state } = React.useContext(StoreContext);
     const { jContent } = state;
@@ -41,8 +44,18 @@ const Personalized = (props) => {
         }
     }, [loading,data]);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :(</p>;
+    if (loading) return <Typography className={classnames(
+                            sharedClasses.wait,
+                            sharedClasses.textUppercase)}
+                            variant="body2">
+                                score calculation in progress...
+                        </Typography>;
+    if (error) return <Typography className={classnames(
+                            sharedClasses.wait,
+                            sharedClasses.textUppercase)}
+                            variant="body2">
+                                Error getting your result.
+                        </Typography>;
     console.debug("*** paint personalized result : ",result.title);
 
     // console.log("Personalized props.show :",props.show);
