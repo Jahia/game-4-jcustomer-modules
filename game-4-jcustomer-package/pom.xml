@@ -10,7 +10,7 @@
     </parent>
     <artifactId>game-experience-package</artifactId>
     <name>Jahia Gamification Experience Package</name>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <description>This project package game-4-jcustomer modules: including core and Quiz modules</description>
     <packaging>pom</packaging>
     <properties>
@@ -39,12 +39,12 @@
         <dependency>
             <groupId>org.jahia.se.modules</groupId>
             <artifactId>game-4-jcustomer-core</artifactId>
-            <version>1.0.4</version>
+            <version>1.0.5</version>
         </dependency>
         <dependency>
             <groupId>org.jahia.se.modules</groupId>
             <artifactId>game-4-jcustomer-components-quiz</artifactId>
-            <version>1.0.4</version>
+            <version>1.0.5</version>
         </dependency>
     </dependencies>
     <build>
