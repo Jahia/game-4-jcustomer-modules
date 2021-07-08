@@ -46,7 +46,12 @@ const defaultTheme = () =>({
             secondary:"rgba(0, 0, 0, 0.87)"
         },
         background:{
-            overlay: "rgba(0,0,0,.75)",
+            overlay: {
+                start:"rgba(0,0,0,.95)",
+                startMiddle:"rgba(0,0,0,.9)",
+                endMiddle:"rgba(0,0,0,.85)",
+                end:"rgba(0,0,0,.75)",
+            },
             checkedAnswer: "rgba(255,255,255,1)",
         },
         shadows:{

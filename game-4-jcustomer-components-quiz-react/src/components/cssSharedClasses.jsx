@@ -46,16 +46,19 @@ export default makeStyles((theme)=> ({
             position:'absolute',
             top:0, right:0, bottom:0, left:0,
             content:'""',
-            backgroundColor: theme.palette.background.overlay,
+            background: `linear-gradient(90deg, ${theme.palette.background.overlay.start} 0, ${theme.palette.background.overlay.startMiddle} 30%, ${theme.palette.background.overlay.endMiddle} 60%, ${theme.palette.background.overlay.end} 100%)`,
 
-            boxShadow: theme.palette.shadows.overlay.lg,
-            [theme.breakpoints.between('xs', 'sm')]: {
-                boxShadow: theme.palette.shadows.overlay.xs,
-            }
+            // backgroundColor: theme.palette.background.overlay,
+            // boxShadow: theme.palette.shadows.overlay.lg,
+            // [theme.breakpoints.between('xs', 'sm')]: {
+            //     boxShadow: theme.palette.shadows.overlay.xs,
+            // }
         }
     },
     caption:{
         width:'100%',
+        maxWidth:theme.breakpoints.values.lg,
+        margin:"auto",
         flexGrow:2,
         paddingRight:theme.geometry.caption.padding.lg,
         paddingLeft:theme.geometry.caption.padding.lg,
