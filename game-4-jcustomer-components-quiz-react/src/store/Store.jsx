@@ -2,7 +2,7 @@ import React from "react";
 import {StoreContext} from "contexts";
 
 import {getRandomString} from "misc/utils";
-import {syncQuizScore} from "misc/tracker";
+import {syncQuizScore} from "misc/wemAPI";
 import QuizMapper from "components/Quiz/QuizModel";
 
 const init = jContent => {
@@ -19,7 +19,8 @@ const init = jContent => {
         showScore:false,
         max:-1,
         score:0,
-        cxs:null,
+        wem:null,
+        // cxs:null,
         reset:false,
         resetBtnIsEnabled:false,//jContent.reset,
         transitionActive:false,
@@ -38,14 +39,14 @@ const reducer = (state, action) => {
     const showNext = ({slideSet,max,slide}) =>
         slideSet.indexOf(slide) < max;
 
-    const getScore = ({resultSet,quizKey,split}) =>{
+    const getScore = ({wem,resultSet,quizKey}) =>{
         const goodAnswers = resultSet.filter(result => result).length;
         const answers = resultSet.length;
         const score = Math.floor((goodAnswers/answers)*100);
 
         syncQuizScore({
+            wem,
             quizKey,//:state.quiz.key,
-            split,//:state.jContent.score_splitPattern,
             quizScore:score
         });
 
@@ -78,14 +79,22 @@ const reducer = (state, action) => {
                 max
             };
         }
-        case "ADD_CXS": {
-            const cxs = payload.cxs;
-            console.debug("[STORE] ADD_CXS - cxs: ",cxs);
+        case "ADD_WEM": {
+            const wem = payload.wem;
+            console.debug("[STORE] ADD_WEM - wem: ",wem);
             return {
                 ...state,
-                cxs
+                wem
             };
         }
+        // case "ADD_CXS": {
+        //     const cxs = payload.cxs;
+        //     console.debug("[STORE] ADD_CXS - cxs: ",cxs);
+        //     return {
+        //         ...state,
+        //         cxs
+        //     };
+        // }
         case "ADD_SLIDES": {
             const slides = payload.slides;
             const parentSlide = payload.parentSlide;
@@ -133,14 +142,15 @@ const reducer = (state, action) => {
         case "SHOW_SCORE": {
             console.debug("[STORE] SHOW_SCORE");
             const [slide] = state.slideSet.slice(-1);
-            const {quiz} = state;
+            const {quiz,wem} = state;
             let {score} = state;
 
             if(!quiz.personalizedResult || !quiz.personalizedResult.id)
                 score = getScore({
+                    wem,
                     resultSet:state.resultSet,
                     quizKey:state.quiz.key,
-                    split:state.jContent.score_splitPattern
+                    // split:state.jContent.score_splitPattern
                 });
 
             // const goodAnswers = state.resultSet.filter(result => result).length;
@@ -179,17 +189,18 @@ const reducer = (state, action) => {
             console.debug("[STORE] SHOW_RESULT - currentResult: ", currentResult);
 
             const resultSet = [...state.resultSet, currentResult];
-            const {quiz} = state;
+            const {quiz,wem} = state;
             let {score,currentSlide:nextSlide} = state;
 
             if(skipScore) {
                 if(showScore){
                     if(!quiz.personalizedResult || !quiz.personalizedResult.id)
                             score = getScore({
-                            resultSet: resultSet,
-                            quizKey: state.quiz.key,
-                            split: state.jContent.score_splitPattern
-                        });
+                                wem,
+                                resultSet: resultSet,
+                                quizKey: state.quiz.key,
+                                // split: state.jContent.score_splitPattern
+                            });
                     [nextSlide] = state.slideSet.slice(-1);
                 }else{
                     nextSlide=state.slideSet[nextIndex]

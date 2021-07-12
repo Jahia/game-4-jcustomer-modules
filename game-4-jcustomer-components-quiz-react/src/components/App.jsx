@@ -85,14 +85,21 @@ const App = (props)=> {
                 }
             });
 
-            //Init unomi tracker
+            //setup wem
             if(jContent.gql_variables.workspace === "LIVE")
-                syncTracker({
-                    scope: jContent.scope,
-                    url: jContent.cdp_endpoint,
-                    // sessionId:`qZ-${quizKey}-${Date.now()}`,
-                    dispatch
-                });
+                dispatch({
+                    case:"ADD_WEM",
+                    payload:{
+                        wem:window.wem
+                    }
+                })
+
+                // syncTracker({
+                //     scope: jContent.scope,
+                //     url: jContent.cdp_endpoint,
+                //     // sessionId:`qZ-${quizKey}-${Date.now()}`,
+                //     dispatch
+                // });
         }
     }, [loading,data]);
 

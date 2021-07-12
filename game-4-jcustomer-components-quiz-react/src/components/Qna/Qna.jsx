@@ -10,7 +10,7 @@ import {GET_QNA} from "./QnaGraphQL";
 import Answer from "./Answer";
 
 import QnaMapper from "components/Qna/QnaModel";
-import {syncVisitorData} from "misc/tracker";
+import {syncVisitorData} from "misc/wemAPI";
 import Media from "components/Media";
 import cssSharedClasses from "components/cssSharedClasses";
 import classnames from "clsx";
@@ -114,7 +114,8 @@ const Qna = (props) => {
     const {
         currentSlide,
         jContent,
-        reset
+        reset,
+        wem
     } = state;
     const { gql_variables,language_bundle } =  jContent;
 
@@ -182,10 +183,24 @@ const Qna = (props) => {
             // console.debug("[handleSubmit] update : ",qna.jExpField2Map," with values : ",values);
 
             //if tracker is not initialized the track event is not send
-            syncVisitorData({
-                propertyName:`properties.${qna.jExpField2Map}`,
-                propertyValue:values
-            })
+            function syncData({propertyName,propertyValue}) {
+                return new Promise(resolve =>
+                    syncVisitorData({
+                        wem,
+                        propertyName,
+                        propertyValue,
+                        resolve
+                    })
+                );
+            }
+            async function waitSync(){
+                const xhr = await syncData({
+                    propertyName:`properties.${qna.jExpField2Map}`,
+                    propertyValue:values
+                });
+                console.debug("xhr :",xhr);
+            }
+            waitSync();
         }
 
         const payload = {
@@ -199,6 +214,7 @@ const Qna = (props) => {
         }
 
         if(qna.notUsedForScore){
+            console.debug("data synch continue!");
             manageTransition({
                 state,
                 dispatch,

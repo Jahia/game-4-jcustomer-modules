@@ -2,7 +2,7 @@ import React, {useRef} from 'react';
 import PropTypes from "prop-types";
 import {StoreContext} from "contexts";
 import ReactPlayer from "react-player";
-import {syncVideoStatus} from "misc/tracker";
+import {syncVideoStatus} from "misc/wemAPI";
 import {makeStyles} from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme => ({
@@ -13,12 +13,13 @@ const VideoPlayer = (props)=>{
     const classes = useStyles(props);
     const {ownerID,videoURL} = props;
     const { state } = React.useContext(StoreContext);
-    const {quiz} = state;
+    const {quiz,wem} = state;
 
     const player = useRef(null);
 
     const handleVideoStatus = ({status}) => {
         syncVideoStatus({
+            wem,
             content:{
                 id:quiz.id,
                 type:quiz.type

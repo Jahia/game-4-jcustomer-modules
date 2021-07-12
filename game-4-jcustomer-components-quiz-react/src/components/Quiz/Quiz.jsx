@@ -9,7 +9,7 @@ import {StoreContext} from "contexts";
 import Consent from "components/Consent";
 import get from "lodash.get";
 
-import {syncConsentStatus} from "misc/tracker";
+import {syncConsentStatus} from "misc/wemAPI";
 import Media from '../Media'
 import classnames from "clsx";
 import cssSharedClasses from "components/cssSharedClasses";
@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
         textTransform:'capitalize',
         textDecoration:'underline'
     },
-    cxsError:{
+    wemError:{
         backgroundColor:theme.palette.error.dark,
         borderRadius:'3px',
         display: 'inline',
@@ -84,15 +84,18 @@ function reducer(state, action) {
     switch (action.case) {
         case "DATA_READY_CONSENT":{
             let {consents} = state;
-            const {consentData,scope,cxs,consent_status} = payload;
+            const {consentData,scope,wem,consent_status} = payload;
             console.debug("[QUIZ] DATA_READY_CONSENT -> consentData :",consentData);
 
             const identifier = get(consentData, "identifier");
 
             //compute granted
             const consentPath = `consents["${scope}/${identifier}"]`;
-            const cxsConsentStatus = get(cxs,`${consentPath}.status`);
-            const cxsConsentRevokeDate = get(cxs,`${consentPath}.revokeDate`);
+
+            //TODO verifier la structure, je ne pense pas avoir le context ici
+            const cxsConsentStatus = get(wem,`${consentPath}.status`);
+            const cxsConsentRevokeDate = get(wem,`${consentPath}.revokeDate`);
+
             const granted = consent_status.GRANTED === cxsConsentStatus
                 && Date.now() < Date.parse(cxsConsentRevokeDate)
 
@@ -173,7 +176,7 @@ const Quiz = (props) => {
         showNext,
         currentSlide,
         jContent,
-        cxs
+        wem
     } = state;
 
     const {
@@ -202,17 +205,28 @@ const Quiz = (props) => {
     const show = currentSlide === quiz.id;
 
     const onClick = () => {
-        quizState.consents.forEach(consent=>{
-            //already granted nothing to do
-            if(consent.granted)
-                return;
-
-            syncConsentStatus({
-                scope,
-                typeIdentifier:consent.identifier,
-                status:consent_status.GRANTED
-            });
-        })
+        const consents = quizState
+                            .consents
+                            .filter(consent => !consent.granted)
+                            .map(consent => {
+                                return {
+                                    scope,
+                                    typeIdentifier:consent.identifier,
+                                    status:consent_status.GRANTED
+                                }
+                        })
+        syncConsentStatus({wem,consents})
+        // quizState.consents.forEach(consent=>{
+        //     //already granted nothing to do
+        //     if(consent.granted)
+        //         return;
+        //
+        //     syncConsentStatus({
+        //         scope,
+        //         typeIdentifier:consent.identifier,
+        //         status:consent_status.GRANTED
+        //     });
+        // })
 
         manageTransition({
             state,
@@ -235,21 +249,21 @@ const Quiz = (props) => {
         return false;
     }
 
-    const handleMktoForm = (form,_cxs) =>{
+    const handleMktoForm = (form) =>{
         form.addHiddenFields({
             'pageURL' : document.location.href,
-            'cxsProfileId' : cxs?cxs.profileId:'',
+            'cxsProfileId' : wem?wem.profileId:'',
         });
         form.onSuccess(handleMktoFormSuccess);
     }
 
     const getStartComponent = () => {
 
-        const _cxs = window.cxs || false;
-        if(!state.cxs &&
-            _cxs.constructor === Object &&
-            Object.keys(_cxs).length === 0)
-            return <Typography className={classes.cxsError}
+        const _wem = window.wem || false;
+        if(!state.wem &&
+            _wem.constructor === Object &&
+            Object.keys(_wem).length === 0)
+            return <Typography className={classes.wemError}
                                variant="h5">
                 Internal jExperience connection issue
             </Typography>
@@ -260,7 +274,7 @@ const Quiz = (props) => {
                 {language_bundle && language_bundle.btnStart}
             </Button>
 
-        if(quiz.mktgForm === mktgForm.MARKETO && quiz.mktoConfig && cxs)
+        if(quiz.mktgForm === mktgForm.MARKETO && quiz.mktoConfig && wem)
             return <MktoForm
                 baseUrl={quiz.mktoConfig.baseUrl}
                 munchkinId={quiz.mktoConfig.munchkinId}
@@ -272,7 +286,7 @@ const Quiz = (props) => {
     const getConsent = () =>{
         if(quiz.mktgForm)
             return;
-        if(quiz.consents.length > 0 && cxs)
+        if(quiz.consents.length > 0 && wem)
             return <div className={classes.consent}>
                         <Typography className={classes.consentTitle}
                                     variant="h5">

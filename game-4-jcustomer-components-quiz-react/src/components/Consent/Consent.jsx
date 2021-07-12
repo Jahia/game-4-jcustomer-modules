@@ -5,7 +5,7 @@ import {useQuery} from "@apollo/react-hooks";
 import {GET_CONSENT} from "components/Consent/ConsentGraphQL";
 import get from "lodash.get";
 
-import {syncConsentStatus} from "misc/tracker";
+import {syncConsentStatus} from "misc/wemAPI";
 import {StoreContext} from "contexts";
 import {makeStyles} from "@material-ui/core/styles";
 import CheckIcon from '@material-ui/icons/Check';
@@ -42,7 +42,7 @@ const Consent = (props)=> {
 
     const { state } = React.useContext(StoreContext);
 
-    const {jContent,cxs} = state;
+    const {jContent,wem} = state;
     const {gql_variables,scope,consent_status} =  jContent;
 
     const variables = Object.assign(gql_variables,{id})
@@ -59,7 +59,7 @@ const Consent = (props)=> {
                 payload:{
                     consentData,
                     scope,
-                    cxs,
+                    wem,
                     consent_status
                 }
             })
@@ -74,11 +74,11 @@ const Consent = (props)=> {
     console.debug("*** paint consent : ",id);
 
     const handleDenied = (consent) => {
-        syncConsentStatus({
+        syncConsentStatus(wem,[{
             scope,
             typeIdentifier:consent.identifier,
             status:consent_status.DENIED
-        });
+        }]);
 
         quizDispatch({
             case:"DENIED_CONSENT",
